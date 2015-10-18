@@ -2,7 +2,7 @@
   "use strict";
 
   /**
-   * Informações do Moodle (url, course)
+   * Informações do Moodle (url, curso, linguagem)
    */
    
   chrome.tabs.getSelected(null, function(tab) {
@@ -27,21 +27,21 @@
               chrome.storage.local.set({
                 url: url,
                 course: course
-              }); 
+              });
+
+              chrome.tabs.sendMessage(tab.id, {type: "GET", command: "lang"}, function(response) {
+                if (response && response.moodle) {
+                  chrome.storage.local.set({
+                    lang: response.moodle.lang
+                  });
+                }
+              });              
             }   
           });
         })(a.protocol + "//" + a.host + paths.join("/"));
         paths.pop();
       }
     }
-
-    chrome.tabs.sendMessage(tab.id, {type: "GET", command: "lang"}, function(response) {
-      if (response && response.moodle) {
-        chrome.storage.local.set({
-          lang: response.moodle.lang
-        });
-      }
-    });
   });
 
   /**
@@ -55,8 +55,9 @@
   });
 
   /**
-   * Start
+   * Start: Verifica se há alguma sincronização
    */
+   
   chrome.storage.local.get({
     sync: false,
   }, function(items) {
@@ -69,9 +70,10 @@
   });
 
   /**
-   * Global
+   * Global: Em todas as páginas
    */
-
+   
+  // Botão de sincronização
   $(".btn-sync").click(function() {
     chrome.storage.local.get({
       url: "",
@@ -115,6 +117,7 @@
     });
   });
 
+  // Botão filtro de usuários
   $(".btn-users").click(function() {
       if($("#card-filter-users").length) {
         $("#card-filter-time").hide();
@@ -122,6 +125,7 @@
       }
   });
 
+  // Botão filtro de período
   $(".btn-time").click(function() {
       if($("#card-filter-time").length) {
         $("#card-filter-users").hide();
