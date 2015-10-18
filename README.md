@@ -13,8 +13,6 @@ Versão: 1.0 (Protótipo)
 
 ## Guia de execução
  - A extensão será exibida ao lado da barra de navegação
-
-## Guia de configuração
- - Clique no menu configurações e informe o endereço do Moodle
- - Clique no menu sincronizar
- - Verifique se existe uma sessão a nível de professor existente com o moodle configurado
+ - Acesse o moodle que desejar com permissão a nível de professor e clique no botão sincronizar
+ 
+Nota: Toda vez que você abrir o dashboard em um moodle ele ira configurar com este. Com isso você poderá sinconizar sem estar navegando no moodle, contudo deverá haver uma sessão aberta.

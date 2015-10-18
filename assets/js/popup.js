@@ -2,23 +2,43 @@
   "use strict";
 
   /**
-   * Informações do Moodle
+   * Informações do Moodle (url, course)
    */
-
+   
   chrome.tabs.getSelected(null, function(tab) {
     var a = document.createElement("a");
     a.href = tab.url;
     var regex = new RegExp("[\\?&]id=([^&#]*)");
-    var regid = regex.exec(a.search); 
-    chrome.storage.sync.set({
-      url: tab.url,
-      moodle_course: (regid === null) ? 0 : parseInt(regid[1])
-    });
+    var regid = regex.exec(a.search);
+    var course = (regid === null) ? 0 : parseInt(regid[1]);
+
+    if (course > 0) {
+
+      var paths = a.pathname.split("/").filter(function(path) {
+        return path.indexOf(".") === -1;
+      });
+      
+      for (var i = paths.length; i > 0; i--) {
+        (function(url) {
+          $.ajax({
+            type: 'HEAD',
+            url: url + "/report/log/index.php?id=" + course,
+            success: function() {
+              chrome.storage.local.set({
+                url: url,
+                course: course
+              }); 
+            }   
+          });
+        })(a.protocol + "//" + a.host + paths.join("/"));
+        paths.pop();
+      }
+    }
 
     chrome.tabs.sendMessage(tab.id, {type: "GET", command: "lang"}, function(response) {
       if (response && response.moodle) {
-        chrome.storage.sync.set({
-          moodle_lang: response.moodle.lang
+        chrome.storage.local.set({
+          lang: response.moodle.lang
         });
       }
     });
@@ -30,12 +50,7 @@
 
   chrome.storage.onChanged.addListener(function(changes, namespace) {
     for (var key in changes) {
-      console.log("Novo valor: "+changes[key].newValue);
-      switch (key) {
-        //case "moodle_url":
-          //console.log(changes[key].newValue);
-        //  break;  
-      }
+      console.log(key + " := " + changes[key].newValue);
     }
   });
 
@@ -43,9 +58,9 @@
    * Start
    */
   chrome.storage.local.get({
-    moodle_sync: false,
+    sync: false,
   }, function(items) {
-    if (!items.moodle_sync) {
+    if (!items.sync) {
       if($("#card-message-sync").length) {
         $(".mdl-card").hide();
         $("#card-message-sync").show();
@@ -58,41 +73,34 @@
    */
 
   $(".btn-sync").click(function() {
-    chrome.storage.sync.get({
+    chrome.storage.local.get({
       url: "",
-      moodle_url: "",
-      moodle_course: 0,
-      moodle_lang: "en"
+      course: 0,
+      lang: "en"
     }, function(items) {
-      console.log(items.url);
-      console.log(items.moodle_url);
-      console.log(items.moodle_course);
-      console.log(items.moodle_lang);
-      if (items.url !== "" && items.moodle_url !== "" && items.moodle_course !== 0 && items.url.indexOf(items.moodle_url) > -1) {
+      console.log(items);
+      
+      if (items.url !== "" && items.course !== 0) {
         console.log("sync true");
         mdash.sync({
-          url: items.moodle_url+"/report/log/index.php",
-          course: items.moodle_course,
-          lang: items.moodle_lang,
+          moodle: {
+            url: items.url + "/report/log/index.php",
+            data: {
+              course: items.course,
+              lang: items.lang
+            }
+          },
           init: function() {
             $(".mdl-card").hide();
             $("#spinner").show();
           },
           done: function(data) {
             chrome.storage.local.set({
-              moodle_data: data,
-              moodle_sync: true
+              data: data,
+              sync: true
             });
             
-            $("#spinner").hide();
-            
-            chrome.storage.local.get({
-              moodle_data: "",
-              moodle_sync: false
-            }, function(items) {
-              console.log(items.moodle_sync);
-              console.log(items.moodle_data);
-            });
+            //$("#spinner").hide();
             
             location.reload();
           },
@@ -120,5 +128,5 @@
         $("#card-filter-time").toggle();
       }
   });
-
+  
 })(this.chrome, this.jQuery, this.mdash);

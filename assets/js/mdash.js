@@ -90,9 +90,9 @@
       options.init();
     }
     ajax({
-      url: options.url,
+      url: options.moodle.url,
       data: {
-            "id": options.course,             // ID do curso
+            "id": options.moodle.data.course, // ID do curso
             "group": 0,                       // ID do grupo
             "user": 0,                        // ID do usuário
             "date": 0,                        // data para mostrar
@@ -129,7 +129,7 @@
         }
       },
       fail: function(xhr) {
-        setDefaultLang(options);
+        setDefaultLang(options.moodle);
         if (options.fail instanceof Function) {
           options.fail({
             type: 0,
@@ -138,7 +138,7 @@
         }
       },
       received: function(xhr) {
-        setDefaultLang(options);
+        setDefaultLang(options.moodle);
       }
     });
     return this;
@@ -147,11 +147,9 @@
   // Retorna a linguagem do moodle
   var setDefaultLang = function(options) {
     ajax({
+      type: "HEAD",
       url: options.url,
-      data: {
-        "id": options.course,
-        "lang": options.lang
-      }
+      data: options.data
     });
   };
   

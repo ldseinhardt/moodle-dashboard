@@ -1,5 +1,5 @@
 (function(global, d3) {
-  'use strict';
+  "use strict";
 
   var graph = {};
 

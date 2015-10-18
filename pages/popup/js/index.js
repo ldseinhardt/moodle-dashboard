@@ -2,17 +2,17 @@
   "use strict";
   
   chrome.storage.local.get({
-    moodle_data: "",
-    moodle_sync: false
+    data: "",
+    sync: false
   }, function(items) {
-    if (items.moodle_sync && items.moodle_data !== "") {
+    if (items.sync && items.data !== "") {
       //Chama a visualização da tela apropriada
       console.log("listOfActions");
-      var listOfActions = mdash.listOfActions(items.moodle_data);
+      var listOfActions = mdash.listOfActions(items.data);
       console.log(listOfActions);
       
       console.log("listOfUsers");
-      var listOfUsers = mdash.listOfUsers(items.moodle_data);
+      var listOfUsers = mdash.listOfUsers(items.data);
       console.log(listOfUsers);
       
       graph
