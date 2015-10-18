@@ -1,6 +1,6 @@
 # Moodle Dashboard
 
-Plataforma: Extensão Google Chrome
+Plataforma: Extensão Chromium / Google Chrome
 
 Versão: 1.0 (Protótipo)
 
