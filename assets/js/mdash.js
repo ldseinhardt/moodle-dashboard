@@ -92,7 +92,7 @@
     ajax({
       url: options.moodle.url,
       data: {
-            "id": options.moodle.data.course, // ID do curso
+            "id": options.moodle.data.id,     // ID do curso
             "group": 0,                       // ID do grupo
             "user": 0,                        // ID do usuário
             "date": 0,                        // data para mostrar
@@ -146,11 +146,8 @@
 
   // Retorna a linguagem do moodle
   var setDefaultLang = function(options) {
-    ajax({
-      type: "HEAD",
-      url: options.url,
-      data: options.data
-    });
+    options.type = "HEAD";
+    ajax(options);
   };
   
   // Processa o TSV (Moodle 2.6)
