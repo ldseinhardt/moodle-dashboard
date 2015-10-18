@@ -13,6 +13,7 @@
     {
       "matches": ["<all_urls>"],
       "js": [
+        "vendor/jquery/js/jquery.min.js",
         "assets/js/content.js"
       ]
     }
@@ -28,11 +29,9 @@
 
   "permissions": [
     "tabs",
-    "downloads",
     "storage",
-    "declarativeContent",
-    "http://*/*",
-    "https://*/*"
+    "downloads",
+    "<all_urls>"
   ],  
 
   "icons": {
