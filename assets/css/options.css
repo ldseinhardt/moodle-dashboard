@@ -1,0 +1,12 @@
+body {
+  width: 100%;
+  color: #333;
+  font-size: 12pt;
+  text-align: center;
+}
+
+body > div > header > h1 {
+  display: block;
+  margin: 10px;
+  padding: 0;
+}

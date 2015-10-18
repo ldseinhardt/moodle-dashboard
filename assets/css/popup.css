@@ -1,0 +1,28 @@
+body {
+  width: 100%;
+}
+
+body > div,
+.mdl-layout {
+  width: 450px;
+  height: 600px;
+}
+
+.mdl-card {
+  width: 100%;
+  margin: 5px;
+}
+
+.page-content {
+  margin: 10px;
+}
+
+#spinner {
+  text-align: center;
+  margin: 15px;
+  display: none;
+}
+
+.mdl-layout__header-row .mdl-navigation__link {
+  padding: 0 5px !important;
+}

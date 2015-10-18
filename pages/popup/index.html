@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="utf-8"/>
+    <!-- Biliotecas externas -->
+    <link rel="stylesheet" href="../../vendor/material-design-lite/css/roboto.min.css"/>
+    <link rel="stylesheet" href="../../vendor/material-design-lite/css/material-icons.min.css"/>
+    <link rel="stylesheet" href="../../vendor/material-design-lite/css/material.deep_orange-red.min.css"/>
+    <!-- Biliotecas Locais -->
+    <link rel="stylesheet" href="../../assets/css/popup.css"/>
+    <link rel="stylesheet" href="../../assets/css/graph.css"/>
+  </head>
+  <body>
+    <div>
+      <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+          <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <a class="mdl-navigation__link" href="index.html" title="Inicio"><span class="mdl-layout-title" title="Inicio">Moodle Dashboard</span></a>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <nav class="mdl-navigation">
+              <a class="mdl-navigation__link btn-sync" title="Sincronizar"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">sync</i></span></a>
+              <a class="mdl-navigation__link btn-users" title="Úsuários"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">people</i></span></a>
+              <a class="mdl-navigation__link btn-time" title="Período"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">query_builder</i></span></a>
+              <a class="mdl-navigation__link" href="config.html" title="Configurações"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons" title="Configurações">settings</i></span></a>
+            </nav> 
+          </div>
+        </header>
+
+        <div class="mdl-layout__drawer">
+          <span class="mdl-layout-title">Visualizações</span>
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="index.html" title="">Resumo</a>
+            <a class="mdl-navigation__link" href="index.html" title="">Atividades</a>
+          </nav>
+        </div>
+
+        <main class="mdl-layout__content">
+          <div id="spinner">
+            <div class="mdl-spinner mdl-js-spinner is-active"></div>
+            <div id="spinner-message"></div>
+          </div>
+
+          <div id="content" class="page-content">
+            <!-- Content -->
+            <div id="card-filter-users" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Usuários</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <p align="justify">
+                  Selecione os usuários.
+                </p>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a id="filter_users_save" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                  Confirmar
+                </a>
+              </div>
+            </div>
+
+            <div id="card-filter-time" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Período</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <p align="justify">
+                  Informe abaixo o período.
+                </p>
+                <p align="justify">
+                    <input type="date" min="2015-10-05" max="2015-10-15" value="2015-10-05"/> a 
+                    <input type="date" min="2015-10-05" max="2015-10-15" value="2015-10-15"/>
+                </p>
+                <div id="config_status"></div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a id="filter_users_save" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                  Confirmar
+                </a>
+              </div>
+            </div>
+
+            <div id="card-message-sync" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Bem-vindo</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <p align="justify">
+                  Você deve sincronizar os dados de logs do Moodle
+                </p>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect btn-sync">
+                  Sincronizar
+                </a>
+              </div>
+            </div>
+
+
+
+
+            <div id="card-download" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Bem-vindo</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <p align="justify">
+                  Você poderá baixar um arquivo csv de logs, caso você tenha permissões de acesso no usuário logado ao moodle.
+                </p>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a id="download-logs" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                  Baixar logs
+                </a>
+              </div>
+            </div>
+
+            <div id="card-download-sucess" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Sucesso</h2>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <p align="justify">
+                  Logs baixados com sucesso, inicie a analise dos dados.
+                </p>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                  Analisar
+                </a>
+              </div>
+            </div>
+
+            <div id="card-download-fail" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+              <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text">Erro</h2>
+              </div>
+            <div class="mdl-card__supporting-text">
+              <p align="justify">
+                Verifique se o moodle configurado está online, ou se você está logado com um usuário com permissões de acesso aos logs.
+              </p>
+            </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                  Mais Informações
+                </a>
+              </div>
+            </div>
+            <!-- End Content -->
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- Biliotecas externas -->
+    <script src="../../vendor/jquery/js/jquery.min.js"></script>
+    <script src="../../vendor/d3/js/d3.min.js"></script>
+    <script src="../../vendor/material-design-lite/js/material.min.js"></script>
+    <!-- Biliotecas Locais -->
+    <script src="../../assets/js/polyfill.js"></script>
+    <script src="../../assets/js/mdash.js"></script>
+    <script src="../../assets/js/graph.js"></script>
+    <script src="../../assets/js/popup.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

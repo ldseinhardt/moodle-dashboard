@@ -1,0 +1,94 @@
+/* graph */
+
+.graph,
+.bubble_chart,
+.bar_chart,
+.dashboard_chart {
+  display: inline;
+}
+
+/* bubble_chart */
+
+.graph .bubble_chart text {
+  font: 10px sans-serif;
+}
+
+/* bar_chart */
+
+.graph .bar_chart .bar {
+  fill: steelblue;
+}
+
+.graph .bar_chart .bar:hover {
+  fill: brown;
+}
+
+.graph .bar_chart .axis {
+  font: 10px sans-serif;
+}
+
+.graph .bar_chart .axis path,
+.graph .bar_chart .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.graph .bar_chart .x .axis path {
+  display: none;
+}
+
+/* dashboard_chart */
+
+.graph .dashboard_chart path {
+  stroke: #fff;
+}
+
+.graph .dashboard_chart path:hover {
+  opacity: 0.9;
+}
+
+.graph .dashboard_chart rect:hover {
+  fill: blue;
+}
+
+.graph .dashboard_chart .axis { 
+  font: 10px sans-serif;
+}
+
+.graph .dashboard_chart .legend tr {
+  border-bottom: 1px solid grey;
+}
+
+.graph .dashboard_chart .legend tr:first-child {
+  border-top: 1px solid grey;
+}
+
+.graph .dashboard_chart .axis path,
+.graph .dashboard_chart .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.graph .dashboard_chart .x.axis path {
+  display: none;
+}
+
+.graph .dashboard_chart .legend {
+  margin-bottom: 76px;
+  display: inline-block;
+  border-collapse: collapse;
+  border-spacing: 0px;
+}
+
+.graph .dashboard_chart .legend td {
+  padding: 4px 5px;
+  vertical-align: bottom;
+}
+
+.graph .dashboard_chart .legendFreq,
+.graph .dashboard_chart .legendPerc {
+  align: right;
+  width: 50px;
+}
