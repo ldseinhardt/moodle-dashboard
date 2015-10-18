@@ -15,4 +15,4 @@ Versão: 1.0 (Protótipo)
  - A extensão será exibida ao lado da barra de navegação
  - Acesse o moodle que desejar com permissão a nível de professor e clique no botão sincronizar
  
-Nota: Toda vez que você navegar por um moodle ele irá configurar este para sincronização. Com isso você poderá sinconizar sem estar navegando no moodle, contudo deverá haver uma sessão de login aberta.
+Nota: Toda vez que você navegar por um moodle ele irá configurar este para sincronização. Com isso você poderá sincronizar sem estar navegando no moodle, contudo deverá haver uma sessão de login aberta.
