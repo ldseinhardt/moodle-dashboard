@@ -2,59 +2,6 @@
   "use strict";
 
   /**
-   * Informações do Moodle (url, curso, linguagem)
-   */
-   
-  chrome.tabs.getSelected(null, function(tab) {
-    var a = document.createElement("a");
-    a.href = tab.url;
-    var regex = new RegExp("[\\?&]id=([^&#]*)");
-    var regid = regex.exec(a.search);
-    var course = (regid === null) ? 0 : parseInt(regid[1]);
-
-    if (course > 0) {
-
-      var paths = a.pathname.split("/").filter(function(path) {
-        return path.indexOf(".") === -1;
-      });
-      
-      for (var i = paths.length; i > 0; i--) {
-        (function(url) {
-          $.ajax({
-            type: 'HEAD',
-            url: url + "/report/log/index.php?id=" + course,
-            success: function() {
-              chrome.storage.local.set({
-                url: url,
-                course: course
-              });
-
-              chrome.tabs.sendMessage(tab.id, {type: "GET", command: "lang"}, function(response) {
-                if (response && response.moodle) {
-                  chrome.storage.local.set({
-                    lang: response.moodle.lang
-                  });
-                }
-              });              
-            }   
-          });
-        })(a.protocol + "//" + a.host + paths.join("/"));
-        paths.pop();
-      }
-    }
-  });
-
-  /**
-   * Monitor de armazenamento
-   */
-
-  chrome.storage.onChanged.addListener(function(changes, namespace) {
-    for (var key in changes) {
-      console.log(key + " := " + changes[key].newValue);
-    }
-  });
-
-  /**
    * Start: Verifica se há alguma sincronização
    */
    
@@ -80,15 +27,12 @@
       course: 0,
       lang: "en"
     }, function(items) {
-      console.log(items);
-      
       if (items.url !== "" && items.course !== 0) {
-        console.log("sync true");
         mdash.sync({
           moodle: {
             url: items.url + "/report/log/index.php",
             data: {
-              course: items.course,
+              id: items.course,
               lang: items.lang
             }
           },
@@ -102,18 +46,15 @@
               sync: true
             });
             
-            //$("#spinner").hide();
-            
             location.reload();
           },
           fail: function(params) {
             $("#spinner").hide();
-            console.log("Error Type: " + params.type);
-            console.log("Error Message: " + params.message);
+            console.log("Error Type: %s", params.type);
+            console.log("Error Message: %s", params.message);
           }
         });
       }
-      console.log("sync");
     });
   });
 
