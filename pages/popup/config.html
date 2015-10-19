@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../vendor/material-design-lite/css/material.deep_orange-red.min.css"/>
     <!-- Biliotecas Locais -->
     <link rel="stylesheet" href="../../assets/css/popup.css"/>
+    <link rel="stylesheet" href="../../assets/css/graph.css"/>
   </head>
   <body>
     <div>
@@ -19,30 +20,35 @@
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
             <nav class="mdl-navigation">
-              <a class="mdl-navigation__link btn-sync" title="Sincronizar"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">sync</i></span></a>
-              <a class="mdl-navigation__link btn-users" title="Úsuários"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">people</i></span></a>
-              <a class="mdl-navigation__link btn-time" title="Período"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">query_builder</i></span></a>
-              <a class="mdl-navigation__link" href="config.html" title="Configurações"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons" title="Configurações">settings</i></span></a>
-            </nav> 
+              <a class="mdl-navigation__link btn-sync" id="menu-sync"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">sync</i></span></a>
+              <a class="mdl-navigation__link btn-users" id="menu-users"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">people</i></span></a>
+              <a class="mdl-navigation__link btn-time" id="menu-time"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">query_builder</i></span></a>
+              <a class="mdl-navigation__link" id="menu-config" href="config.html"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">settings</i></span></a>
+              <!-- Tooltip -->
+              <div class="mdl-tooltip mdl-tooltip--large" for="menu-sync">Sincronizar</div>
+              <div class="mdl-tooltip mdl-tooltip--large" for="menu-users">Filtrar Usuários</div>
+              <div class="mdl-tooltip mdl-tooltip--large" for="menu-time">Filtrar Período</div>
+              <div class="mdl-tooltip mdl-tooltip--large" for="menu-config">Configurações</div>
+            </nav>
           </div>
         </header>
 
         <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">Visualizações</span>
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="index.html" title="">Resumo</a>
-            <a class="mdl-navigation__link" href="index.html" title="">Atividades</a>
+            <a class="mdl-navigation__link" href="index.html" title="">Ações</a>
+            <a class="mdl-navigation__link" href="users.html" title="">Usuários e interações</a>
           </nav>
         </div>
 
         <main class="mdl-layout__content">
-          <div id="spinner">
-            <div class="mdl-spinner mdl-js-spinner is-active"></div>
-            <div id="spinner-message"></div>
-          </div>
-
           <div id="content" class="page-content">
-            <!-- Content -->            <div id="card-filter-users" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+            <div id="spinner" style="text-align: center; display: none">
+              <div class="mdl-spinner mdl-js-spinner is-active"></div>
+            </div>
+            <!-- Content -->
+            <!-- User Filter -->
+            <div id="card-filter-users" style="display: none" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
                 <h2 class="mdl-card__title-text">Usuários</h2>
               </div>
@@ -50,36 +56,70 @@
                 <p align="justify">
                   Selecione os usuários.
                 </p>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
-                  <label><input type="checkbox"/>Luan Einhardt</label><br/>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input"/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                  <input type="checkbox" class="mdl-checkbox__input" checked/>
+                  <span class="mdl-checkbox__label">Luan Einhardt</span>
+                </label>
               </div>
-              <div class="mdl-card__actions mdl-card--border">
+              <div class="mdl-card__actions mdl-card--border" style="display: flex; box-sizing:border-box; align-items: center;">
                 <a id="filter_users_save" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
                   Confirmar
                 </a>
+                <div class="mdl-layout-spacer"></div>
+                <!-- Right aligned menu on top of button  -->
+                <button id="filter_users_actions" class="mdl-button mdl-js-button mdl-button--icon">
+                  <i class="material-icons">more_vert</i>
+                </button>
+                <ul class="mdl-menu mdl-menu--top-right mdl-js-menu mdl-js-ripple-effect" for="filter_users_actions">
+                  <li class="mdl-menu__item">Selecionar todos</li>
+                  <li class="mdl-menu__item">Inverter</li>
+                </ul>
               </div>
             </div>
 
-            <div id="card-filter-time" style="display:none" class="mdl-card mdl-shadow--2dp demo-card-square">
+            <!-- Period Filter -->
+            <div id="card-filter-time" style="display: none" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
                 <h2 class="mdl-card__title-text">Período</h2>
               </div>
               <div class="mdl-card__supporting-text">
                 <p align="justify">
-                  Informe abaixo o período.
+                  Selecione o período.
                 </p>
                 <p align="justify">
+                  <input class="mdl-slider mdl-js-slider" type="range" min="0" max="100" value="50" tabindex="0"/>
+                  <div style="text-align: center">
                     <input type="date" min="2015-10-05" max="2015-10-15" value="2015-10-05"/> a 
                     <input type="date" min="2015-10-05" max="2015-10-15" value="2015-10-15"/>
+                  </div>
                 </p>
                 <div id="config_status"></div>
               </div>
@@ -90,6 +130,7 @@
               </div>
             </div>
 
+            <!-- Config -->
             <div class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
                 <h2 class="mdl-card__title-text">Configurações</h2>

@@ -52,8 +52,14 @@
             $("#spinner").hide();
             console.log("Error Type: %s", params.type);
             console.log("Error Message: %s", params.message);
+            $(".error-message", "#card-message-sync").remove();
+            $("#card-message-sync").show();
+            $(".mdl-card__supporting-text", "#card-message-sync").append("<p class=\"error-message\" style=\"color: red\">Erro ao sincronizar, verifique se você possui uma sessão de professor aberta.</p>");
           }
         });
+      } else {
+        $(".error-message", "#card-message-sync").remove();
+        $(".mdl-card__supporting-text", "#card-message-sync").append("<p class=\"error-message\" style=\"color: red\">Erro ao sincronizar, acesse um curso no Moodle por favor.</p>");
       }
     });
   });

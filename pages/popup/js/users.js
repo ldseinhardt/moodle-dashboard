@@ -7,17 +7,17 @@
   }, function(items) {
     if (items.sync && items.data !== "") {
       //Chama a visualização da tela apropriada
-      console.log("listOfActions");
-      var listOfActions = mdash.listOfActions(items.data);
-      console.log(listOfActions);
+      console.log("listOfUsers");
+      var listOfUsers = mdash.listOfUsers(items.data);
+      console.log(listOfUsers);
       
-      $(".mdl-card__title-text", "#card-graph").html("Ações");
+      $(".mdl-card__title-text", "#card-graph").html("Usuários e interações");
       $("#card-graph > .mdl-card__supporting-text").html();
 
-      graph.Bubble({
-        data: listOfActions,
+      graph.Bar({
+        data: listOfUsers,
         context: "#card-graph > .mdl-card__supporting-text",
-        diameter: 400
+        width: 400
       });
 
       $("#card-graph").show();

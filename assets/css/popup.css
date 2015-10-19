@@ -9,18 +9,12 @@ body > div,
 }
 
 .mdl-card {
-  width: 100%;
+  width: 98%;
   margin: 5px;
 }
 
 .page-content {
   margin: 10px;
-}
-
-#spinner {
-  text-align: center;
-  margin: 15px;
-  display: none;
 }
 
 .mdl-layout__header-row .mdl-navigation__link {
