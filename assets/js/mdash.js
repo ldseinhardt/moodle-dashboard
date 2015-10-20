@@ -7,30 +7,20 @@
     var result = {"name": "Actions", "children": []};
     
     data.forEach(function(context) {
-      context.users.forEach(function(us) {
-        us.components.forEach(function(comp) {
-          var i = result.children.findIndex(function(node) {
-              return node.name === comp.component;
+      context.users.forEach(function(user) {
+        user.components.forEach(function(component) {
+          var i = addInArray(result.children, "name", component["component"], {
+            "name": component["component"],
+            "children": []
           });
-          if(i === -1) {  
-            i += result.children.push({
-              "name": comp.component,
-              "children": []
-            }); 
-          }
-          comp.actions.forEach(function(act) {
-            var j = result.children[i].children.findIndex(function(node) {
-              return node.name === act.action;
+          component.actions.forEach(function(action) {
+            var j = addInArray(result.children[i].children, "name", action["action"], {
+              "name": action["action"],
+              "size": 0
             });
-            if(j === -1) {
-              j += result.children[i].children.push({
-                "name": act.action,
-                "size": 0
-              });
-            }
-            act.informations.forEach(function(inf) {
-              inf.dates.forEach(function(dat) {
-                result.children[i].children[j].size += dat.hours.length;
+            action.informations.forEach(function(information) {
+              information.dates.forEach(function(date) {
+                result.children[i].children[j].size += date.hours.length;
               });
             });
           });
@@ -54,17 +44,12 @@
     var result = [];
     
     data.forEach(function(context) {
-      context.users.forEach(function(us) {
-        var i = result.findIndex(function(node) {
-          return node.name === us.user;
+      context.users.forEach(function(user) {
+        var i = addInArray(result, "name", user["user"], {
+          "name": user["user"],
+          "size": 0
         });
-        if(i === -1) {
-          i += result.push({
-            "name": us.user,
-            "size": 0
-          }); 
-        }
-        us.components.forEach(function(comp) {
+        user.components.forEach(function(comp) {
           comp.actions.forEach(function(act) {
             act.informations.forEach(function(inf) {
               inf.dates.forEach(function(dat) {
@@ -225,29 +210,35 @@
           hour: time[1].trim()
         }, ["context", "user", "component", "action", "information", "date", "hour"]);
       }, this);
-      
+
       return data;
     })(csv);
   };
   
   // Processa uma linha do TSV/CSV e insere no objeto data
   var processRow = function(data, row, nodes) {
-    var a = nodes[0];
-    var b = nodes.length > 1 ? nodes[1] + "s" : null;
-    var i = data.findIndex(function(node) {
-      return node[a] === row[a];
-    });
-    if (i === -1) {
-      if (b) {
-        var obj = {};
-        obj[a] = row[a];
-        obj[b] = [];
-      } else {
-        obj = row[a];
-      }
-      i += data.push(obj);
-    }
+    var a, b, i, obj;
+    a = nodes[0];
+    b = nodes.length > 1 ? nodes[1] + "s" : null;
+    if (b) {
+      obj = {};
+      obj[a] = row[a];
+      obj[b] = [];
+    } else {
+      obj = row[a];
+    }    
+    i = addInArray(data, a, row[a], obj);
     return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
+  };
+  
+  // Adiciona no array se não existir e retorna o indice sempre
+  var addInArray = function(array, key, value, obj) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i][key] == value) {
+        return i;
+      }
+    }
+    return array.push(obj) - 1;
   };
   
   // Ajax para realizar requisições
