@@ -29,7 +29,9 @@
               });
             }
             act.informations.forEach(function(inf) {
-              result.children[i].children[j].size += inf.interactions.length;
+              inf.dates.forEach(function(dat) {
+                result.children[i].children[j].size += dat.hours.length;
+              });
             });
           });
         });
@@ -65,7 +67,9 @@
         us.components.forEach(function(comp) {
           comp.actions.forEach(function(act) {
             act.informations.forEach(function(inf) {
-              result[i].size += inf.interactions.length;
+              inf.dates.forEach(function(dat) {
+                result[i].size += dat.hours.length;
+              });
             });
           });
         });
@@ -173,15 +177,16 @@
 
       d3.tsv.parse(tsv).forEach(function(row) {
         var action = row["Action"].split(" (")[0].trim();
-        data = processData({
-          data: data,
+        var time = row["Time"].split(", ");
+        processRow(data, {
           context: "Course: "+row["Course"].trim(),
           user: row["User full name"].trim(),
           component: action.split(" ")[0].trim(),
           action: action,
           information: row["Information"].trim(),
-          time: row["Time"].trim()
-        });
+          date: time[0].trim(),
+          hour: time[1].trim()
+        }, ["context", "user", "component", "action", "information", "date", "hour"]);
       }, this);
 
       return data;
@@ -209,84 +214,40 @@
       var data = [];
 
       d3.csv.parse(csv).forEach(function(row) {
-        data = processData({
-          data: data,
+        var time = row["Time"].split(", ");
+        processRow(data, {
           context: row["Event context"].trim(),
           user: row["User full name"].trim(),
           component: row["Component"].trim(),
           action: row["Event name"].trim(),
           information: row["Description"].trim(),
-          time: row["Time"].trim(),
-          affecteduser: row["Affected user"].trim()
-        });
+          date: time[0].trim(),
+          hour: time[1].trim()
+        }, ["context", "user", "component", "action", "information", "date", "hour"]);
       }, this);
-
+      
       return data;
     })(csv);
   };
   
-  // Processa os dados do TSV/CSV
-  var processData = function(options) {
-    var i = options.data.findIndex(function(node) {
-      return node.context === options.context;
+  // Processa uma linha do TSV/CSV e insere no objeto data
+  var processRow = function(data, row, nodes) {
+    var a = nodes[0];
+    var b = nodes.length > 1 ? nodes[1] + "s" : null;
+    var i = data.findIndex(function(node) {
+      return node[a] === row[a];
     });
-
     if (i === -1) {
-      i += options.data.push({
-        "context": options.context, "users": []
-      });
+      if (b) {
+        var obj = {};
+        obj[a] = row[a];
+        obj[b] = [];
+      } else {
+        obj = row[a];
+      }
+      i += data.push(obj);
     }
-
-    var j = options.data[i].users.findIndex(function(node) {
-      return node.user === options.user;
-    });
-
-    if (j === -1) {
-      j += options.data[i].users.push({
-        "user": options.user, "components": []
-      });
-    }
-
-    var k = options.data[i].users[j].components.findIndex(function(node) {
-      return node.component === options.component;
-    });
-
-    if (k === -1) {
-      k += options.data[i].users[j].components.push({
-        "component": options.component, "actions": []
-      });
-    }
-
-    var l = options.data[i].users[j].components[k].actions
-    .findIndex(function(node) {
-      return node.action === options.action;
-    });
-
-    if (l === -1) {
-      l += options.data[i].users[j].components[k].actions.push({
-        "action": options.action, "informations": []
-      });
-    }
-
-    var m = options.data[i].users[j].components[k].actions[l].informations
-    .findIndex(function(node) {
-      return node.information === options.information;
-    });
-
-    if (m === -1) {
-      m += options.data[i].users[j].components[k].actions[l].informations.push({
-        "information": options.information, interactions: []
-      });
-    }
-
-    options.data[i].users[j].components[k].actions[l].informations[m]
-    .interactions.push({
-      "time": options.time,
-      "affecteduser": (options.affecteduser !== undefined &&
-      options.affecteduser !== "-") ? options.affecteduser : ""
-    });
-
-    return options.data;
+    return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
   };
   
   // Ajax para realizar requisições
