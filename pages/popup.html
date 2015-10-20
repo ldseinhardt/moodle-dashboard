@@ -3,12 +3,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html"; charset="utf-8"/>
     <!-- Biliotecas externas -->
-    <link rel="stylesheet" href="../../vendor/material-design-lite/css/roboto.min.css"/>
-    <link rel="stylesheet" href="../../vendor/material-design-lite/css/material-icons.min.css"/>
-    <link rel="stylesheet" href="../../vendor/material-design-lite/css/material.deep_orange-red.min.css"/>
+    <link rel="stylesheet" href="../vendor/material-design-lite/css/roboto.min.css"/>
+    <link rel="stylesheet" href="../vendor/material-design-lite/css/material-icons.min.css"/>
+    <link rel="stylesheet" href="../vendor/material-design-lite/css/material.deep_orange-red.min.css"/>
     <!-- Biliotecas Locais -->
-    <link rel="stylesheet" href="../../assets/css/popup.css"/>
-    <link rel="stylesheet" href="../../assets/css/graph.css"/>
+    <link rel="stylesheet" href="../assets/css/popup.css"/>
+    <link rel="stylesheet" href="../assets/css/graph.css"/>
   </head>
   <body>
     <div>
@@ -16,14 +16,14 @@
         <header class="mdl-layout__header">
           <div class="mdl-layout__header-row">
             <!-- Title -->
-            <a class="mdl-navigation__link" href="index.html" title="Inicio"><span class="mdl-layout-title" title="Inicio">Moodle Dashboard</span></a>
+            <a class="mdl-navigation__link" href="popup.html" title="Inicio"><span class="mdl-layout-title" title="Inicio">Moodle Dashboard</span></a>
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
             <nav class="mdl-navigation">
               <a class="mdl-navigation__link btn-sync" id="menu-sync"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">sync</i></span></a>
               <a class="mdl-navigation__link btn-users" id="menu-users"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">people</i></span></a>
               <a class="mdl-navigation__link btn-time" id="menu-time"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">query_builder</i></span></a>
-              <a class="mdl-navigation__link" id="menu-config" href="config.html"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">settings</i></span></a>
+              <a class="mdl-navigation__link btn-config" id="menu-config"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">settings</i></span></a>
               <!-- Tooltip -->
               <div class="mdl-tooltip mdl-tooltip--large" for="menu-sync">Sincronizar</div>
               <div class="mdl-tooltip mdl-tooltip--large" for="menu-users">Filtrar Usuários</div>
@@ -36,8 +36,8 @@
         <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">Visualizações</span>
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="index.html" title="">Ações</a>
-            <a class="mdl-navigation__link" href="users.html" title="">Usuários e interações</a>
+            <a class="mdl-navigation__link btn-graph-1" href="#">Ações</a>
+            <a class="mdl-navigation__link btn-graph-2" href="#">Usuários e interações</a>
           </nav>
         </div>
 
@@ -163,13 +163,12 @@
       </div>
     </div>
     <!-- Biliotecas externas -->
-    <script src="../../vendor/jquery/js/jquery.min.js"></script>
-    <script src="../../vendor/d3/js/d3.min.js"></script>
-    <script src="../../vendor/material-design-lite/js/material.min.js"></script>
+    <script src="../vendor/jquery/js/jquery.min.js"></script>
+    <script src="../vendor/d3/js/d3.min.js"></script>
+    <script src="../vendor/material-design-lite/js/material.min.js"></script>
     <!-- Biliotecas Locais -->
-    <script src="../../assets/js/mdash.js"></script>
-    <script src="../../assets/js/graph.js"></script>
-    <script src="../../assets/js/popup.js"></script>
-    <script src="js/index.js"></script>
+    <script src="../assets/js/mdash.js"></script>
+    <script src="../assets/js/graph.js"></script>
+    <script src="../assets/js/popup.js"></script>
   </body>
 </html>
