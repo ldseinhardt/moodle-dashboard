@@ -101,6 +101,11 @@
 
     // Define as margens
     var margin = {top: 20, right: 20, bottom: 20, left: 180};
+    
+    // Filtro para remover objetos com valor 0
+    options.data = options.data.filter(function(item) {
+      return (item.size > 0);
+    });
 
     // Ajusta o tamanho
     width -= margin.left + margin.right;
@@ -472,7 +477,7 @@
     return this;
   };
 
-  if(global) {
+  if (global) {
     global.graph = graph;
   }
 })(this, this.d3);
