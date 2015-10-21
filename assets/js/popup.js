@@ -26,16 +26,18 @@
   var getData = function(title, done) {
     chrome.storage.local.get({
       data: null,
+      user: null,
+      time: null,
       sync: false
     }, function(items) {
-      if (items.sync && items.data) {
+      if (items.sync && items.data && items.user && items.time) {
         if (done instanceof Function) {
           
           CARD_ALL.hide();
           $(".mdl-card__title-text", CARD_GRAPH).html(title);
           $(".mdl-card__supporting-text", CARD_GRAPH).html("");
           
-          done(items.data, {
+          done(items.data, items.user, items.time, {
             context: "#card-graph > .mdl-card__supporting-text"
           });
           
@@ -51,8 +53,8 @@
   
   // Exibe o gráfico 1 (ações)
   var graph1 = function() {
-    getData("Ações", function(data, options) {
-      options.data = mdash.listOfActions(data);
+    getData("Ações", function(data, user, time, options) {
+      options.data = mdash.listOfActions(data, user, time);
       options.diameter = 390;
       graph.Bubble(options);
     });    
@@ -60,15 +62,24 @@
   
   // Exibe o gráfico 2 (usuários)
   var graph2 = function() {
-    getData("Usuários e interações", function(data, options) {
-      options.data = mdash.listOfUsers(data);
+    getData("Usuários e interações", function(data, user, time, options) {
+      options.data = mdash.listOfUsers(data, user, time);
       options.width = 390;
       graph.Bar(options);
     });
   };
   
-  // Exibe o primeiro gráfico
-  graph1();
+  var goGraph = function() {
+    switch (location.hash) {
+      case "#2":
+        graph2();
+        break;
+      default:
+        graph1();
+    }
+  };
+  
+  goGraph();
 
   /**
    * Global: Em todas as páginas
@@ -106,7 +117,7 @@
             
             SPINNER.hide();
             
-            graph1();
+            goGraph();
           },
           fail: function(params) {
             
@@ -163,6 +174,8 @@
     });
     
     CARD_USER.hide();
+    
+    goGraph();
   });
   
   $(".action-select-all", CARD_USER).click(function() {
@@ -223,6 +236,8 @@
         }
             
         CARD_TIME.hide();
+    
+        goGraph();
       }
     });
   });

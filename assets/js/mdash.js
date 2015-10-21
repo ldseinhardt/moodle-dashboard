@@ -18,9 +18,9 @@
     
     // Ordena de modo crescente pelo nome de usuário
     listOfUniqueUsers.sort(function(a, b) {
-      if(a.name < b.name)
+      if (a.name < b.name)
         return -1;
-      if(a.name > b.name)
+      if (a.name > b.name)
         return 1;
       return 0;
     });
@@ -63,34 +63,36 @@
   };
   
   // Retorna a lista de componentes e ações e suas quantidades
-  mdash.listOfActions = function(data) {
+  mdash.listOfActions = function(data, users, time) {
     var listOfActions = {"name": "Actions", "children": []};
     
     data.forEach(function(context) {
       context.users.forEach(function(user) {
-        user.components.forEach(function(component) {
-          var i = addInArray(listOfActions.children, "name", component["component"], {
-            "name": component["component"],
-            "children": []
-          });
-          component.actions.forEach(function(action) {
-            var j = addInArray(listOfActions.children[i].children, "name", action["action"], {
-              "name": action["action"],
-              "size": 0
+        if (checkUser(users, user["user"])) {
+          user.components.forEach(function(component) {
+            var i = addInArray(listOfActions.children, "name", component["component"], {
+              "name": component["component"],
+              "children": []
             });
-            action.informations.forEach(function(information) {
-                listOfActions.children[i].children[j].size += information.times.length;
+            component.actions.forEach(function(action) {
+              var j = addInArray(listOfActions.children[i].children, "name", action["action"], {
+                "name": action["action"],
+                "size": 0
+              });
+              action.informations.forEach(function(information) {
+                listOfActions.children[i].children[j].size += checkTime(information.times, time);
+              });
             });
           });
-        });
+        }
       });
     });
     
     // Ordena de modo crescente as interações pelo nome do componente
     listOfActions.children.sort(function(a, b) {
-      if(a.name < b.name)
+      if (a.name < b.name)
         return -1;
-      if(a.name > b.name)
+      if (a.name > b.name)
         return 1;
       return 0;
     });
@@ -99,30 +101,32 @@
   };
   
   // Retorna a lista de Usuários e o numero de ações
-  mdash.listOfUsers = function(data) {
+  mdash.listOfUsers = function(data, users, time) {
     var listOfUsers = [];
     
     data.forEach(function(context) {
       context.users.forEach(function(user) {
-        var i = addInArray(listOfUsers, "name", user["user"], {
-          "name": user["user"],
-          "size": 0
-        });
-        user.components.forEach(function(component) {
-          component.actions.forEach(function(action) {
-            action.informations.forEach(function(information) {
-              listOfUsers[i].size += information.times.length;
+        if (checkUser(users, user["user"])) {
+          var i = addInArray(listOfUsers, "name", user["user"], {
+            "name": user["user"],
+            "size": 0
+          });
+          user.components.forEach(function(component) {
+            component.actions.forEach(function(action) {
+              action.informations.forEach(function(information) {
+                listOfUsers[i].size += checkTime(information.times, time);
+              });
             });
           });
-        });
+        }
       });
     });
     
     // Ordena de modo decrescente os usuários pelo número de interações
     listOfUsers.sort(function(a, b) {
-      if(a.size > b.size)
+      if (a.size > b.size)
         return -1;
-      if(a.size < b.size)
+      if (a.size < b.size)
         return 1;
       return 0;
     });
@@ -274,6 +278,31 @@
     i = addInArray(data, a, row[a], obj);
     return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
   };
+  
+  // Verifica se um usuário esta selecionado
+  var checkUser = function(users, name) {
+    for (var i = 0; i < users.length; i ++) {
+      if (users[i].name === name) {
+        return users[i].selected;
+     }
+    }
+    return false;
+  }
+  
+  // Verifica se a data está no intervalo selecionado
+  var checkTime = function(times, time) {
+    var min = time.min.selected;
+    var max = time.max.selected;
+    var count = 0;
+    for (var i = 0; i < times.length; i++) {
+      var value = new Date(times[i]).toISOString().slice(0, 10);
+        if ((new Date(Date.parse(min)) - new Date(Date.parse(value)) <= 0) && 
+            (new Date(Date.parse(value)) - new Date(Date.parse(max)) <= 0)) {
+          count++;
+        }
+    }
+    return count;
+  }
   
   // Adiciona no array se não existir e retorna o indice sempre
   var addInArray = function(array, key, value, obj) {
