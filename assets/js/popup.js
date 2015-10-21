@@ -1,86 +1,85 @@
 (function(chrome, $, mdash, graph) {
   "use strict";
 
+  /* Objetos do DOM */
+  var
+    DRAWER      = $(".mdl-layout__drawer")[0],
+    SPINNER     = $("#spinner"),
+    CARD_ALL    = $(".mdl-card"),
+    CARD_SYNC   = $("#card-sync"),
+    CARD_USER   = $("#card-user"),
+    CARD_TIME   = $("#card-time"),
+    CARD_GRAPH  = $("#card-graph"),
+    BTN_SYNC    = $(".btn-sync"),
+    BTN_USER    = $(".btn-user"),
+    BTN_TIME    = $(".btn-time"),
+    BTN_CONF    = $(".btn-conf"),
+    BTN_GRAPH_1 = $(".btn-graph-1"),
+    BTN_GRAPH_2 = $(".btn-graph-2");
+
   /**
    * Start: Verifica se há alguma sincronização,
    * se existir mostra o gráfico padrão
    */
-   
-  chrome.storage.local.get({
-    sync: false,
-  }, function(items) {
-    if (items.sync) {
-      graph1();
-    } else {
-      $(".mdl-card").hide();
-      $("#card-message-sync").show();
-    }
-  });
+
+  // Manipula dados sincronizados
+  var getData = function(title, done) {
+    chrome.storage.local.get({
+      data: null,
+      sync: false
+    }, function(items) {
+      if (items.sync && items.data) {
+        if (done instanceof Function) {
+          
+          CARD_ALL.hide();
+          $(".mdl-card__title-text", CARD_GRAPH).html(title);
+          $(".mdl-card__supporting-text", CARD_GRAPH).html("");
+          
+          done(items.data, {
+            context: "#card-graph > .mdl-card__supporting-text"
+          });
+          
+          CARD_GRAPH.show(); 
+          
+        }
+      } else {
+        CARD_ALL.hide();
+        CARD_SYNC.show();
+      }
+    });    
+  };
   
+  // Exibe o gráfico 1 (ações)
   var graph1 = function() {
-    chrome.storage.local.get({
-      data: null,
-      sync: false
-    }, function(items) {
-      if (items.sync && items.data) {
-        //Chama a visualização da tela apropriada
-        //console.log(items.data);
-        //console.log("listOfActions");
-        var listOfActions = mdash.listOfActions(items.data);
-        //console.log(listOfActions);
-        
-        $(".mdl-card").hide();
-        $(".mdl-card__title-text", "#card-graph").html("Ações");
-        $("#card-graph > .mdl-card__supporting-text").html("");
-  
-        graph.Bubble({
-          data: listOfActions,
-          context: "#card-graph > .mdl-card__supporting-text",
-          diameter: 400
-        });
-  
-        $("#card-graph").show();
-      }
+    getData("Ações", function(data, options) {
+      options.data = mdash.listOfActions(data);
+      options.diameter = 390;
+      graph.Bubble(options);
     });    
   };
   
+  // Exibe o gráfico 2 (usuários)
   var graph2 = function() {
-    chrome.storage.local.get({
-      data: null,
-      sync: false
-    }, function(items) {
-      if (items.sync && items.data) {
-        //Chama a visualização da tela apropriada
-        //console.log("listOfUsers");
-        var listOfUsers = mdash.listOfUsers(items.data);
-        //console.log(listOfUsers);
-        
-        $(".mdl-card").hide();
-        $(".mdl-card__title-text", "#card-graph").html("Usuários e interações");
-        $("#card-graph > .mdl-card__supporting-text").html("");
-  
-        graph.Bar({
-          data: listOfUsers,
-          context: "#card-graph > .mdl-card__supporting-text",
-          width: 400
-        });
-  
-        $("#card-graph").show();
-      }
-    });    
+    getData("Usuários e interações", function(data, options) {
+      options.data = mdash.listOfUsers(data);
+      options.width = 390;
+      graph.Bar(options);
+    });
   };
+  
+  // Exibe o primeiro gráfico
+  graph1();
 
   /**
    * Global: Em todas as páginas
    */
    
   // Botão de sincronização
-  $(".btn-sync").click(function() {
+  BTN_SYNC.click(function() {
     var sendMessage = function(message) {
-      var message = $("#card-message-sync");
-      $(".error-message", message).remove();
-      $(".mdl-card__supporting-text", message).append("<p class=\"error-message\" style=\"color: red\">" + message + "</p>");
-      message.show();
+      $(".error-message", CARD_SYNC).remove();
+      $(".mdl-card__supporting-text", CARD_SYNC).append("<p class=\"error-message\" style=\"color: red\">" + message + "</p>");
+      CARD_SYNC.show();
     };
     
     chrome.storage.local.get({
@@ -94,8 +93,8 @@
           course: items.course,
           lang: items.lang,
           init: function() {
-            $(".mdl-card").hide();
-            $("#spinner").show();
+            CARD_ALL.hide();
+            SPINNER.show();
           },
           done: function(data) {
             chrome.storage.local.set({
@@ -105,13 +104,13 @@
               sync: true
             });
             
-            $("#spinner").hide();
+            SPINNER.hide();
             
             graph1();
           },
           fail: function(params) {
             
-            $("#spinner").hide();
+            SPINNER.hide();
             
             console.log("Error Type: %s", params.type);
             console.log("Error Message: %s", params.message);
@@ -126,39 +125,36 @@
   });
 
   // Botão filtro de usuários
-  $(".btn-users").click(function() {
-    $("#card-filter-time").hide();
-    
-    var users = $("#card-filter-users");
-    
-    $(".items", users).html("");
-
-    chrome.storage.local.get({
-      user: null,
-      sync: false
-    }, function(items) {
-      if (items.sync && items.user) {
-        items.user.forEach(function(user) {
-          var html = "";
-          html += "<label class=\"mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect\">";
-          html += "  <input type=\"checkbox\" class=\"mdl-checkbox__input\"" + (user.selected ? " checked" : "") + "/>";
-          html += "  <span class=\"mdl-checkbox__label\">" + user.name + "</span>";
-          html += "</label>";
-          $(".items", "#card-filter-users").append(html);
-          upgradeDom();
-        });
-      }
-    });     
-    
-    users.toggle();
+  BTN_USER.click(function() {
+    CARD_TIME.hide();
+    if (!CARD_USER.is(":visible")) {
+      chrome.storage.local.get({
+        user: null,
+        sync: false
+      }, function(items) {
+        if (items.sync && items.user) {
+          $(".items", CARD_USER).html("");
+          items.user.forEach(function(user) {
+            var html = "";
+            html += "<label class=\"mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect\">";
+            html += "  <input type=\"checkbox\" class=\"mdl-checkbox__input\"" + (user.selected ? " checked" : "") + "/>";
+            html += "  <span class=\"mdl-checkbox__label\">" + user.name + "</span>";
+            html += "</label>";
+            $(".items", CARD_USER).append(html);
+            upgradeDom();
+          });
+        }
+      });
+    }
+    CARD_USER.toggle();
   });
   
-  $("#filter_users_save").click(function() {
+  $(".action-confirm", CARD_USER).click(function() {
     var listOfUniqueUsers = [];
-    $("label.mdl-checkbox", "#card-filter-users").each(function(index, element) {
+    $(".mdl-checkbox", CARD_USER).each(function(index, element) {
       listOfUniqueUsers.push({
-        name: $("span.mdl-checkbox__label", element).html(),
-        selected: $("input.mdl-checkbox__input", element).prop("checked")
+        name: $(".mdl-checkbox__label", element).html(),
+        selected: $(".mdl-checkbox__input", element).prop("checked")
       });
     });
     
@@ -166,28 +162,78 @@
       user: listOfUniqueUsers
     });
     
-    $("#card-filter-users").hide();
+    CARD_USER.hide();
+  });
+  
+  $(".action-select-all", CARD_USER).click(function() {
+      
+  });
+  
+  $(".action-invert", CARD_USER).click(function() {
+      
   });
 
   // Botão filtro de período
-  $(".btn-time").click(function() {
-    $("#card-filter-users").hide();
-    $("#card-filter-time").toggle();
+  BTN_TIME.click(function() {
+    CARD_USER.hide();
+    if (!CARD_TIME.is(":visible")) {
+      chrome.storage.local.get({
+        time: null,
+        sync: false
+      }, function(items) {
+        if (items.sync && items.time) {
+          
+          $("input", CARD_TIME).first()
+            .attr("min", items.time.min.value)
+            .attr("max", items.time.max.value)
+            .attr("value", items.time.min.selected)
+            .change(function() {
+              $(this).attr("value", this.value);
+            });
+            
+          $("input", CARD_TIME).last()
+            .attr("min", items.time.min.value)
+            .attr("max", items.time.max.value)
+            .attr("value", items.time.max.selected)
+            .change(function() {
+              $(this).attr("value", this.value);
+            });
+        }
+      });
+    }
+    CARD_TIME.toggle();
   });
   
-  var drawer = $(".mdl-layout__drawer")[0];
-  
-  $("a", drawer).click(function() {
-    drawer.classList.toggle("is-visible");
+  $(".action-confirm", CARD_TIME).click(function() {
+    chrome.storage.local.get({
+      time: null,
+      sync: false
+    }, function(items) {
+      if (items.sync && items.time) {
+        
+        var min = $("input", CARD_TIME).first().attr("value");
+        var max = $("input", CARD_TIME).last().attr("value");
+        
+        if (new Date(Date.parse(min)) - new Date(Date.parse(max)) <= 0) {
+          items.time.min.selected = min;
+          items.time.max.selected = max;
+          chrome.storage.local.set({
+            time: items.time
+          });
+        }
+            
+        CARD_TIME.hide();
+      }
+    });
   });
   
-  $(".btn-graph-1").click(function() {
-    graph1();
+  $("a", DRAWER).click(function() {
+    DRAWER.classList.toggle("is-visible");
   });
   
-  $(".btn-graph-2").click(function() {
-    graph2();
-  });
+  BTN_GRAPH_1.click(graph1);
+  
+  BTN_GRAPH_2.click(graph2);
   
   var upgradeDom = function() {
     // Expand all new MDL elements

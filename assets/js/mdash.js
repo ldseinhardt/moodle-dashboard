@@ -52,15 +52,12 @@
       return new Date(Date.parse(a)) - new Date(Date.parse(b));
     });
     
+    var min = new Date(listOfUniqueDays[0]).toISOString().slice(0, 10);
+    var max = new Date(listOfUniqueDays[listOfUniqueDays.length-1]).toISOString().slice(0, 10);
+    
     return {
-      first: {
-        value: listOfUniqueDays[0],
-        selected: listOfUniqueDays[0]
-      },
-      last: {
-        value: listOfUniqueDays[listOfUniqueDays.length-1],
-        selected: listOfUniqueDays[listOfUniqueDays.length-1]
-      },
+      min: {value: min, selected: min},
+      max: {value: max, selected: max},
       list: listOfUniqueDays
     };
   };
