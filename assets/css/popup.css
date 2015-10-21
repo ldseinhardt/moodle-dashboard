@@ -11,6 +11,7 @@ body > div,
 .mdl-card {
   width: 98%;
   margin: 5px;
+  display: none;
 }
 
 .page-content {
@@ -19,4 +20,15 @@ body > div,
 
 .mdl-layout__header-row .mdl-navigation__link {
   padding: 0 5px !important;
+}
+
+#spinner {
+  text-align: center;
+  display: none;
+}
+
+.mdl-card__actions {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
 }
