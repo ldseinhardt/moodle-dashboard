@@ -3,27 +3,46 @@
 
   /* Objetos do DOM */
   var
-    DRAWER      = $(".mdl-layout__drawer")[0],
-    SPINNER     = $("#spinner"),
-    CARD_ALL    = $(".mdl-card"),
-    CARD_SYNC   = $("#card-sync"),
-    CARD_USER   = $("#card-user"),
-    CARD_TIME   = $("#card-time"),
-    CARD_GRAPH  = $("#card-graph"),
-    BTN_SYNC    = $(".btn-sync"),
-    BTN_USER    = $(".btn-user"),
-    BTN_TIME    = $(".btn-time"),
-    BTN_CONF    = $(".btn-conf"),
-    BTN_GRAPH_1 = $(".btn-graph-1"),
-    BTN_GRAPH_2 = $(".btn-graph-2");
+    DRAWER     = $(".mdl-layout__drawer")[0],
+    SPINNER    = $("#spinner"),
+    CARD_ALL   = $(".mdl-card"),
+    CARD_SYNC  = $("#card-sync"),
+    CARD_USER  = $("#card-user"),
+    CARD_TIME  = $("#card-time"),
+    CARD_GRAPH = $("#card-graph"),
+    BTN_SYNC   = $(".btn-sync"),
+    BTN_USER   = $(".btn-user"),
+    BTN_TIME   = $(".btn-time"),
+    BTN_CONF   = $(".btn-conf"),
+    BTN_GRAPH  = $(".btn-graph");
 
   /**
    * Start: Verifica se há alguma sincronização,
    * se existir mostra o gráfico padrão
    */
 
-  // Manipula dados sincronizados
-  var getData = function(title, done) {
+  // Exibe o gráfico apropriado
+  var showGraph = function(hash) {
+    var title, callback;
+    
+    switch (hash || location.hash) {
+      case "#2":
+        title = "Usuários e interações";
+        callback = function(data, user, time, options) {
+          options.data = mdash.listOfUsers(data, user, time);
+          options.width = 390;
+          graph.Bar(options);
+        };
+        break;
+      default:
+        title = "Ações";
+        callback = function(data, user, time, options) {
+          options.data = mdash.listOfActions(data, user, time);
+          options.diameter = 390;
+          graph.Bubble(options);
+        };
+    }
+    
     chrome.storage.local.get({
       data: null,
       user: null,
@@ -31,55 +50,23 @@
       sync: false
     }, function(items) {
       if (items.sync && items.data && items.user && items.time) {
-        if (done instanceof Function) {
-          
           CARD_ALL.hide();
           $(".mdl-card__title-text", CARD_GRAPH).html(title);
           $(".mdl-card__supporting-text", CARD_GRAPH).html("");
           
-          done(items.data, items.user, items.time, {
+          callback(items.data, items.user, items.time, {
             context: "#card-graph > .mdl-card__supporting-text"
           });
           
-          CARD_GRAPH.show(); 
-          
-        }
+          CARD_GRAPH.show();
       } else {
         CARD_ALL.hide();
         CARD_SYNC.show();
       }
-    });    
+    }); 
   };
   
-  // Exibe o gráfico 1 (ações)
-  var graph1 = function() {
-    getData("Ações", function(data, user, time, options) {
-      options.data = mdash.listOfActions(data, user, time);
-      options.diameter = 390;
-      graph.Bubble(options);
-    });    
-  };
-  
-  // Exibe o gráfico 2 (usuários)
-  var graph2 = function() {
-    getData("Usuários e interações", function(data, user, time, options) {
-      options.data = mdash.listOfUsers(data, user, time);
-      options.width = 390;
-      graph.Bar(options);
-    });
-  };
-  
-  var goGraph = function() {
-    switch (location.hash) {
-      case "#2":
-        graph2();
-        break;
-      default:
-        graph1();
-    }
-  };
-  
-  goGraph();
+  showGraph();
 
   /**
    * Global: Em todas as páginas
@@ -117,7 +104,7 @@
             
             SPINNER.hide();
             
-            goGraph();
+            showGraph();
           },
           fail: function(params) {
             
@@ -175,7 +162,7 @@
     
     CARD_USER.hide();
     
-    goGraph();
+    showGraph();
   });
   
   $(".action-select-all", CARD_USER).click(function() {
@@ -237,7 +224,7 @@
             
         CARD_TIME.hide();
     
-        goGraph();
+        showGraph();
       }
     });
   });
@@ -246,9 +233,9 @@
     DRAWER.classList.toggle("is-visible");
   });
   
-  BTN_GRAPH_1.click(graph1);
-  
-  BTN_GRAPH_2.click(graph2);
+  BTN_GRAPH.click(function() {
+    showGraph($(this).attr("href"));
+  });
   
   var upgradeDom = function() {
     // Expand all new MDL elements
