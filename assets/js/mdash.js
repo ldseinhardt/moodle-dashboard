@@ -3,33 +3,21 @@
   
   var mdash = {};
   
-  mdash.listOfActions = function(data) {
-    var result = {"name": "Actions", "children": []};
+  // Retorna a lista de usuários unicos contidos nos logs
+  mdash.uniqueUsers = function(data) {
+    var listOfUniqueUsers = [];
     
     data.forEach(function(context) {
       context.users.forEach(function(user) {
-        user.components.forEach(function(component) {
-          var i = addInArray(result.children, "name", component["component"], {
-            "name": component["component"],
-            "children": []
-          });
-          component.actions.forEach(function(action) {
-            var j = addInArray(result.children[i].children, "name", action["action"], {
-              "name": action["action"],
-              "size": 0
-            });
-            action.informations.forEach(function(information) {
-              information.dates.forEach(function(date) {
-                result.children[i].children[j].size += date.hours.length;
-              });
-            });
-          });
+        addInArray(listOfUniqueUsers, "name", user["user"], {
+            name: user["user"],
+            selected: true
         });
       });
     });
     
-    // Ordena de modo crescente as interações pelo nome do componente
-    result.children.sort(function(a, b) {
+    // Ordena de modo crescente pelo nome de usuário
+    listOfUniqueUsers.sort(function(a, b) {
       if(a.name < b.name)
         return -1;
       if(a.name > b.name)
@@ -37,23 +25,21 @@
       return 0;
     });
     
-    return result;
+    return listOfUniqueUsers;
   };
   
-  mdash.listOfUsers = function(data) {
-    var result = [];
+  // Retorna a lista de dias contidos nos logs, além do primeiro e último dia
+  mdash.uniqueDays = function(data) {
+    var listOfUniqueDays = [];
     
     data.forEach(function(context) {
       context.users.forEach(function(user) {
-        var i = addInArray(result, "name", user["user"], {
-          "name": user["user"],
-          "size": 0
-        });
-        user.components.forEach(function(comp) {
-          comp.actions.forEach(function(act) {
-            act.informations.forEach(function(inf) {
-              inf.dates.forEach(function(dat) {
-                result[i].size += dat.hours.length;
+        user.components.forEach(function(component) {
+          component.actions.forEach(function(action) {
+            action.informations.forEach(function(information) {
+              information.times.forEach(function(time) {
+                var value = new Date(time).toDateString();
+                addInArray(listOfUniqueDays, null, value, value);
               });
             });
           });
@@ -61,8 +47,82 @@
       });
     });
     
+    // Ordena de modo crescente pela data
+    listOfUniqueDays.sort(function(a, b){
+      return new Date(Date.parse(a)) - new Date(Date.parse(b));
+    });
+    
+    return {
+      first: {
+        value: listOfUniqueDays[0],
+        selected: listOfUniqueDays[0]
+      },
+      last: {
+        value: listOfUniqueDays[listOfUniqueDays.length-1],
+        selected: listOfUniqueDays[listOfUniqueDays.length-1]
+      },
+      list: listOfUniqueDays
+    };
+  };
+  
+  // Retorna a lista de componentes e ações e suas quantidades
+  mdash.listOfActions = function(data) {
+    var listOfActions = {"name": "Actions", "children": []};
+    
+    data.forEach(function(context) {
+      context.users.forEach(function(user) {
+        user.components.forEach(function(component) {
+          var i = addInArray(listOfActions.children, "name", component["component"], {
+            "name": component["component"],
+            "children": []
+          });
+          component.actions.forEach(function(action) {
+            var j = addInArray(listOfActions.children[i].children, "name", action["action"], {
+              "name": action["action"],
+              "size": 0
+            });
+            action.informations.forEach(function(information) {
+                listOfActions.children[i].children[j].size += information.times.length;
+            });
+          });
+        });
+      });
+    });
+    
+    // Ordena de modo crescente as interações pelo nome do componente
+    listOfActions.children.sort(function(a, b) {
+      if(a.name < b.name)
+        return -1;
+      if(a.name > b.name)
+        return 1;
+      return 0;
+    });
+    
+    return listOfActions;
+  };
+  
+  // Retorna a lista de Usuários e o numero de ações
+  mdash.listOfUsers = function(data) {
+    var listOfUsers = [];
+    
+    data.forEach(function(context) {
+      context.users.forEach(function(user) {
+        var i = addInArray(listOfUsers, "name", user["user"], {
+          "name": user["user"],
+          "size": 0
+        });
+        user.components.forEach(function(component) {
+          component.actions.forEach(function(action) {
+            action.informations.forEach(function(information) {
+              listOfUsers[i].size += information.times.length;
+            });
+          });
+        });
+      });
+    });
+    
     // Ordena de modo decrescente os usuários pelo número de interações
-    result.sort(function(a, b) {
+    listOfUsers.sort(function(a, b) {
       if(a.size > b.size)
         return -1;
       if(a.size < b.size)
@@ -70,33 +130,22 @@
       return 0;
     });
     
-    return result;
+    return listOfUsers;
   };
   
-  // Realiza uma requisição para obter os dados do moodle
+  // Realiza uma requisição para obter os logs do moodle
   mdash.sync = function(options) {
     if (options.init instanceof Function) {
       options.init();
     }
     ajax({
-      url: options.moodle.url,
+      url: options.url + "/report/log/index.php",
       data: {
-            "id": options.moodle.data.id,     // ID do curso
-            "group": 0,                       // ID do grupo
-            "user": 0,                        // ID do usuário
-            "date": 0,                        // data para mostrar
-            "modid": 0,                       // ID da ação
-            "modaction": "",                  // Tipo de ação
-            "page": 0,                        // Página para mostrar
-            "perpage": 100,                   // Quantidade por página
-            "showcourses": 0,                 // Whether to show courses if we're over our limit
-            "showusers": 0,                   // Whether to show users if we're over our limit
-            "chooselog": 1,                   // Visualizar logs
-            "logformat": "downloadascsv",     // Formato para download (tsv) Moodle 2.6
-            "download": "csv",                // Formato para download (csv) Moodle 2.7+
-            "logreader": "logstore_standard", // Leitor utilizado para leitura de logs
-            "edulevel": -1,                   // Tipo de usuário
-            "lang": "en"                      // Linguagem
+            "id": options.course,         // ID do curso
+            "chooselog": 1,               // Visualizar logs
+            "logformat": "downloadascsv", // Formato para download (tsv) Moodle 2.6
+            "download": "csv",            // Formato para download (csv) Moodle 2.7+
+            "lang": "en"                  // Linguagem
           },
       done: function(xhr) {
         var type = xhr.getResponseHeader("content-type") || "";
@@ -118,7 +167,7 @@
         }
       },
       fail: function(xhr) {
-        setDefaultLang(options.moodle);
+        setDefaultLang(options.url, options.lang);
         if (options.fail instanceof Function) {
           options.fail({
             type: 0,
@@ -127,16 +176,18 @@
         }
       },
       received: function(xhr) {
-        setDefaultLang(options.moodle);
+        setDefaultLang(options.url, options.lang);
       }
     });
     return this;
   };
 
   // Retorna a linguagem do moodle
-  var setDefaultLang = function(options) {
-    options.type = "HEAD";
-    ajax(options);
+  var setDefaultLang = function(url, lang) {
+    ajax({
+      type: "HEAD",
+      url: url + "/?lang=" + lang
+    });
   };
   
   // Processa o TSV (Moodle 2.6)
@@ -162,16 +213,14 @@
 
       d3.tsv.parse(tsv).forEach(function(row) {
         var action = row["Action"].split(" (")[0].trim();
-        var time = row["Time"].split(", ");
         processRow(data, {
           context: "Course: "+row["Course"].trim(),
           user: row["User full name"].trim(),
           component: action.split(" ")[0].trim(),
           action: action,
           information: row["Information"].trim(),
-          date: time[0].trim(),
-          hour: time[1].trim()
-        }, ["context", "user", "component", "action", "information", "date", "hour"]);
+          time: Date.parse(row["Time"])
+        }, ["context", "user", "component", "action", "information", "time"]);
       }, this);
 
       return data;
@@ -199,18 +248,16 @@
       var data = [];
 
       d3.csv.parse(csv).forEach(function(row) {
-        var time = row["Time"].split(", ");
         processRow(data, {
           context: row["Event context"].trim(),
           user: row["User full name"].trim(),
           component: row["Component"].trim(),
           action: row["Event name"].trim(),
           information: row["Description"].trim(),
-          date: time[0].trim(),
-          hour: time[1].trim()
-        }, ["context", "user", "component", "action", "information", "date", "hour"]);
+          time: Date.parse(row["Time"])
+        }, ["context", "user", "component", "action", "information", "time"]);
       }, this);
-
+      
       return data;
     })(csv);
   };
@@ -234,28 +281,34 @@
   // Adiciona no array se não existir e retorna o indice sempre
   var addInArray = function(array, key, value, obj) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i][key] == value) {
+      if ((key ? array[i][key] : array[i]) === value) {
         return i;
       }
     }
+    
     return array.push(obj) - 1;
   };
   
   // Ajax para realizar requisições
   var ajax = function(options) {
     var data = "";
+    
     if (options.data instanceof Object) {
       data = "?" + Object.keys(options.data).map(function(key) {
         return key + '=' + options.data[key];
       }).join('&');
     }
+    
     var xhr = new XMLHttpRequest();
+    
     xhr.onprogress = function(event) {
       if (options.progress instanceof Function) {
         options.progress(event);
       }
-     };
+    };
+    
     xhr.open(options.type || "GET", options.url + data, true);
+    
     xhr.onreadystatechange = function() {
       switch (xhr.readyState) {
         case 2:
@@ -275,6 +328,7 @@
           }
       }
     };
+    
     xhr.send();
   };  
   
