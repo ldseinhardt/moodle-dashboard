@@ -216,7 +216,7 @@
         var action = row["Action"].split(" (")[0].trim();
         processRow(data, {
           context: "Course: "+row["Course"].trim(),
-          user: row["User full name"].trim(),
+          user: row["User full name"].trim().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }),
           component: action.split(" ")[0].trim(),
           action: action,
           information: row["Information"].trim(),
@@ -251,7 +251,7 @@
       d3.csv.parse(csv).forEach(function(row) {
         processRow(data, {
           context: row["Event context"].trim(),
-          user: row["User full name"].trim(),
+          user: row["User full name"].trim().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }),
           component: row["Component"].trim(),
           action: row["Event name"].trim(),
           information: row["Description"].trim(),
