@@ -166,11 +166,19 @@
   });
   
   $(".action-select-all", CARD_USER).click(function() {
-      
+     $(".mdl-checkbox", CARD_USER).each(function(index, element) {
+      element.MaterialCheckbox.check();
+     });
   });
   
   $(".action-invert", CARD_USER).click(function() {
-      
+     $(".mdl-checkbox", CARD_USER).each(function(index, element) {
+       if ($(".mdl-checkbox__input", element).prop("checked")) {
+        element.MaterialCheckbox.uncheck();
+       } else {
+        element.MaterialCheckbox.check();
+       }
+     });
   });
 
   // Botão filtro de período
@@ -184,20 +192,14 @@
         if (items.sync && items.time) {
           
           $("input", CARD_TIME).first()
-            .attr("min", items.time.min.value)
-            .attr("max", items.time.max.value)
-            .attr("value", items.time.min.selected)
-            .change(function() {
-              $(this).attr("value", this.value);
-            });
+            .prop("min", items.time.min.value)
+            .prop("max", items.time.max.value)
+            .prop("value", items.time.min.selected);
             
           $("input", CARD_TIME).last()
-            .attr("min", items.time.min.value)
-            .attr("max", items.time.max.value)
-            .attr("value", items.time.max.selected)
-            .change(function() {
-              $(this).attr("value", this.value);
-            });
+            .prop("min", items.time.min.value)
+            .prop("max", items.time.max.value)
+            .prop("value", items.time.max.selected);
         }
       });
     }
@@ -211,8 +213,8 @@
     }, function(items) {
       if (items.sync && items.time) {
         
-        var min = $("input", CARD_TIME).first().attr("value");
-        var max = $("input", CARD_TIME).last().attr("value");
+        var min = $("input", CARD_TIME).first().prop("value");
+        var max = $("input", CARD_TIME).last().prop("value");
         
         if (new Date(Date.parse(min)) - new Date(Date.parse(max)) <= 0) {
           items.time.min.selected = min;
