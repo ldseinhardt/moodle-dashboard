@@ -31,9 +31,10 @@
             $(".mdl-card__title-text", CARD_GRAPH).html(title);
             $(".mdl-card__supporting-text", CARD_GRAPH).html("");
             
+            var size = $("#card-graph").innerWidth();
             callback(items.data, items.user, items.time, {
               context: "#card-graph > .mdl-card__supporting-text",
-              size: $("#card-graph").innerWidth() - 75
+              size: size * 0.85
             });
             
             CARD_GRAPH.show();
