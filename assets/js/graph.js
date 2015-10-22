@@ -7,7 +7,7 @@
   graph.Bubble = function(options) {
     // Define valores padrão para argumentos
     var context = options.context || "body",
-        diameter = options.diameter || 960;
+        diameter = options.size || 960;
 
     // Define formação e escala de cores
     var format = d3.format(".d"),
@@ -93,7 +93,7 @@
   graph.Bar = function(options) {
     // Define valores padrão para argumentos
     var context  = options.context || "body",
-        width = options.width || 900,
+        width = options.size || 900,
         height;
 
     // Define largura das barras    
