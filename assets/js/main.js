@@ -243,4 +243,8 @@
     componentHandler.upgradeDom(); 
   };
   
+  $(window).resize(function() {
+    showPage();
+  });
+  
 })(this.chrome, this.jQuery, this.mdash, this.graph);
