@@ -2,15 +2,14 @@ body {
   width: 100%;
 }
 
-body > div,
-.mdl-layout {
-  width: 450px;
+body > div {
+  width: 500px;
   height: 600px;
 }
 
 .mdl-card {
-  width: 98%;
-  margin: 5px;
+  width: 99%;
+  margin: 5px auto;
   display: none;
 }
 
@@ -31,4 +30,8 @@ body > div,
   display: flex;
   box-sizing: border-box;
   align-items: center;
+}
+
+#card-graph {
+  text-align: center;
 }
