@@ -9,7 +9,7 @@
     var context = options.context || "body",
         diameter = options.size || 960;
 
-    // Define formação e escala de cores
+    // Define formatação e escala de cores
     var format = d3.format(".d"),
         color = d3.scale.category20c();
 
@@ -85,8 +85,6 @@
       recurse(null, root);
       return {children: classes};
     }
-
-    return this;
   };
 
   // Gráfico de Barras
@@ -97,7 +95,7 @@
         height;
 
     // Define largura das barras    
-    var barHeight = 20;
+    var barHeight = 15;
 
     // Define as margens
     var margin = {top: 20, right: 20, bottom: 20, left: 0};
@@ -199,8 +197,6 @@
         .text(function(d) {
           return d.name + ": " + d.size;
         });
-
-    return this;
   };
 
   // Gráfico de Dashboard (hisatograma + pizza + legenda)
@@ -272,7 +268,7 @@
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-      // Cria e isnere as barras
+      // Cria e insere as barras
       svg.selectAll(".bar")
         .data(data)
         .enter()
@@ -493,8 +489,6 @@
 
       return legend_chart;
     })(tF);
-
-    return this;
   };
 
   if (global) {
