@@ -1,15 +1,5 @@
-(function(chrome, $) {
+(function(chrome, ajax) {
   "use strict";
-  
-  /**
-   * Monitor de armazenamento (dev test)
-   */
-
-  chrome.storage.onChanged.addListener(function(changes, namespace) {
-    for (var key in changes) {
-      console.log("%s := %s", key, changes[key].newValue);
-    }
-  });
 
   /**
    * Informações do Moodle (url, curso, linguagem)
@@ -25,13 +15,13 @@
       return path.indexOf(".") === -1;
     });
     
-    var lang = $("html").attr("lang").replace("-", "_");
+    var lang = document.querySelector("html").lang.replace("-", "_");
     
     for (var i = paths.length; i > 0; i--) {
       (function(url) {
-        $.ajax({
-          type: 'HEAD',
+        ajax({
           url: url + "/report/log/index.php?id=" + course,
+          type: 'HEAD',
           success: function() {
             chrome.storage.local.set({
               url: url,
@@ -45,4 +35,4 @@
     }
   }
   
-})(this.chrome, this.jQuery);
+})(this.chrome, this.ajax);

@@ -13,7 +13,7 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "vendor/jquery/js/jquery.min.js",
+        "assets/js/ajax.js",
         "assets/js/content.js"
       ]
     }
