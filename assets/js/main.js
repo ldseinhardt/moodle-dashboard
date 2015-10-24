@@ -1,4 +1,4 @@
-(function(chrome, $, mdash, graph) {
+(function(chrome, $, dash, graph) {
   "use strict";
 
   /* Objetos do DOM */
@@ -16,7 +16,7 @@
     BTN_TIME   = $(".btn-time"),
     BTN_CONF   = $(".btn-conf"),
     BTN_PAGE   = $(".btn-page");
-
+    
   // Exibe o gráfico apropriado
   var showPage = function(hash) {
     var showGraph = function(title, callback) {
@@ -52,13 +52,13 @@
         break;
       case "2":
         showGraph("Usuários e interações", function(data, user, time, options) {
-          options.data = mdash.listOfUsers(data, user, time);
+          options.data = dash.listOfUsers(data, user, time);
           graph.Bar(options);
         });
         break;
       default:
         showGraph("Ações", function(data, user, time, options) {
-          options.data = mdash.listOfActions(data, user, time);
+          options.data = dash.listOfActions(data, user, time);
           graph.Bubble(options);
         });
     }
@@ -80,7 +80,7 @@
       lang: "en"
     }, function(items) {
       if (items.url !== "" && items.course !== 0) {
-        mdash.sync({
+        dash.sync({
           url: items.url,
           course: items.course,
           lang: items.lang,
@@ -91,8 +91,8 @@
           done: function(data) {
             chrome.storage.local.set({
               data: data,
-              user: mdash.uniqueUsers(data),
-              time: mdash.uniqueDays(data),
+              user: dash.uniqueUsers(data),
+              time: dash.uniqueDays(data),
               sync: true
             });
             
@@ -248,4 +248,4 @@
     showPage();
   });
   
-})(this.chrome, this.jQuery, this.mdash, this.graph);
+})(this.chrome, this.jQuery, this.dash, this.graph);

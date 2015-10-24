@@ -1,10 +1,10 @@
-(function(global, d3) {
+(function(global, ajax, d3) {
   "use strict";
   
-  var mdash = {};
+  var dash = {};
   
   // Retorna a lista de usuários unicos contidos nos logs
-  mdash.uniqueUsers = function(data) {
+  dash.uniqueUsers = function(data) {
     var listOfUniqueUsers = [];
     
     data.forEach(function(context) {
@@ -29,7 +29,7 @@
   };
   
   // Retorna a lista de dias contidos nos logs, além do primeiro e último dia
-  mdash.uniqueDays = function(data) {
+  dash.uniqueDays = function(data) {
     var listOfUniqueDays = [];
     
     data.forEach(function(context) {
@@ -63,7 +63,7 @@
   };
   
   // Retorna a lista de componentes e ações e suas quantidades
-  mdash.listOfActions = function(data, users, time) {
+  dash.listOfActions = function(data, users, time) {
     var listOfActions = {"name": "Actions", "children": []};
     
     data.forEach(function(context) {
@@ -101,7 +101,7 @@
   };
   
   // Retorna a lista de Usuários e o numero de ações
-  mdash.listOfUsers = function(data, users, time) {
+  dash.listOfUsers = function(data, users, time) {
     var listOfUsers = [];
     
     data.forEach(function(context) {
@@ -135,20 +135,20 @@
   };
   
   // Realiza uma requisição para obter os logs do moodle
-  mdash.sync = function(options) {
+  dash.sync = function(options) {
     if (options.init instanceof Function) {
       options.init();
     }
     ajax({
       url: options.url + "/report/log/index.php",
       data: {
-            "id": options.course,         // ID do curso
-            "chooselog": 1,               // Visualizar logs
-            "logformat": "downloadascsv", // Formato para download (tsv) Moodle 2.6
-            "download": "csv",            // Formato para download (csv) Moodle 2.7+
-            "lang": "en"                  // Linguagem
+            id: options.course,         // ID do curso
+            chooselog: 1,               // Visualizar logs
+            logformat: "downloadascsv", // Formato para download (tsv) Moodle 2.6
+            download: "csv",            // Formato para download (csv) Moodle 2.7+
+            lang: "en"                  // Linguagem
           },
-      done: function(xhr) {
+      success: function(xhr) {
         var type = xhr.getResponseHeader("content-type") || "";
         if (type.search("application/download") > -1) {
           if (options.done instanceof Function) {
@@ -167,7 +167,7 @@
           }
         }
       },
-      fail: function(xhr) {
+      error: function(xhr) {
         setDefaultLang(options.url, options.lang);
         if (options.fail instanceof Function) {
           options.fail({
@@ -186,8 +186,8 @@
   // Retorna a linguagem do moodle
   var setDefaultLang = function(url, lang) {
     ajax({
-      type: "HEAD",
-      url: url + "/?lang=" + lang
+      url: url + "/?lang=" + lang,
+      type: "HEAD"
     });
   };
   
@@ -315,51 +315,8 @@
     return array.push(obj) - 1;
   };
   
-  // Ajax para realizar requisições
-  var ajax = function(options) {
-    var data = "";
-    
-    if (options.data instanceof Object) {
-      data = "?" + Object.keys(options.data).map(function(key) {
-        return key + '=' + options.data[key];
-      }).join('&');
-    }
-    
-    var xhr = new XMLHttpRequest();
-    
-    xhr.onprogress = function(event) {
-      if (options.progress instanceof Function) {
-        options.progress(event);
-      }
-    };
-    
-    xhr.open(options.type || "GET", options.url + data, true);
-    
-    xhr.onreadystatechange = function() {
-      switch (xhr.readyState) {
-        case 2:
-          if (options.received instanceof Function) {
-            options.received(xhr);
-          }
-          break;
-        case 4:
-          var f = (xhr.status === 200)
-            ? options.done
-            : options.fail;
-          if (f instanceof Function) {
-            f(xhr);
-          }
-          if (options.complete instanceof Function) {
-            options.complete(xhr);
-          }
-      }
-    };
-    
-    xhr.send();
-  };  
-  
   if (global) {
-    global.mdash = mdash;
+    global.dash = dash;
   }
 
-})(this, this.d3);
+})(this, this.ajax, this.d3);
