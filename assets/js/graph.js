@@ -100,7 +100,18 @@
     var barHeight = 20;
 
     // Define as margens
-    var margin = {top: 20, right: 20, bottom: 20, left: 180};
+    var margin = {top: 20, right: 20, bottom: 20, left: 0};
+    
+    for (var i = 0; i < options.data.length; i++) {
+      var d = options.data[i].name.split(" ");
+      var v = d[0].length + d[d.length - 1].length + 1;
+      if (v > margin.left) {
+        margin.left = v;
+      }
+    }
+    
+    margin.left *= 5.5;
+    margin.left += 20;
     
     // Filtro para remover objetos com valor 0
     options.data = options.data.filter(function(item) {
@@ -159,8 +170,17 @@
       .attr("transform", "translate(-10, 0)")
       .call(yAxis)
       .selectAll("text")
+      .data(options.data)
+      .text(function(d) {
+        var name = d.name.split(" ");
+        return name[0] + " " + name[name.length-1];
+      })
       .attr("dy", ".35em")
-      .style("text-anchor", "left");
+      .style("text-anchor", "left")
+      .append("title")
+        .text(function(d) {
+          return d.name;
+        });
 
     // Insere as barras  
     svg.selectAll(".bar")
@@ -428,9 +448,9 @@
         .append("rect")
           .attr("width", 16)
           .attr("height", 16)
-			    .attr("fill", function(d) {
-			      return segColor(d.type);
-			    });
+          .attr("fill", function(d) {
+            return segColor(d.type);
+          });
 
       tr.append("td")
         .text(function(d) {

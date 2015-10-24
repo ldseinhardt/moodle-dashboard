@@ -31,10 +31,9 @@
             $(".mdl-card__title-text", CARD_GRAPH).html(title);
             $(".mdl-card__supporting-text", CARD_GRAPH).html("");
             
-            var size = $("#card-graph").innerWidth();
             callback(items.data, items.user, items.time, {
               context: "#card-graph > .mdl-card__supporting-text",
-              size: size * 0.85
+              size: $("#card-graph").innerWidth() * 0.91
             });
             
             CARD_GRAPH.show();
@@ -59,6 +58,7 @@
       default:
         showGraph("Ações", function(data, user, time, options) {
           options.data = dash.listOfActions(data, user, time);
+          options.size = 430;
           graph.Bubble(options);
         });
     }

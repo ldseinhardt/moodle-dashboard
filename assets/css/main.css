@@ -35,3 +35,7 @@ body > div {
 #card-graph {
   text-align: center;
 }
+
+.mdl-card__supporting-text {
+  width: 93.5% !important;
+}
