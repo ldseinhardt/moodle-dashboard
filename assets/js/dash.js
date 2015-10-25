@@ -1,4 +1,4 @@
-(function(global, ajax, d3) {
+(function(global, d3, DOMParser) {
   "use strict";
   
   var dash = {};
@@ -134,20 +134,98 @@
     return listOfUsers;
   };
   
+  dash.moodle = function(url, callback) {
+    var location = document.createElement("a");
+    location.href = url;
+
+    var check = {
+      success: false,
+      count: 0
+    };
+    
+    var nav = function(url) {
+      ajax({
+        url: url + "/my",
+        success: function(xhr) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(xhr.responseText, "text/html");
+
+          var lang = doc.querySelector("html").lang.replace("-", "_");
+
+          var link = doc.querySelectorAll(".course_list a[href*='course/view.php']");
+
+          var courses = [];
+          for (var i = 0; i < link.length; i++) {
+            var regex = new RegExp("[\\?&]id=([^&#]*)");
+            var regid = regex.exec(link[i].search);
+            var couid = (regid === null) ? 0 : parseInt(regid[1]);
+
+            if (couid > 0) {
+              courses.push({
+                name: link[i].innerHTML, 
+                id: couid
+              });
+            }
+          }
+
+          if (courses.length) {
+            callback({
+              url: url,
+              lang: lang,
+              courses: courses
+            });
+          } else {
+            callback({
+              error: 2
+            });
+          }
+          
+          check.success = true;
+        },
+        error: function() {
+          if (!check.success) {
+            check.count--;
+            if (!check.count) {
+              callback({
+                error: 1
+              }); 
+            }
+          }
+        }  
+      });
+    };
+
+    if (location.pathname === "/") {
+      check.count = 1;
+      nav(location.protocol + "//" + location.host);
+    } else {
+      var paths = location.pathname.split("/").filter(function(path) {
+        return path.indexOf(".") === -1;
+      });
+
+      check.count = paths.length;
+
+      for (var i = paths.length; i > 0 ; i--) {
+        nav(location.protocol + "//" + location.host + paths.join("/"));
+        paths.pop();
+      }
+    }
+  };
+  
   // Realiza uma requisição para obter os logs do moodle
   dash.sync = function(options) {
     if (options.init instanceof Function) {
       options.init();
     }
     ajax({
-      url: options.url + "/report/log/index.php",
+      url: options.url + "/report/log",
       data: {
-            id: options.course,         // ID do curso
-            chooselog: 1,               // Visualizar logs
-            logformat: "downloadascsv", // Formato para download (tsv) Moodle 2.6
-            download: "csv",            // Formato para download (csv) Moodle 2.7+
-            lang: "en"                  // Linguagem
-          },
+        id: options.course,         // ID do curso
+        chooselog: 1,               // Visualizar logs
+        logformat: "downloadascsv", // Formato para download (tsv) Moodle 2.6
+        download: "csv",            // Formato para download (csv) Moodle 2.7+
+        lang: "en"                  // Linguagem
+      },
       success: function(xhr) {
         var type = xhr.getResponseHeader("content-type") || "";
         if (type.search("application/download") > -1) {
@@ -287,7 +365,7 @@
      }
     }
     return false;
-  }
+  };
   
   // Verifica se a data está no intervalo selecionado
   var checkTime = function(times, time) {
@@ -302,7 +380,7 @@
         }
     }
     return count;
-  }
+  };
   
   // Adiciona no array se não existir e retorna o indice sempre
   var addInArray = function(array, key, value, obj) {
@@ -315,8 +393,55 @@
     return array.push(obj) - 1;
   };
   
+  /**
+   * Ajax para realização de requisições
+   * @param options { url, [data, type, success, error, progress, received, complete] }
+   */
+  
+  var ajax = function(options) {
+    var data = "";
+    
+    if (options.data instanceof Object) {
+      data = "?" + Object.keys(options.data).map(function(key) {
+        return key + '=' + options.data[key];
+      }).join('&');
+    }
+    
+    var xhr = new XMLHttpRequest();
+    
+    xhr.onprogress = function(event) {
+      if (options.progress instanceof Function) {
+        options.progress(event);
+      }
+    };
+    
+    xhr.open(options.type || "GET", options.url + data, true);
+    
+    xhr.onreadystatechange = function() {
+      switch (xhr.readyState) {
+        case 2:
+          if (options.received instanceof Function) {
+            options.received(xhr);
+          }
+          break;
+        case 4:
+          var f = (xhr.status === 200)
+            ? options.success
+            : options.error;
+          if (f instanceof Function) {
+            f(xhr);
+          }
+          if (options.complete instanceof Function) {
+            options.complete(xhr);
+          }
+      }
+    };
+    
+    xhr.send();
+  };
+  
   if (global) {
     global.dash = dash;
   }
 
-})(this, this.ajax, this.d3);
+})(this, this.d3, this.DOMParser);

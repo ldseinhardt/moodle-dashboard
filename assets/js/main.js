@@ -1,21 +1,23 @@
-(function(chrome, $, dash, graph) {
+(function(chrome, $, dash, graph, componentHandler) {
   "use strict";
 
   /* Objetos do DOM */
   var
-    DRAWER     = $(".mdl-layout__drawer")[0],
-    SPINNER    = $("#spinner"),
-    CARD_ALL   = $(".mdl-card"),
-    CARD_SYNC  = $("#card-sync"),
-    CARD_USER  = $("#card-user"),
-    CARD_TIME  = $("#card-time"),
-    CARD_CONF  = $("#card-conf"),
-    CARD_GRAPH = $("#card-graph"),
-    BTN_SYNC   = $(".btn-sync"),
-    BTN_USER   = $(".btn-user"),
-    BTN_TIME   = $(".btn-time"),
-    BTN_CONF   = $(".btn-conf"),
-    BTN_PAGE   = $(".btn-page");
+    DRAWER          = $(".mdl-layout__drawer")[0],
+    SPINNER         = $("#spinner"),
+    CARD_ALL        = $(".mdl-card"),
+    CARD_SYNC       = $("#card-sync"),
+    CARD_SYNC_LIST  = $("#card-sync-list"),
+    CARD_USER       = $("#card-user"),
+    CARD_TIME       = $("#card-time"),
+    CARD_CONF       = $("#card-conf"),
+    CARD_GRAPH      = $("#card-graph"),
+    BTN_SYNC        = $(".btn-sync"),
+    BTN_SYNC_COURSE = $(".btn-sync-course"),
+    BTN_USER        = $(".btn-user"),
+    BTN_TIME        = $(".btn-time"),
+    BTN_CONF        = $(".btn-conf"),
+    BTN_PAGE        = $(".btn-page");
     
   // Exibe o gráfico apropriado
   var showPage = function(hash) {
@@ -66,23 +68,82 @@
   
   showPage();
 
+  var sendErrorMessage = function(message) {
+    $(".error-message", CARD_SYNC).remove();
+    $(".mdl-card__supporting-text", CARD_SYNC).append("<p class=\"error-message\" style=\"color: red\">" + message + "</p>");
+
+    CARD_ALL.hide();
+    CARD_SYNC.show();
+  };
+
   // Botão de sincronização
   BTN_SYNC.click(function() {
-    var sendMessage = function(message) {
-      $(".error-message", CARD_SYNC).remove();
-      $(".mdl-card__supporting-text", CARD_SYNC).append("<p class=\"error-message\" style=\"color: red\">" + message + "</p>");
-      CARD_SYNC.show();
+    var listCourses = function(data) {
+      $(".items", CARD_SYNC_LIST).html("");
+
+      data.forEach(function(course) {
+        var html = "";
+        html += "<label class=\"mdl-radio mdl-js-radio mdl-js-ripple-effect\">";
+        html += "  <input type=\"radio\" class=\"mdl-radio__button\" name=\"course\" value=\"" + course.id + "\"/>";
+        html += "  <span class=\"mdl-radio__label\">" + course.name + "</span>";
+        html += "</label><br/>";
+        $(".items", CARD_SYNC_LIST).append(html);
+        upgradeDom();
+      });
+
+      $(".mdl-radio", CARD_SYNC_LIST)[0].MaterialRadio.check();
+
+      CARD_ALL.hide();
+      CARD_SYNC_LIST.show();
     };
-    
+
+    chrome.tabs.getSelected(null, function(tab) {
+      if (tab.url.indexOf("chrome://") === -1 && tab.url.indexOf("chrome-extension://") === -1) {
+        SPINNER.show();
+
+        dash.moodle(tab.url, function(response) {
+          if (response.hasOwnProperty("error")) {
+            switch (response.error) {
+              case 1:
+                SPINNER.hide();
+                sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
+                break;
+              case 2:
+                SPINNER.hide();
+                sendErrorMessage("Erro ao sincronizar, verifique se você está logado ao Moodle.");
+                break;
+            }
+          } else {
+            SPINNER.hide();
+
+            listCourses(response.courses);
+
+            chrome.storage.local.set(response);
+          }
+        });
+      } else {
+        chrome.storage.local.get({
+          courses: null
+        }, function(items) {
+          if (items.courses) {
+            listCourses(items.courses);
+          } else {
+            sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
+          }
+        });
+      }
+    });
+  });
+
+  BTN_SYNC_COURSE.click(function() {
     chrome.storage.local.get({
-      url: "",
-      course: 0,
+      url: null,
       lang: "en"
     }, function(items) {
-      if (items.url !== "" && items.course !== 0) {
+      if (items.url) {
         dash.sync({
           url: items.url,
-          course: items.course,
+          course: $(".mdl-radio__button:checked", CARD_SYNC_LIST).val(),
           lang: items.lang,
           init: function() {
             CARD_ALL.hide();
@@ -100,18 +161,17 @@
             
             showPage();
           },
-          fail: function(params) {
-            
+          fail: function(params) {            
             SPINNER.hide();
             
             console.log("Error Type: %s", params.type);
             console.log("Error Message: %s", params.message);
             
-            sendMessage("Erro ao sincronizar, verifique se você possui uma sessão de professor aberta.");
+            sendErrorMessage("Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.");
           }
         });
       } else {
-        sendMessage("Erro ao sincronizar, acesse um curso no Moodle por favor.");
+        sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
       }
     });
   });
@@ -248,4 +308,4 @@
     showPage();
   });
   
-})(this.chrome, this.jQuery, this.dash, this.graph);
+})(this.chrome, this.jQuery, this.dash, this.graph, this.componentHandler);

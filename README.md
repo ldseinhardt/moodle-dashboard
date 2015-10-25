@@ -2,7 +2,7 @@
 
 Plataforma: Extensão Chromium / Google Chrome
 
-Versão: 1.0 (Protótipo)
+Versão: 0.1 (Protótipo)
 
 ## Guia de instalação
  - Entre na seguinte url do Google Chrome: "chrome://extensions/"
@@ -14,5 +14,3 @@ Versão: 1.0 (Protótipo)
 ## Guia de execução
  - A extensão será exibida ao lado da barra de navegação
  - Acesse o moodle que desejar com permissão a nível de professor e clique no botão sincronizar
- 
-Nota: Toda vez que você navegar por um moodle ele irá configurar este para sincronização. Com isso você poderá sincronizar sem estar navegando no moodle, contudo deverá haver uma sessão de login aberta.
