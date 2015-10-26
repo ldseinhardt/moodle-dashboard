@@ -11,7 +11,7 @@
 
   "browser_action": {
     "default_title": "Moodle Dashboard",
-    "default_icon": "assets/icons/icon-32.png",
+    "default_icon": "assets/img/icon-32.png",
     "default_popup": "main.html"
   },
 
@@ -20,14 +20,14 @@
     "storage",
     "downloads",
     "<all_urls>"
-  ],  
+  ],
 
   "icons": {
-    "32": "assets/icons/icon-32.png",
-    "48": "assets/icons/icon-48.png"
+    "32": "assets/img/icon-32.png",
+    "48": "assets/img/icon-48.png"
   },
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  
+
   "manifest_version": 2
 }

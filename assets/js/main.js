@@ -1,311 +1,359 @@
-(function(chrome, $, dash, graph, componentHandler) {
-  "use strict";
+(function(chrome, mdash, graph) {
+  'use strict';
 
-  /* Objetos do DOM */
-  var
-    DRAWER          = $(".mdl-layout__drawer")[0],
-    SPINNER         = $("#spinner"),
-    CARD_ALL        = $(".mdl-card"),
-    CARD_SYNC       = $("#card-sync"),
-    CARD_SYNC_LIST  = $("#card-sync-list"),
-    CARD_USER       = $("#card-user"),
-    CARD_TIME       = $("#card-time"),
-    CARD_CONF       = $("#card-conf"),
-    CARD_GRAPH      = $("#card-graph"),
-    BTN_SYNC        = $(".btn-sync"),
-    BTN_SYNC_COURSE = $(".btn-sync-course"),
-    BTN_USER        = $(".btn-user"),
-    BTN_TIME        = $(".btn-time"),
-    BTN_CONF        = $(".btn-conf"),
-    BTN_PAGE        = $(".btn-page");
-    
-  // Exibe o gráfico apropriado
-  var showPage = function(hash) {
-    var showGraph = function(title, callback) {
-      chrome.storage.local.get({
-        data: null,
-        user: null,
-        time: null,
-        sync: false
-      }, function(items) {
-        if (items.sync && items.data && items.user && items.time) {
-            CARD_ALL.hide();
-            $(".mdl-card__title-text", CARD_GRAPH).html(title);
-            $(".mdl-card__supporting-text", CARD_GRAPH).html("");
-            
-            callback(items.data, items.user, items.time, {
-              context: "#card-graph > .mdl-card__supporting-text",
-              size: $("#card-graph").innerWidth() * 0.91
-            });
-            
-            CARD_GRAPH.show();
-        } else {
-          CARD_ALL.hide();
-          CARD_SYNC.show();
-        }
-      });
-    };
-    
-    switch ((hash || location.hash).replace("#", "")) {
-      case "config":
-        CARD_ALL.hide();
-        CARD_CONF.show();
-        break;
-      case "2":
-        showGraph("Usuários e interações", function(data, user, time, options) {
-          options.data = dash.listOfUsers(data, user, time);
-          graph.Bar(options);
-        });
-        break;
-      default:
-        showGraph("Ações", function(data, user, time, options) {
-          options.data = dash.listOfActions(data, user, time);
-          options.size = 430;
-          graph.Bubble(options);
-        });
-    }
-  };
-  
-  showPage();
+  var init = (function() {
+    /* Principais elementos de interface */
+    var DRAWER                 = $('.mdl-layout__drawer')
+      , DRAWER_LINKS           = $('a', DRAWER)
+      , SPINNER                = $('#spinner')
+      , CARDS                  = $('.mdl-card')
+      , CARD_SYNC              = $('#card-sync')
+      , CARD_SYNC_BODY         = $('.mdl-card__supporting-text', CARD_SYNC)
+      , CARD_SYNC_ERROR        = $('.error-message', CARD_SYNC)
+      , CARD_SYNC_COURSE       = $('#card-sync-course')
+      , CARD_SYNC_COURSE_LIST  = $('.items', CARD_SYNC_COURSE)
+      , CARD_SYNC_COURSE_ERROR = $('.error-message', CARD_SYNC_COURSE)
+      , CARD_USER              = $('#card-user')
+      , CARD_USER_LIST         = $('.items', CARD_USER)
+      , CARD_USER_OK           = $('.action-confirm', CARD_USER)
+      , CARD_USER_SELECT       = $('.action-select-all', CARD_USER)
+      , CARD_USER_INVERT       = $('.action-invert', CARD_USER)
+      , CARD_TIME              = $('#card-time')
+      , CARD_TIME_FIELDS       = $('input', CARD_TIME)
+      , CARD_TIME_OK           = $('.action-confirm', CARD_TIME)
+      , CARD_CONF              = $('#card-conf')
+      , CARD_GRAPH             = $('#card-graph')
+      , CARD_GRAPH_TITLE       = $('.mdl-card__title-text', CARD_GRAPH)
+      , CARD_GRAPH_BODY        = $('.mdl-card__supporting-text', CARD_GRAPH)
+      , BTNS_SYNC              = $('.btn-sync')
+      , BTNS_SYNC_COURSE       = $('.btn-sync-course')
+      , BTNS_USER              = $('.btn-user')
+      , BTNS_TIME              = $('.btn-time')
+      , BTNS_CONF              = $('.btn-conf')
+      , BTNS_PAGE              = $('.btn-page')
+      ;
 
-  var sendErrorMessage = function(message) {
-    $(".error-message", CARD_SYNC).remove();
-    $(".mdl-card__supporting-text", CARD_SYNC).append("<p class=\"error-message\" style=\"color: red\">" + message + "</p>");
-
-    CARD_ALL.hide();
-    CARD_SYNC.show();
-  };
-
-  // Botão de sincronização
-  BTN_SYNC.click(function() {
-    var listCourses = function(data) {
-      $(".items", CARD_SYNC_LIST).html("");
-
-      data.forEach(function(course) {
-        var html = "";
-        html += "<label class=\"mdl-radio mdl-js-radio mdl-js-ripple-effect\">";
-        html += "  <input type=\"radio\" class=\"mdl-radio__button\" name=\"course\" value=\"" + course.id + "\"/>";
-        html += "  <span class=\"mdl-radio__label\">" + course.name + "</span>";
-        html += "</label><br/>";
-        $(".items", CARD_SYNC_LIST).append(html);
-        upgradeDom();
-      });
-
-      $(".mdl-radio", CARD_SYNC_LIST)[0].MaterialRadio.check();
-
-      CARD_ALL.hide();
-      CARD_SYNC_LIST.show();
-    };
-
-    chrome.tabs.getSelected(null, function(tab) {
-      if (tab.url.indexOf("chrome://") === -1 && tab.url.indexOf("chrome-extension://") === -1) {
-        SPINNER.show();
-
-        dash.moodle(tab.url, function(response) {
-          if (response.hasOwnProperty("error")) {
-            switch (response.error) {
-              case 1:
-                SPINNER.hide();
-                sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
-                break;
-              case 2:
-                SPINNER.hide();
-                sendErrorMessage("Erro ao sincronizar, verifique se você está logado ao Moodle.");
-                break;
-            }
-          } else {
-            SPINNER.hide();
-
-            listCourses(response.courses);
-
-            chrome.storage.local.set(response);
-          }
-        });
-      } else {
+    // Exibe a página
+    function showPage(hash) {
+      function showGraph(title, callback) {
         chrome.storage.local.get({
-          courses: null
+          data: null,
+          user: null,
+          time: null
         }, function(items) {
-          if (items.courses) {
-            listCourses(items.courses);
-          } else {
-            sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
-          }
-        });
-      }
-    });
-  });
-
-  BTN_SYNC_COURSE.click(function() {
-    chrome.storage.local.get({
-      url: null,
-      lang: "en"
-    }, function(items) {
-      if (items.url) {
-        dash.sync({
-          url: items.url,
-          course: $(".mdl-radio__button:checked", CARD_SYNC_LIST).val(),
-          lang: items.lang,
-          init: function() {
-            CARD_ALL.hide();
-            SPINNER.show();
-          },
-          done: function(data) {
-            chrome.storage.local.set({
-              data: data,
-              user: dash.uniqueUsers(data),
-              time: dash.uniqueDays(data),
-              sync: true
+          if (items.data && items.user && items.time) {
+            CARDS.hide();
+            CARD_GRAPH_TITLE.html(title);
+            CARD_GRAPH_BODY.html('');
+            callback(items.data, items.user, items.time, {
+              context: '#card-graph > .mdl-card__supporting-text',
+              size: window.innerWidth * 0.91
             });
-            
-            SPINNER.hide();
-            
-            showPage();
-          },
-          fail: function(params) {            
-            SPINNER.hide();
-            
-            console.log("Error Type: %s", params.type);
-            console.log("Error Message: %s", params.message);
-            
-            sendErrorMessage("Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.");
+            CARD_GRAPH.show();
+          } else {
+            CARDS.hide();
+            CARD_SYNC.show();
           }
         });
-      } else {
-        sendErrorMessage("Erro ao sincronizar, acesse o Moodle.");
       }
-    });
-  });
+      switch ((hash || location.hash).replace('#', '')) {
+        case 'config':
+          CARDS.hide();
+          CARD_CONF.show();
+          break;
+        case '2':
+          showGraph('Usuários e interações', function(data, user, time, options) {
+            options.data = mdash.listOfUsers(data, user, time);
+            graph.Bar(options);
+          });
+          break;
+        default:
+          showGraph('Ações', function(data, user, time, options) {
+            options.data = mdash.listOfActions(data, user, time);
+            options.size = 430;
+            graph.Bubble(options);
+          });
+      }
+    }
 
-  // Botão filtro de usuários
-  BTN_USER.click(function() {
-    CARD_TIME.hide();
-    if (!CARD_USER.is(":visible")) {
+    // Botão de sincronização
+    BTNS_SYNC.addEventListener('click', function() {
+      function listCourses(data) {
+        var html = '';
+        data.forEach(function(course, i) {
+          html += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect">';
+          html += '<input type="radio" class="mdl-radio__button" name="course" value="' + course.id + '"' + (i === 0 ? ' checked' : '') + '/>';
+          html += '<span class="mdl-radio__label">' + course.name + '</span>';
+          html += '</label><br/>';
+        });
+        CARD_SYNC_COURSE_LIST.html(html);
+        upgradeDom();
+        CARDS.hide();
+        CARD_SYNC_COURSE.show();
+      }      
+      chrome.tabs.getSelected(null, function(tab) {
+        if (tab.url.indexOf('chrome://') === -1 && tab.url.indexOf('chrome-extension://') === -1) {
+          SPINNER.show();
+          mdash.moodle(tab.url, function(response) {
+            if (response.hasOwnProperty('error')) {
+                SPINNER.hide();
+              switch (response.error) {
+                case 1:
+                  CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+                  break;
+                case 2:
+                  CARD_SYNC_ERROR.html('Erro ao sincronizar, verifique se você está logado ao Moodle.');
+                  break;
+              }
+              CARDS.hide();
+              CARD_SYNC.show();
+            } else {
+              SPINNER.hide();
+              listCourses(response.courses);
+              chrome.storage.local.set(response);
+            }
+          });
+        } else {
+          chrome.storage.local.get({
+            courses: null
+          }, function(items) {
+            if (items.courses) {
+              listCourses(items.courses);
+            } else {
+              CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+              CARDS.hide();
+              CARD_SYNC.show();
+            }
+          });
+        }
+      });
+    });
+
+    // Botão de sincronização para o curso selecionado
+    BTNS_SYNC_COURSE.addEventListener('click', function() {
       chrome.storage.local.get({
-        user: null,
-        sync: false
+        url: null,
+        lang: 'en'
       }, function(items) {
-        if (items.sync && items.user) {
-          $(".items", CARD_USER).html("");
-          items.user.forEach(function(user) {
-            var html = "";
-            html += "<label class=\"mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect\">";
-            html += "  <input type=\"checkbox\" class=\"mdl-checkbox__input\"" + (user.selected ? " checked" : "") + "/>";
-            html += "  <span class=\"mdl-checkbox__label\">" + user.name + "</span>";
-            html += "</label>";
-            $(".items", CARD_USER).append(html);
+        if (items.url) {
+          var course = $('.mdl-radio__button:checked', CARD_SYNC_COURSE).value;
+          mdash.sync({
+            url: items.url,
+            course: course,
+            lang: items.lang,
+            init: function() {
+              CARDS.hide();
+              SPINNER.show();
+            },
+            done: function(data) {
+              chrome.storage.local.set({
+                data: data,
+                user: mdash.uniqueUsers(data),
+                time: mdash.uniqueDays(data)
+              });
+              SPINNER.hide();
+              showPage();
+            },
+            fail: function() {
+              SPINNER.hide();
+              CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.');
+              CARD_SYNC_COURSE.show();
+            }
+          });
+        } else {
+          CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+        }
+      });
+    });
+
+    // Botão para seleção de usuários
+    BTNS_USER.addEventListener('click', function() {
+      CARDS.hide();
+      if (CARD_USER.style.display === 'none') {
+        chrome.storage.local.get({
+          user: null
+        }, function(items) {
+          if (items.user) {
+            var html = '';
+            items.user.forEach(function(user) {
+              html += '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">';
+              html += '<input type="checkbox" class="mdl-checkbox__input"' + (user.selected ? ' checked' : '') + '/>';
+              html += '<span class="mdl-checkbox__label">' + user.name + '</span>';
+              html += '</label>';
+            });
+            CARD_USER_LIST.html(html);
+            CARD_USER.show();
             upgradeDom();
-          });
-        }
-      });
-    }
-    CARD_USER.toggle();
-  });
-  
-  // Ação confirmar alterações na lista de usuários
-  $(".action-confirm", CARD_USER).click(function() {
-    var listOfUniqueUsers = [];
-    $(".mdl-checkbox", CARD_USER).each(function(index, element) {
-      listOfUniqueUsers.push({
-        name: $(".mdl-checkbox__label", element).html(),
-        selected: $(".mdl-checkbox__input", element).prop("checked")
-      });
-    });
-    
-    chrome.storage.local.set({
-      user: listOfUniqueUsers
-    });
-    
-    CARD_USER.hide();
-    
-    showPage();
-  });
-  
-  // Ação selecionar todos usuários
-  $(".action-select-all", CARD_USER).click(function() {
-     $(".mdl-checkbox", CARD_USER).each(function(index, element) {
-      element.MaterialCheckbox.check();
-     });
-  });
-  
-  // Ação inverter usuários selecionados
-  $(".action-invert", CARD_USER).click(function() {
-     $(".mdl-checkbox", CARD_USER).each(function(index, element) {
-       if ($(".mdl-checkbox__input", element).prop("checked")) {
-        element.MaterialCheckbox.uncheck();
-       } else {
-        element.MaterialCheckbox.check();
-       }
-     });
-  });
-
-  // Botão filtro de período
-  BTN_TIME.click(function() {
-    CARD_USER.hide();
-    if (!CARD_TIME.is(":visible")) {
-      chrome.storage.local.get({
-        time: null,
-        sync: false
-      }, function(items) {
-        if (items.sync && items.time) {
-          
-          $("input", CARD_TIME).first()
-            .prop("min", items.time.min.value)
-            .prop("max", items.time.max.value)
-            .prop("value", items.time.min.selected);
-            
-          $("input", CARD_TIME).last()
-            .prop("min", items.time.min.value)
-            .prop("max", items.time.max.value)
-            .prop("value", items.time.max.selected);
-        }
-      });
-    }
-    CARD_TIME.toggle();
-  });
-  
-  // Ação confirmar alteração no período
-  $(".action-confirm", CARD_TIME).click(function() {
-    chrome.storage.local.get({
-      time: null,
-      sync: false
-    }, function(items) {
-      if (items.sync && items.time) {
-        
-        var min = $("input", CARD_TIME).first().prop("value");
-        var max = $("input", CARD_TIME).last().prop("value");
-        
-        if (new Date(Date.parse(min)) - new Date(Date.parse(max)) <= 0) {
-          items.time.min.selected = min;
-          items.time.max.selected = max;
-          chrome.storage.local.set({
-            time: items.time
-          });
-        }
-            
-        CARD_TIME.hide();
-    
-        showPage();
+          } else {
+            CARD_SYNC.show();
+          }
+        });
       }
     });
-  });
-  
-  // Fecha o drawer quando houver o clique em uma opção
-  $("a", DRAWER).click(function() {
-    DRAWER.classList.toggle("is-visible");
-  });
-  
-  // Botão para seleção de página
-  BTN_PAGE.click(function() {
-    showPage($(this).attr("href"));
-  });
-  
-  // Expande os elementos do MDL
-  var upgradeDom = function() {
-    componentHandler.upgradeDom(); 
-  };
-  
-  $(window).resize(function() {
+
+    // Botão de confirmação para seleção de usuários
+    CARD_USER_OK.addEventListener('click', function() {
+      var listOfUniqueUsers = [];
+      var e = $('.mdl-checkbox', CARD_USER);
+      if (!e.length) {
+        e = e ? [e] : [];
+      }
+      e.forEach(function(e) {
+        listOfUniqueUsers.push({
+          name: $('.mdl-checkbox__label', e).html(),
+          selected: $('.mdl-checkbox__input', e).checked
+        });
+      });
+      chrome.storage.local.set({
+        user: listOfUniqueUsers
+      });
+      CARD_USER.hide();
+      showPage();
+    });
+
+    // Botão para selecionar todos usuários
+    CARD_USER_SELECT.addEventListener('click', function() {
+      var e = $('.mdl-checkbox', CARD_USER);
+      if (!e.length) {
+        e = e ? [e] : [];
+      }
+      e.forEach(function(e) {
+        e.MaterialCheckbox.check();
+      });
+    });
+
+    // Botão para inverter seleção de usuários
+    CARD_USER_INVERT.addEventListener('click', function() {
+      var e = $('.mdl-checkbox', CARD_USER);
+      if (!e.length) {
+        e = e ? [e] : [];
+      }
+      e.forEach(function(e) {
+        if ($('.mdl-checkbox__input', e).checked) {
+          e.MaterialCheckbox.uncheck();
+        } else {
+          e.MaterialCheckbox.check();
+        }
+      });
+    });
+
+    // Botão para seleção de período
+    BTNS_TIME.addEventListener('click', function() {
+      CARDS.hide();
+      if (CARD_TIME.style.display === 'none') {
+        chrome.storage.local.get({
+          time: null
+        }, function(items) {
+          if (items.time) {
+            CARD_TIME_FIELDS.forEach(function(e) {
+              e.min = items.time.min.value;
+              e.max = items.time.max.value;
+            });
+            CARD_TIME_FIELDS[0].value = items.time.min.selected;
+            CARD_TIME_FIELDS[1].value = items.time.max.selected;
+            CARD_TIME.show();
+          } else {
+            CARD_SYNC.show();
+          }
+        });
+      }
+    });
+
+    // Botão de confimação para seleção de período
+    CARD_TIME_OK.addEventListener('click', function() {
+      chrome.storage.local.get({
+        time: null
+      }, function(items) {
+        if (items.time) {
+          var min = CARD_TIME_FIELDS[0].value;
+          var max = CARD_TIME_FIELDS[1].value;
+          if (new Date(Date.parse(min)) - new Date(Date.parse(max)) <= 0) {
+            items.time.min.selected = min;
+            items.time.max.selected = max;
+            chrome.storage.local.set({
+              time: items.time
+            });
+          }
+          CARD_TIME.hide();
+          showPage();
+        }
+      });
+    });
+
+    // Fecha o drawer ao clicar em um link
+    DRAWER_LINKS.addEventListener('click', function() {
+      DRAWER.classList.toggle('is-visible');
+    });
+
+    // Botão para seleção de página
+    BTNS_PAGE.addEventListener('click', function() {
+      showPage(this.hash);
+    });
+
+    // Atualiza o Material Design no DOM
+    function upgradeDom() {
+      window.componentHandler.upgradeDom();
+    }
+
+    // Redimensiona a página de acordo com o tamanho da mesma
+    window.addEventListener('resize', function() {
+      showPage();
+    });
+
+    // Exibe a página padrão
     showPage();
   });
   
-})(this.chrome, this.jQuery, this.dash, this.graph, this.componentHandler);
+  /* Funções auxiliares */
+
+  // Seletor de elemento
+  function $(selector, e) {
+    if (!e) {
+      e = document;
+    }
+    var n = e.querySelectorAll(selector);
+    return (n.length > 1)
+      ? Array.prototype.slice.call(n)
+      : n[0];
+  }
+
+  // Exibe um elemento
+  Element.prototype.show = function() {
+    this.style.display = 'block';
+  };
+
+  // Esconde um elemento
+  Element.prototype.hide = function() {
+    this.style.display = 'none';
+  };
+
+  // Insere ou retorna um elemento html
+  Element.prototype.html = function(html) {
+    if (html !== undefined) {
+      this.innerHTML = html;
+    }
+    return this.innerHTML;
+  };
+
+  // Esconde elementos de uma lista
+  Array.prototype.hide = function() {
+    if (this[0] instanceof Element) {
+      this.forEach(function(e) {
+        e.hide();
+      }); 
+    }
+  };
+
+  // Adiciona eventos a elementos de uma lista
+  Array.prototype.addEventListener = function(evt, callback) {
+    if (this[0] instanceof Element) {
+      this.forEach(function(e) {
+        e.addEventListener(evt, callback);
+      });
+    }
+  };
+
+  // Inicia a aplicação
+  init();
+
+})(this.chrome, this.mdash, this.graph);

@@ -39,3 +39,7 @@ body > div {
 .mdl-card__supporting-text {
   width: 93.5% !important;
 }
+
+.error-message {
+  color: red;
+}
