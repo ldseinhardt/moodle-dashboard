@@ -134,6 +134,28 @@
     return listOfUsers;
   };
   
+  dash.users = function(url, course, callback) {
+    ajax({
+      url: url + "/enrol/users.php",
+      data: {
+        id: course,
+        role: 5 // Estudante
+      },
+      success: function(xhr) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(xhr.responseText, "text/html");
+        var user = doc.querySelectorAll("table > tbody > tr td > div[class*='firstname']");
+        
+        var users = [];
+        for (var i = 0; i < user.length; i++) {
+          users.push(user[i].innerHTML);
+        }
+
+        callback(users);
+      }
+    });
+  };
+  
   dash.moodle = function(url, callback) {
     var location = document.createElement("a");
     location.href = url;
