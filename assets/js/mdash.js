@@ -3,144 +3,7 @@
 
   var mdash = {};
 
-  // Retorna a lista de usuários unicos contidos nos logs
-  mdash.uniqueUsers = function(data) {
-    var listOfUniqueUsers = [];
-    data.forEach(function(context) {
-      context.users.forEach(function(user) {
-        addInArray(listOfUniqueUsers, 'name', user['user'], {
-            name: user['user'],
-            selected: true
-        });
-      });
-    });
-    // Ordena de modo crescente pelo nome de usuário
-    listOfUniqueUsers.sort(function(a, b) {
-      if (a.name < b.name)
-        return -1;
-      if (a.name > b.name)
-        return 1;
-      return 0;
-    });
-    return listOfUniqueUsers;
-  };
-
-  // Retorna a lista de dias contidos nos logs, além do primeiro e último dia
-  mdash.uniqueDays = function(data) {
-    var listOfUniqueDays = [];
-    data.forEach(function(context) {
-      context.users.forEach(function(user) {
-        user.components.forEach(function(component) {
-          component.actions.forEach(function(action) {
-            action.informations.forEach(function(information) {
-              information.times.forEach(function(time) {
-                var value = new Date(time).toDateString();
-                addInArray(listOfUniqueDays, null, value, value);
-              });
-            });
-          });
-        });
-      });
-    });
-    // Ordena de modo crescente pela data
-    listOfUniqueDays.sort(function(a, b){
-      return new Date(Date.parse(a)) - new Date(Date.parse(b));
-    });
-    var min = new Date(listOfUniqueDays[0]).toISOString().slice(0, 10);
-    var max = new Date(listOfUniqueDays[listOfUniqueDays.length-1]).toISOString().slice(0, 10);
-    return {
-      min: {value: min, selected: min},
-      max: {value: max, selected: max},
-      list: listOfUniqueDays
-    };
-  };
-
-  // Retorna a lista de componentes e ações e suas quantidades
-  mdash.listOfActions = function(data, users, time) {
-    var listOfActions = {'name': 'Actions', 'children': []};
-    data.forEach(function(context) {
-      context.users.forEach(function(user) {
-        if (checkUser(users, user['user'])) {
-          user.components.forEach(function(component) {
-            var i = addInArray(listOfActions.children, 'name', component['component'], {
-              'name': component['component'],
-              'children': []
-            });
-            component.actions.forEach(function(action) {
-              var j = addInArray(listOfActions.children[i].children, 'name', action['action'], {
-                'name': action['action'],
-                'size': 0
-              });
-              action.informations.forEach(function(information) {
-                listOfActions.children[i].children[j].size += checkTime(information.times, time);
-              });
-            });
-          });
-        }
-      });
-    });
-    // Ordena de modo crescente as interações pelo nome do componente
-    listOfActions.children.sort(function(a, b) {
-      if (a.name < b.name)
-        return -1;
-      if (a.name > b.name)
-        return 1;
-      return 0;
-    });
-    return listOfActions;
-  };
-
-  // Retorna a lista de Usuários e o numero de ações
-  mdash.listOfUsers = function(data, users, time) {
-    var listOfUsers = [];
-    data.forEach(function(context) {
-      context.users.forEach(function(user) {
-        if (checkUser(users, user['user'])) {
-          var i = addInArray(listOfUsers, 'name', user['user'], {
-            'name': user['user'],
-            'size': 0
-          });
-          user.components.forEach(function(component) {
-            component.actions.forEach(function(action) {
-              action.informations.forEach(function(information) {
-                listOfUsers[i].size += checkTime(information.times, time);
-              });
-            });
-          });
-        }
-      });
-    });
-    // Ordena de modo decrescente os usuários pelo número de interações
-    listOfUsers.sort(function(a, b) {
-      if (a.size > b.size)
-        return -1;
-      if (a.size < b.size)
-        return 1;
-      return 0;
-    });
-    return listOfUsers;
-  };
-
-  mdash.users = function(url, course, callback) {
-    ajax({
-      url: url + '/enrol/users.php',
-      data: {
-        id: course,
-        role: 5 // Estudante
-      },
-      success: function(xhr) {
-        var parser = new window.DOMParser();
-        var doc = parser.parseFromString(xhr.responseText, 'text/html');
-        var user = doc.querySelectorAll('table > tbody > tr td > div[class*="firstname"]');
-        var users = [];
-        for (var i = 0; i < user.length; i++) {
-          users.push(user[i].innerHTML);
-        }
-        callback(users);
-      }
-    });
-  };
-
+  // Realiza requisições para obter url, linguagem e cursos do moodle
   mdash.moodle = function(url, callback) {
     var location = document.createElement('a');
     location.href = url;
@@ -235,8 +98,7 @@
         } else {
           if (options.fail instanceof Function) {
             options.fail({
-              type: 1,
-              message: 'Formato Inválido'
+              error: 2
             });
           }
         }
@@ -245,8 +107,7 @@
         setDefaultLang(options.url, options.lang);
         if (options.fail instanceof Function) {
           options.fail({
-            type: 0,
-            message: xhr.statusText
+            error: 1
           });
         }
       },
@@ -254,6 +115,147 @@
         setDefaultLang(options.url, options.lang);
       }
     });
+  };
+
+  // Realiza uma requisição para obter usuários do moodle
+  mdash.users = function(url, course, callback) {
+    var STUDENT = 5;
+    ajax({
+      url: url + '/enrol/users.php',
+      data: {
+        id: course,
+        role: STUDENT
+      },
+      success: function(xhr) {
+        var parser = new window.DOMParser();
+        var doc = parser.parseFromString(xhr.responseText, 'text/html');
+        var user = doc.querySelectorAll('table > tbody > tr > td > div[class*="firstname"]');
+        var users = [];
+        for (var i = 0; i < user.length; i++) {
+          users.push({
+            name: user[i].innerHTML,
+            selected: true            
+          });
+        }
+        if (users.length) {
+          users.sort(function(a, b){
+            var a = a.name.toLowerCase()
+              , b = b.name.toLowerCase()
+              ;
+            if (a < b)
+              return -1;
+            if (a > b)
+              return 1;
+            return 0;
+          });
+          callback(users);
+        } else {
+          callback({
+            error: 2
+          });
+        }
+      },
+      error: function() {
+        callback({
+          error: 1
+        });
+      }
+    });
+  };
+
+  // Retorna o primeiro e último dia dos dados
+  mdash.time = function(data) {
+    var listOfUniqueDays = [];
+    data.forEach(function(context) {
+      context.users.forEach(function(user) {
+        user.components.forEach(function(component) {
+          component.actions.forEach(function(action) {
+            action.informations.forEach(function(information) {
+              information.times.forEach(function(time) {
+                var value = new Date(time).toDateString();
+                addInArray(listOfUniqueDays, null, value, value);
+              });
+            });
+          });
+        });
+      });
+    });
+    // Ordena de modo crescente pela data
+    listOfUniqueDays.sort(function(a, b){
+      return new Date(Date.parse(a)) - new Date(Date.parse(b));
+    });
+    var min = new Date(listOfUniqueDays[0]).toISOString().slice(0, 10);
+    var max = new Date(listOfUniqueDays[listOfUniqueDays.length-1]).toISOString().slice(0, 10);
+    return {
+      min: {value: min, selected: min},
+      max: {value: max, selected: max}
+    };
+  };
+
+  // Retorna a lista de componentes e ações e suas quantidades
+  mdash.listOfActions = function(data, users, time) {
+    var listOfActions = {'name': 'Actions', 'children': []};
+    data.forEach(function(context) {
+      context.users.forEach(function(user) {
+        if (checkUser(users, user['user'])) {
+          user.components.forEach(function(component) {
+            var i = addInArray(listOfActions.children, 'name', component['component'], {
+              'name': component['component'],
+              'children': []
+            });
+            component.actions.forEach(function(action) {
+              var j = addInArray(listOfActions.children[i].children, 'name', action['action'], {
+                'name': action['action'],
+                'size': 0
+              });
+              action.informations.forEach(function(information) {
+                listOfActions.children[i].children[j].size += checkTime(information.times, time);
+              });
+            });
+          });
+        }
+      });
+    });
+    // Ordena de modo crescente as interações pelo nome do componente
+    listOfActions.children.sort(function(a, b) {
+      if (a.name < b.name)
+        return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    });
+    return listOfActions;
+  };
+
+  // Retorna a lista de Usuários e o número de ações
+  mdash.listOfUsers = function(data, users, time) {
+    var listOfUsers = [];
+    data.forEach(function(context) {
+      context.users.forEach(function(user) {
+        if (checkUser(users, user['user'])) {
+          var i = addInArray(listOfUsers, 'name', user['user'], {
+            'name': user['user'],
+            'size': 0
+          });
+          user.components.forEach(function(component) {
+            component.actions.forEach(function(action) {
+              action.informations.forEach(function(information) {
+                listOfUsers[i].size += checkTime(information.times, time);
+              });
+            });
+          });
+        }
+      });
+    });
+    // Ordena de modo decrescente os usuários pelo número de interações
+    listOfUsers.sort(function(a, b) {
+      if (a.size > b.size)
+        return -1;
+      if (a.size < b.size)
+        return 1;
+      return 0;
+    });
+    return listOfUsers;
   };
 
   // Retorna a linguagem do moodle
@@ -285,9 +287,7 @@
         var action = row['Action'].split(' (')[0].trim();
         processRow(data, {
           context: 'Course: '+row['Course'].trim(),
-          user: row['User full name'].trim().replace(/(?:^|\s)\S/g, function(a) {
-            return a.toUpperCase();
-          }),
+          user: row['User full name'].trim(),
           component: action.split(' ')[0].trim(),
           action: action,
           information: row['Information'].trim(),
@@ -317,9 +317,7 @@
       d3.csv.parse(csv).forEach(function(row) {
         processRow(data, {
           context: row['Event context'].trim(),
-          user: row['User full name'].trim().replace(/(?:^|\s)\S/g, function(a) {
-            return a.toUpperCase();
-          }),
+          user: row['User full name'].trim(),
           component: row['Component'].trim(),
           action: row['Event name'].trim(),
           information: row['Description'].trim(),
@@ -348,8 +346,9 @@
 
   // Verifica se um usuário esta selecionado
   function checkUser(users, name) {
+    name = name.replace(new RegExp(' ', 'g'), '');
     for (var i = 0; i < users.length; i ++) {
-      if (users[i].name === name) {
+      if (users[i].name.replace(new RegExp(' ', 'g'), '') === name) {
         return users[i].selected;
      }
     }

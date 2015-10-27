@@ -43,3 +43,7 @@ body > div {
 .error-message {
   color: red;
 }
+
+#card-user label {
+  text-transform: capitalize;
+}

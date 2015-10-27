@@ -146,13 +146,29 @@
               SPINNER.show();
             },
             done: function(data) {
-              chrome.storage.local.set({
-                data: data,
-                user: mdash.uniqueUsers(data),
-                time: mdash.uniqueDays(data)
+              mdash.users(items.url, course, function(response) {
+                if (response.hasOwnProperty('error')) {
+                  SPINNER.hide();
+                  switch (response.error) {
+                    case 1:
+                      CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+                      break;
+                    case 2:
+                      CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, não foi encontrado usuários.');
+                      break;
+                  }
+                  CARDS.hide();
+                  CARD_SYNC_COURSE.show();
+                } else {
+                  chrome.storage.local.set({
+                    data: data,
+                    user: response,
+                    time: mdash.time(data)
+                  });
+                  SPINNER.hide();
+                  showPage();
+                }
               });
-              SPINNER.hide();
-              showPage();
             },
             fail: function() {
               SPINNER.hide();
@@ -245,12 +261,11 @@
           time: null
         }, function(items) {
           if (items.time) {
-            CARD_TIME_FIELDS.forEach(function(e) {
+            CARD_TIME_FIELDS.forEach(function(e, i) {
               e.min = items.time.min.value;
               e.max = items.time.max.value;
+              e.value = items.time[i === 0 ? 'min' : 'max'].selected;
             });
-            CARD_TIME_FIELDS[0].value = items.time.min.selected;
-            CARD_TIME_FIELDS[1].value = items.time.max.selected;
             CARD_TIME.show();
           } else {
             CARD_SYNC.show();
@@ -261,23 +276,16 @@
 
     // Botão de confimação para seleção de período
     CARD_TIME_OK.addEventListener('click', function() {
-      chrome.storage.local.get({
-        time: null
-      }, function(items) {
-        if (items.time) {
-          var min = CARD_TIME_FIELDS[0].value;
-          var max = CARD_TIME_FIELDS[1].value;
-          if (new Date(Date.parse(min)) - new Date(Date.parse(max)) <= 0) {
-            items.time.min.selected = min;
-            items.time.max.selected = max;
-            chrome.storage.local.set({
-              time: items.time
-            });
+      if (new Date(Date.parse(CARD_TIME_FIELDS[0].value)) - new Date(Date.parse(CARD_TIME_FIELDS[1].value)) <= 0) {
+        chrome.storage.local.set({
+          time: {
+            min: {value: CARD_TIME_FIELDS[0].min, selected: CARD_TIME_FIELDS[0].value},
+            max: {value: CARD_TIME_FIELDS[1].max, selected: CARD_TIME_FIELDS[1].value}
           }
-          CARD_TIME.hide();
-          showPage();
-        }
-      });
+        });
+      }
+      CARD_TIME.hide();
+      showPage();
     });
 
     // Fecha o drawer ao clicar em um link

@@ -171,13 +171,18 @@
       .data(options.data)
       .text(function(d) {
         var name = d.name.split(' ');
-        return name[0] + ' ' + name[name.length-1];
+        return (name[0] + ' ' + name[name.length-1])
+                .replace(/(?:^|\s)\S/g, function(a) {
+                  return a.toUpperCase();
+                });
       })
       .attr('dy', '.35em')
       .style('text-anchor', 'left')
       .append('title')
         .text(function(d) {
-          return d.name;
+          return d.name.replace(/(?:^|\s)\S/g, function(a) {
+            return a.toUpperCase();
+          });
         });
 
     // Insere as barras  
@@ -195,7 +200,9 @@
         .attr('height', barHeight - 2)
       .append('title')
         .text(function(d) {
-          return d.name + ': ' + d.size;
+          return (d.name.replace(/(?:^|\s)\S/g, function(a) {
+            return a.toUpperCase();
+          })) + ': ' + d.size;
         });
   };
 
