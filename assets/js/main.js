@@ -76,15 +76,59 @@
       }
     }
 
+    // Sincroniza um curso do moodle
+    function sync(url, course, lang) {
+      mdash.sync({
+        url: url,
+        course: course,
+        lang: lang,
+        init: function() {
+          CARDS.hide();
+          SPINNER.show();
+        },
+        done: function(data) {
+          mdash.users(url, course, function(response) {
+            if (response.hasOwnProperty('error')) {
+              SPINNER.hide();
+              switch (response.error) {
+                case 1:
+                  CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+                  break;
+                case 2:
+                  CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, não foi encontrado usuários.');
+                  break;
+              }
+              CARDS.hide();
+              CARD_SYNC_COURSE.show();
+            } else {
+              chrome.storage.local.set({
+                data: data,
+                user: response,
+                time: mdash.time(data),
+                course: course
+              });
+              SPINNER.hide();
+              showPage();
+            }
+          });
+        },
+        fail: function() {
+          SPINNER.hide();
+          CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.');
+          CARD_SYNC_COURSE.show();
+        }
+      });
+    }
+
     // Botão de sincronização
     BTNS_SYNC.addEventListener('click', function() {
-      function listCourses(data, cid) {
+      function listCourses(options) {
         var html = '';
         var checked = false;
-        data.forEach(function(course, i) {
+        options.courses.forEach(function(course, i) {
           html += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect">';
           html += '<input type="radio" class="mdl-radio__button" name="course" value="' + course.id + '"';
-          if ((cid + i == 0) || (cid == course.id)) {
+          if ((options.course + i == 0) || (options.course == course.id)) {
             html += ' checked';
             checked = true;
           }
@@ -97,9 +141,13 @@
         if (!checked) {
           $('.mdl-radio:first-child', CARD_SYNC_COURSE).MaterialRadio.check();
         }
-        CARDS.hide();
-        CARD_SYNC_COURSE.show();
-      }      
+        if (options.courses.length === 1) {
+          sync(options.url, options.courses[0].id, options.lang);
+        } else {
+          CARDS.hide();
+          CARD_SYNC_COURSE.show();
+        }
+      }
       chrome.tabs.getSelected(null, function(tab) {
         if (tab.url.indexOf('chrome://') === -1 && tab.url.indexOf('chrome-extension://') === -1) {
           SPINNER.show();
@@ -121,18 +169,21 @@
               chrome.storage.local.get({
                 course: 0
               }, function(items) {
-                listCourses(response.courses, items.course);
+                response.course = items.course;
+                listCourses(response);
+                chrome.storage.local.set(response);
               });
-              chrome.storage.local.set(response);
             }
           });
         } else {
           chrome.storage.local.get({
+            url: null,
+            lang: null,
             courses: null,
             course: 0
           }, function(items) {
-            if (items.courses) {
-              listCourses(items.courses, items.course);
+            if (items.url && items.lang && items.courses) {
+              listCourses(items);
             } else {
               CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
               CARDS.hide();
@@ -150,47 +201,7 @@
         lang: 'en'
       }, function(items) {
         if (items.url) {
-          var course = $('.mdl-radio__button:checked', CARD_SYNC_COURSE).value;
-          mdash.sync({
-            url: items.url,
-            course: course,
-            lang: items.lang,
-            init: function() {
-              CARDS.hide();
-              SPINNER.show();
-            },
-            done: function(data) {
-              mdash.users(items.url, course, function(response) {
-                if (response.hasOwnProperty('error')) {
-                  SPINNER.hide();
-                  switch (response.error) {
-                    case 1:
-                      CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
-                      break;
-                    case 2:
-                      CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, não foi encontrado usuários.');
-                      break;
-                  }
-                  CARDS.hide();
-                  CARD_SYNC_COURSE.show();
-                } else {
-                  chrome.storage.local.set({
-                    data: data,
-                    user: response,
-                    time: mdash.time(data),
-                    course: course
-                  });
-                  SPINNER.hide();
-                  showPage();
-                }
-              });
-            },
-            fail: function() {
-              SPINNER.hide();
-              CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.');
-              CARD_SYNC_COURSE.show();
-            }
-          });
+          sync(items.url, $('.mdl-radio__button:checked', CARD_SYNC_COURSE).value, items.lang);
         } else {
           CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
         }
@@ -199,7 +210,11 @@
 
     // Botão para seleção de usuários
     BTNS_USER.addEventListener('click', function() {
-      CARDS.hide();
+      CARDS.forEach(function(e) {
+        if (e != CARD_USER) {
+          e.hide();
+        }
+      });
       if (CARD_USER.style.display === 'none') {
         chrome.storage.local.get({
           user: null
@@ -213,12 +228,15 @@
               html += '</label>';
             });
             CARD_USER_LIST.html(html);
-            CARD_USER.show();
             upgradeDom();
+            CARD_USER.show();
           } else {
             CARD_SYNC.show();
           }
         });
+      } else {
+        CARD_USER.hide();
+        showPage();
       }
     });
 
@@ -270,7 +288,11 @@
 
     // Botão para seleção de período
     BTNS_TIME.addEventListener('click', function() {
-      CARDS.hide();
+      CARDS.forEach(function(e) {
+        if (e != CARD_TIME) {
+          e.hide();
+        }
+      });
       if (CARD_TIME.style.display === 'none') {
         chrome.storage.local.get({
           time: null
@@ -286,6 +308,9 @@
             CARD_SYNC.show();
           }
         });
+      } else {
+        CARD_TIME.hide();
+        showPage();
       }
     });
 
