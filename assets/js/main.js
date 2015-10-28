@@ -78,16 +78,25 @@
 
     // Botão de sincronização
     BTNS_SYNC.addEventListener('click', function() {
-      function listCourses(data) {
+      function listCourses(data, cid) {
         var html = '';
+        var checked = false;
         data.forEach(function(course, i) {
           html += '<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect">';
-          html += '<input type="radio" class="mdl-radio__button" name="course" value="' + course.id + '"' + (i === 0 ? ' checked' : '') + '/>';
+          html += '<input type="radio" class="mdl-radio__button" name="course" value="' + course.id + '"';
+          if ((cid + i == 0) || (cid == course.id)) {
+            html += ' checked';
+            checked = true;
+          }
+          html += '/>';
           html += '<span class="mdl-radio__label">' + course.name + '</span>';
           html += '</label><br/>';
         });
         CARD_SYNC_COURSE_LIST.html(html);
         upgradeDom();
+        if (!checked) {
+          $('.mdl-radio:first-child', CARD_SYNC_COURSE).MaterialRadio.check();
+        }
         CARDS.hide();
         CARD_SYNC_COURSE.show();
       }      
@@ -109,16 +118,21 @@
               CARD_SYNC.show();
             } else {
               SPINNER.hide();
-              listCourses(response.courses);
+              chrome.storage.local.get({
+                course: 0
+              }, function(items) {
+                listCourses(response.courses, items.course);
+              });
               chrome.storage.local.set(response);
             }
           });
         } else {
           chrome.storage.local.get({
-            courses: null
+            courses: null,
+            course: 0
           }, function(items) {
             if (items.courses) {
-              listCourses(items.courses);
+              listCourses(items.courses, items.course);
             } else {
               CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
               CARDS.hide();
@@ -163,7 +177,8 @@
                   chrome.storage.local.set({
                     data: data,
                     user: response,
-                    time: mdash.time(data)
+                    time: mdash.time(data),
+                    course: course
                   });
                   SPINNER.hide();
                   showPage();
