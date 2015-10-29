@@ -7,7 +7,13 @@
   graph.Bubble = function(options) {
     // Define valores padrão para argumentos
     var context = options.context || 'body'
-      , diameter = options.size || 960;
+      , diameter = options.size || 960
+      , data = classes(options.data);
+    
+    // Filtro para remover objetos com valor 0
+    data.children = data.children.filter(function(item) {
+      return (item.value > 0);
+    });
 
     // Define formatação e escala de cores
     var format = d3.format('.d'),
@@ -31,7 +37,7 @@
 
     // Cria e insere os nodos
     var node = svg.selectAll('.node')
-      .data(bubble.nodes(classes(options.data))
+      .data(bubble.nodes(data)
       .filter(function(d) {
         return !d.children;
       }))
