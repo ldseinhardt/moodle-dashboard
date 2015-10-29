@@ -1,97 +1,97 @@
 {
-	"app_name": {
-		"message": "Moodle Dashboard"
-	},
+  "app_name": {
+    "message": "Moodle Dashboard"
+  },
 
-	"app_description": {
-		"message": "Dashboard de Analítica de Aprendizagem para dados de logs do Moodle"
-	},
+  "app_description": {
+    "message": "Dashboard de Analítica de Aprendizagem para dados de logs do Moodle"
+  },
 
-	"browser_action_title": {
-		"message": "Clique aqui para acessar o Moodle Dashboard"
-	},
+  "browser_action_title": {
+    "message": "Clique aqui para acessar o Moodle Dashboard"
+  },
 
-	"welcome": {
-		"message": "Bem-vindo"
-	},
+  "welcome": {
+    "message": "Bem-vindo"
+  },
 
-	"synchronize": {
-		"message": "Sincronizar"
-	},
+  "synchronize": {
+    "message": "Sincronizar"
+  },
 
-	"synchronize_message_1": {
-		"message": "Acesse o Moodle ..."
-	},
+  "synchronize_message_1": {
+    "message": "Acesse o Moodle ..."
+  },
 
-	"synchronize_message_2": {
-		"message": "Sincronize os dados do Moodle ..."
-	},
+  "synchronize_message_2": {
+    "message": "Sincronize os dados do Moodle ..."
+  },
 
-	"synchronize_error_access": {
-		"message": "Erro de sincronização, acesse o Moodle."
-	},
+  "synchronize_error_access": {
+    "message": "Erro de sincronização, acesse o Moodle."
+  },
 
-	"synchronize_error_permission": {
-		"message": "Erro de sincronização, verifique se você está conectado ao Moodle como professor."
-	},
+  "synchronize_error_permission": {
+    "message": "Erro de sincronização, verifique se você está conectado ao Moodle como professor."
+  },
 
-	"synchronize_error_users": {
-		"message": "Erro de sincronização, não foi encontrado usuários."
-	},
+  "synchronize_error_users": {
+    "message": "Erro de sincronização, não foi encontrado usuários."
+  },
 
-	"course": {
-		"message": "Curso"
-	},
+  "course": {
+    "message": "Curso"
+  },
 
-	"course_message": {
-		"message": "Selecione o curso."
-	},
+  "course_message": {
+    "message": "Selecione o curso."
+  },
 
-	"users": {
-		"message": "Usuários"
-	},
+  "users": {
+    "message": "Usuários"
+  },
 
-	"users_message": {
-		"message": "Selecione os usuários."
-	},
+  "users_message": {
+    "message": "Selecione os usuários."
+  },
 
-	"period": {
-		"message": "Período"
-	},
+  "period": {
+    "message": "Período"
+  },
 
-	"period_message": {
-		"message": "Selecione o período."
-	},
+  "period_message": {
+    "message": "Selecione o período."
+  },
 
-	"settings": {
-		"message": "Configurações"
-	},
+  "settings": {
+    "message": "Configurações"
+  },
 
-	"settings_message": {
-		"message": "Opções de configuração."
-	},
+  "settings_message": {
+    "message": "Opções de configuração."
+  },
 
-	"views": {
-		"message": "Visualizações"
-	},
+  "views": {
+    "message": "Visualizações"
+  },
 
-	"actions": {
-		"message": "Ações"
-	},
+  "actions": {
+    "message": "Ações"
+  },
 
-	"users_interactions": {
-		"message": "Usuários e Interações"
-	},
+  "users_interactions": {
+    "message": "Usuários e Interações"
+  },
 
-	"ok": {
-		"message": "Confirmar"
-	},
+  "ok": {
+    "message": "Confirmar"
+  },
 
-	"select_all": {
-		"message": "Selecionar todos"
-	},
+  "select_all": {
+    "message": "Selecionar todos"
+  },
 
-	"Invert": {
-		"message": "Inverter"
-	}
+  "Invert": {
+    "message": "Inverter"
+  }
 }
