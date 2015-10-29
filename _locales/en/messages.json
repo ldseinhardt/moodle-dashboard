@@ -55,12 +55,12 @@
     "message": "Select users."
   },
 
-  "period": {
-    "message": "Period"
+  "date_range": {
+    "message": "Date range"
   },
 
-  "period_message": {
-    "message": "Select the period."
+  "date_range_message": {
+    "message": "Select the date range."
   },
 
   "settings": {
@@ -91,7 +91,7 @@
     "message": "Select all"
   },
 
-  "Invert": {
-    "message": "Invert"
+  "invert_selection": {
+    "message": "Invert selection"
   }
 }

@@ -55,11 +55,11 @@
     "message": "Selecione os usuários."
   },
 
-  "period": {
+  "date_range": {
     "message": "Período"
   },
 
-  "period_message": {
+  "date_range_message": {
     "message": "Selecione o período."
   },
 
@@ -91,7 +91,7 @@
     "message": "Selecionar todos"
   },
 
-  "Invert": {
-    "message": "Inverter"
+  "invert_selection": {
+    "message": "Inverter seleção"
   }
 }
