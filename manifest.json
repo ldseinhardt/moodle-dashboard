@@ -1,7 +1,7 @@
 {
-  "name": "Moodle Dashboard",
+  "name": "__MSG_app_name__",
 
-  "description": "Dashboard de Analítica de Aprendizagem para dados de logs do Moodle",
+  "description": "__MSG_app_description__",
 
   "version": "0.1",
 
@@ -10,7 +10,7 @@
   "author": "Luan Einhardt <ldseinhardt@gmail.com>",
 
   "browser_action": {
-    "default_title": "Moodle Dashboard",
+    "default_title": "__MSG_browser_action_title__",
     "default_icon": "assets/img/icon-32.png",
     "default_popup": "main.html"
   },
@@ -26,6 +26,8 @@
     "32": "assets/img/icon-32.png",
     "48": "assets/img/icon-48.png"
   },
+
+  "default_locale": "en",
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 

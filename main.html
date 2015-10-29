@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html"; charset="utf-8"/>
-    <title>Moodle Dashboard</title>
+    <title class="__MSG_app_name__"></title>
     <link rel="stylesheet" href="vendor/material-design-lite/css/material.min.css"/>
     <link rel="stylesheet" href="assets/css/main.css"/>
     <link rel="stylesheet" href="assets/css/graph.css"/>
@@ -12,8 +12,8 @@
       <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <header class="mdl-layout__header">
           <div class="mdl-layout__header-row">
-            <!-- Titulo -->
-            <a class="mdl-navigation__link btn-page" href="#1"><span class="mdl-layout-title">Moodle Dashboard</span></a>
+            <!-- Title -->
+            <a class="mdl-navigation__link btn-page" href="#1"><span class="mdl-layout-title __MSG_app_name__"></span></a>
             <div class="mdl-layout-spacer"></div>
             <nav class="mdl-navigation">
               <a class="mdl-navigation__link btn-sync" id="menu-sync"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">sync</i></span></a>
@@ -21,19 +21,19 @@
               <a class="mdl-navigation__link btn-time" id="menu-time"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">query_builder</i></span></a>
               <a class="mdl-navigation__link btn-page" id="menu-conf" href="#config"><span class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">settings</i></span></a>
               <!-- Tooltip -->
-              <div class="mdl-tooltip mdl-tooltip--large" for="menu-sync">Sincronizar</div>
-              <div class="mdl-tooltip mdl-tooltip--large" for="menu-user">Filtrar Usuários</div>
-              <div class="mdl-tooltip mdl-tooltip--large" for="menu-time">Filtrar Período</div>
-              <div class="mdl-tooltip mdl-tooltip--large" for="menu-conf">Configurações</div>
+              <div class="mdl-tooltip mdl-tooltip--large __MSG_synchronize__" for="menu-sync"></div>
+              <div class="mdl-tooltip mdl-tooltip--large __MSG_users__" for="menu-user"></div>
+              <div class="mdl-tooltip mdl-tooltip--large __MSG_period__" for="menu-time"></div>
+              <div class="mdl-tooltip mdl-tooltip--large __MSG_settings__" for="menu-conf"></div>
             </nav>
           </div>
         </header>
 
         <div class="mdl-layout__drawer">
-          <span class="mdl-layout-title">Visualizações</span>
+          <span class="mdl-layout-title __MSG_views__"></span>
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link btn-page" href="#1">Ações</a>
-            <a class="mdl-navigation__link btn-page" href="#2">Usuários e interações</a>
+            <a class="mdl-navigation__link btn-page __MSG_actions__" href="#1"></a>
+            <a class="mdl-navigation__link btn-page __MSG_users_interactions__" href="#2"></a>
           </nav>
         </div>
 
@@ -43,109 +43,91 @@
               <div class="mdl-spinner mdl-js-spinner is-active"></div>
             </div>
 
-            <!-- User -->
+            <!-- Users -->
             <div id="card-user" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text">Usuários</h2>
+                <h2 class="mdl-card__title-text __MSG_users__"></h2>
               </div>
               <div class="mdl-card__supporting-text">
-                <p align="justify">
-                  Selecione os usuários.
-                </p>
+                <p align="justify" class="__MSG_users_message__"></p>
                 <p class="items"></p>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect action-confirm">
-                  Confirmar
-                </a>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect action-confirm __MSG_ok__"></a>
                 <div class="mdl-layout-spacer"></div>
-                <!-- Right aligned menu on top of button  -->
                 <button id="filter_users_actions" class="mdl-button mdl-js-button mdl-button--icon">
                   <i class="material-icons">more_vert</i>
                 </button>
                 <ul class="mdl-menu mdl-menu--top-right mdl-js-menu mdl-js-ripple-effect" for="filter_users_actions">
-                  <li class="mdl-menu__item action-select-all">Selecionar todos</li>
-                  <li class="mdl-menu__item action-invert">Inverter</li>
+                  <li class="mdl-menu__item action-select-all __MSG_select_all__"></li>
+                  <li class="mdl-menu__item action-invert __MSG_invert__"></li>
                 </ul>
               </div>
             </div>
 
-            <!-- Time -->
+            <!-- Period -->
             <div id="card-time" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text">Período</h2>
+                <h2 class="mdl-card__title-text __MSG_period__"></h2>
               </div>
               <div class="mdl-card__supporting-text">
-                <p align="justify">
-                  Selecione o período.
-                </p>
+                <p align="justify" class="__MSG_period_message__"></p>
                 <div style="text-align: center">
                   <input type="date"/> - <input type="date"/>
                 </div>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect action-confirm">
-                  Confirmar
-                </a>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect action-confirm __MSG_ok__"></a>
               </div>
             </div>
 
-            <!-- Sync -->
+            <!-- Synchronize -->
             <div id="card-sync" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text">Bem-vindo</h2>
+                <h2 class="mdl-card__title-text __MSG_welcome__"></h2>
               </div>
               <div class="mdl-card__supporting-text">
                 <ol>
-                  <li>Acesse o Moodle.</li>
-                  <li>Sincronize os dados de logs.</li>
+                  <li class="__MSG_synchronize_message_1__"></li>
+                  <li class="__MSG_synchronize_message_2__"></li>
                 </ol>
                 <p class="error-message"></p>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect btn-sync">
-                  Sincronizar
-                </a>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect btn-sync __MSG_synchronize__"></a>
               </div>
             </div>
 
-            <!-- Sync Course -->
+            <!-- Synchronize Course -->
             <div id="card-sync-course" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text">Curso</h2>
+                <h2 class="mdl-card__title-text __MSG_course__"></h2>
               </div>
               <div class="mdl-card__supporting-text">
-                <p align="justify">
-                  Selecione o curso.
-                </p>
+                <p align="justify" class="__MSG_course_message__"></p>
                 <p class="items"></p>
                 <p class="error-message"></p>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect btn-sync-course">
-                  Sincronizar
-                </a>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect btn-sync-course __MSG_synchronize__"></a>
               </div>
             </div>
 
-            <!-- Config -->
+            <!-- Settings -->
             <div id="card-conf" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text">Configurações</h2>
+                <h2 class="mdl-card__title-text __MSG_settings__"></h2>
               </div>
               <div class="mdl-card__supporting-text">
-                <p>
-                  Opções de configurações.<br/><br/>
-                </p>
+                <p class="__MSG_settings_message__"></p>
+                <br/><br/>
               </div>
               <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                  Confirmar
-                </a>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect __MSG_ok__"></a>
               </div>
             </div>
 
-            <!-- Graph -->
+            <!-- Graphics -->
             <div id="card-graph" class="mdl-card mdl-shadow--2dp demo-card-square">
               <div class="mdl-card__title mdl-card--expand">
                 <h2 class="mdl-card__title-text"></h2>

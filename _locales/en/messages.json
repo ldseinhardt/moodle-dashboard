@@ -1,0 +1,97 @@
+{
+	"app_name": {
+		"message": "Moodle Dashboard"
+	},
+
+	"app_description": {
+		"message": "Learning Analytics Dashboard for Moodle logs data"
+	},
+
+	"browser_action_title": {
+		"message": "Click here to access Moodle Dashboard"
+	},
+
+	"welcome": {
+		"message": "Welcome"
+	},
+
+	"synchronize": {
+		"message": "Synchronize"
+	},
+
+	"synchronize_message_1": {
+		"message": "Access the Moodle ..."
+	},
+
+	"synchronize_message_2": {
+		"message": "Synchronizes the Moodle data ..."
+	},
+
+	"synchronize_error_access": {
+		"message": "Error synchronizing, access the Moodle."
+	},
+
+	"synchronize_error_permission": {
+		"message": "Error synchronizing, make sure you are logged in to Moodle as a teacher."
+	},
+
+	"synchronize_error_users": {
+		"message": "Error synchronizing, was not found users."
+	},
+	
+	"course": {
+		"message": "Course"
+	},
+
+	"course_message": {
+		"message": "Select the course."
+	},
+
+	"users": {
+		"message": "Users"
+	},
+
+	"users_message": {
+		"message": "Select users."
+	},
+
+	"period": {
+		"message": "Period"
+	},
+
+	"period_message": {
+		"message": "Select the period."
+	},
+
+	"settings": {
+		"message": "Settings"
+	},
+
+	"settings_message": {
+		"message": "Configuration options."
+	},
+
+	"views": {
+		"message": "Views"
+	},
+
+	"actions": {
+		"message": "Actions"
+	},
+
+	"users_interactions": {
+		"message": "Users and Interactions"
+	},
+
+	"ok": {
+		"message": "Ok"
+	},
+
+	"select_all": {
+		"message": "Select all"
+	},
+
+	"Invert": {
+		"message": "Invert"
+	}
+}

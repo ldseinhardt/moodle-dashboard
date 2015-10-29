@@ -33,6 +33,44 @@
       , BTNS_PAGE              = $('.btn-page')
       ;
 
+    // i18n
+    function __(key, value) {
+      return chrome.i18n.getMessage(key, value);
+    }
+
+    [
+      'app_name',
+      'welcome',
+      'synchronize',
+      'synchronize_message_1',
+      'synchronize_message_2',
+      'course',
+      'course_message',
+      'users',
+      'users_message',
+      'period',
+      'period_message',
+      'settings',
+      'settings_message',
+      'views',
+      'actions',
+      'users_interactions',
+      'ok',
+      'select_all',
+      'invert'
+    ].forEach(function(key) {
+      var e = $('.__MSG_' + key + '__');
+      if (e) {
+        if (e.length) {
+          e.forEach(function(e) {
+            e.html(__(key));
+          });
+        } else {
+          e.html(__(key));
+        }
+      }
+    });
+
     // Exibe a página
     function showPage(hash) {
       function showGraph(title, callback) {
@@ -62,13 +100,13 @@
           CARD_CONF.show();
           break;
         case '2':
-          showGraph('Usuários e interações', function(data, user, time, options) {
+          showGraph(__('users_interactions'), function(data, user, time, options) {
             options.data = mdash.listOfUsers(data, user, time);
             graph.Bar(options);
           });
           break;
         default:
-          showGraph('Ações', function(data, user, time, options) {
+          showGraph(__('actions'), function(data, user, time, options) {
             options.data = mdash.listOfActions(data, user, time);
             options.size = 430;
             graph.Bubble(options);
@@ -92,10 +130,10 @@
               SPINNER.hide();
               switch (response.error) {
                 case 1:
-                  CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+                  CARD_SYNC_COURSE_ERROR.html(__('synchronize_error_access'));
                   break;
                 case 2:
-                  CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, não foi encontrado usuários.');
+                  CARD_SYNC_COURSE_ERROR.html(__('synchronize_error_users'));
                   break;
               }
               CARDS.hide();
@@ -114,7 +152,7 @@
         },
         fail: function() {
           SPINNER.hide();
-          CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, verifique se você esta logado ao Moodle como professor.');
+          CARD_SYNC_COURSE_ERROR.html(__('synchronize_error_permission'));
           CARD_SYNC_COURSE.show();
         }
       });
@@ -156,10 +194,10 @@
                 SPINNER.hide();
               switch (response.error) {
                 case 1:
-                  CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+                  CARD_SYNC_ERROR.html(__('synchronize_error_access'));
                   break;
                 case 2:
-                  CARD_SYNC_ERROR.html('Erro ao sincronizar, verifique se você está logado ao Moodle.');
+                  CARD_SYNC_ERROR.html(__('synchronize_error_permission'));
                   break;
               }
               CARDS.hide();
@@ -185,7 +223,7 @@
             if (items.url && items.lang && items.courses) {
               listCourses(items);
             } else {
-              CARD_SYNC_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+              CARD_SYNC_ERROR.html(__('synchronize_error_access'));
               CARDS.hide();
               CARD_SYNC.show();
             }
@@ -203,7 +241,7 @@
         if (items.url) {
           sync(items.url, $('.mdl-radio__button:checked', CARD_SYNC_COURSE).value, items.lang);
         } else {
-          CARD_SYNC_COURSE_ERROR.html('Erro ao sincronizar, acesse o Moodle.');
+          CARD_SYNC_COURSE_ERROR.html(__('synchronize_error_access'));
         }
       });
     });
