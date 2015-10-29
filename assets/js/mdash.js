@@ -164,8 +164,8 @@
   };
 
   // Retorna o primeiro e último dia dos dados
-  mdash.time = function(data) {
-    var listOfUniqueDays = [];
+  mdash.dates = function(data) {
+    var dates = [];
     data.forEach(function(context) {
       context.users.forEach(function(user) {
         user.components.forEach(function(component) {
@@ -173,7 +173,7 @@
             action.informations.forEach(function(information) {
               information.times.forEach(function(time) {
                 var value = new Date(time).toDateString();
-                addInArray(listOfUniqueDays, null, value, value);
+                addInArray(dates, null, value, value);
               });
             });
           });
@@ -181,19 +181,28 @@
       });
     });
     // Ordena de modo crescente pela data
-    listOfUniqueDays.sort(function(a, b){
+    dates.sort(function(a, b){
       return new Date(Date.parse(a)) - new Date(Date.parse(b));
     });
-    var min = new Date(listOfUniqueDays[0]).toISOString().slice(0, 10);
-    var max = new Date(listOfUniqueDays[listOfUniqueDays.length-1]).toISOString().slice(0, 10);
+    var min = new Date(dates[0]).toISOString().slice(0, 10);
+    var max = new Date(dates[dates.length-1]).toISOString().slice(0, 10);
     return {
-      min: {value: min, selected: min},
-      max: {value: max, selected: max}
+      min: min,
+      max: max,
+      selected: {
+        min: min,
+        max: max
+      }
     };
   };
 
+  // Retorna um resumo dos dados
+  mdash.resume = function(data, users, data_range) {
+    return {};
+  };
+
   // Retorna a lista de componentes e ações e suas quantidades
-  mdash.listOfActions = function(data, users, time) {
+  mdash.listOfActions = function(data, users, date_range) {
     var listOfActions = {'name': 'Actions', 'children': []};
     data.forEach(function(context) {
       context.users.forEach(function(user) {
@@ -209,7 +218,7 @@
                 'size': 0
               });
               action.informations.forEach(function(information) {
-                listOfActions.children[i].children[j].size += checkTime(information.times, time);
+                listOfActions.children[i].children[j].size += checkTime(information.times, date_range);
               });
             });
           });
@@ -228,7 +237,7 @@
   };
 
   // Retorna a lista de Usuários e o número de ações
-  mdash.listOfUsers = function(data, users, time) {
+  mdash.listOfUsers = function(data, users, date_range) {
     var listOfUsers = [];
     data.forEach(function(context) {
       context.users.forEach(function(user) {
@@ -240,7 +249,7 @@
           user.components.forEach(function(component) {
             component.actions.forEach(function(action) {
               action.informations.forEach(function(information) {
-                listOfUsers[i].size += checkTime(information.times, time);
+                listOfUsers[i].size += checkTime(information.times, date_range);
               });
             });
           });
@@ -356,14 +365,12 @@
   }
 
   // Verifica se a data está no intervalo selecionado
-  function checkTime(times, time) {
-    var min = time.min.selected;
-    var max = time.max.selected;
+  function checkTime(dates, date_range) {
     var count = 0;
-    for (var i = 0; i < times.length; i++) {
-      var value = new Date(times[i]).toISOString().slice(0, 10);
-        if ((new Date(Date.parse(min)) - new Date(Date.parse(value)) <= 0) && 
-            (new Date(Date.parse(value)) - new Date(Date.parse(max)) <= 0)) {
+    for (var i = 0; i < dates.length; i++) {
+      var value = new Date(dates[i]).toISOString().slice(0, 10);
+        if ((new Date(Date.parse(date_range.min)) - new Date(Date.parse(value)) <= 0) && 
+            (new Date(Date.parse(value)) - new Date(Date.parse(date_range.max)) <= 0)) {
           count++;
         }
     }
