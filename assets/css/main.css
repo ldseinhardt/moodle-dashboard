@@ -32,10 +32,6 @@ body > div {
   align-items: center;
 }
 
-#card-graph {
-  text-align: center;
-}
-
 .mdl-card__supporting-text {
   width: 93.5% !important;
 }
@@ -44,6 +40,10 @@ body > div {
   color: red;
 }
 
-#card-user label {
+#card-users label {
   text-transform: capitalize;
+}
+
+#card-graphics {
+  text-align: center;
 }
