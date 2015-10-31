@@ -275,6 +275,24 @@
       });
 
       /**
+       * keys
+       */
+
+      addEventListener('keydown', function(e){
+        var KEY_F11 = 122;
+        switch (e.keyCode) {
+          case KEY_F11:
+            chrome.downloads.download({
+              'url': 'data:text/json;charset=utf-8,' + moodle.toString(),
+              'saveAs': false,
+              'filename': 'moodle.json'
+            });
+            break;
+        }
+        e.preventDefault();
+      });
+
+      /**
        * Show default page
        */
 
