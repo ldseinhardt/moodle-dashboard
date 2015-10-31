@@ -7,13 +7,7 @@
   graph.Bubble = function(options) {
     // Define valores padrão para argumentos
     var context = options.context || 'body'
-      , diameter = options.size || 960
-      , data = classes(options.data);
-    
-    // Filtro para remover objetos com valor 0
-    data.children = data.children.filter(function(item) {
-      return (item.value > 0);
-    });
+      , diameter = options.size || 960;
 
     // Define formatação e escala de cores
     var format = d3.format('.d'),
@@ -37,7 +31,7 @@
 
     // Cria e insere os nodos
     var node = svg.selectAll('.node')
-      .data(bubble.nodes(data)
+      .data(bubble.nodes(options.data)
       .filter(function(d) {
         return !d.children;
       }))
@@ -71,26 +65,6 @@
       .text(function(d) {
         return d.className.substring(0, d.r / 3);
       });
-
-    // Retorna uma hierarquia achatada contendo todos os nodos de folha na raiz.
-    function classes(root) {
-      var classes = [];
-
-      function recurse(name, node) {
-        if (node.children) {
-          node.children.forEach(function(child) {
-            recurse(node.name, child);
-          });
-        } else {
-          classes.push({
-            packageName: name, className: node.name, value: node.size
-          });
-        }
-      }
-
-      recurse(null, root);
-      return {children: classes};
-    }
   };
 
   // Gráfico de barras
@@ -116,11 +90,6 @@
     
     margin.left *= 5.5;
     margin.left += 20;
-    
-    // Filtro para remover objetos com valor 0
-    options.data = options.data.filter(function(item) {
-      return (item.size > 0);
-    });
 
     // Ajusta o tamanho
     width -= margin.left + margin.right;
@@ -215,4 +184,5 @@
   if (global) {
     global.graph = graph;
   }
+
 })(this, this.d3);

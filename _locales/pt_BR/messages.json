@@ -79,7 +79,7 @@
     "message": "Ações"
   },
 
-  "users_interactions": {
+  "users_interaction": {
     "message": "Usuários e Interações"
   },
 
@@ -93,5 +93,9 @@
 
   "invert_selection": {
     "message": "Inverter seleção"
+  },
+
+  "no_data": {
+    "message": "Sem dados para exibir."
   }
 }
