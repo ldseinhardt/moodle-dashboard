@@ -233,6 +233,59 @@
   };
 
   /**
+   * Get Summary of data
+   */
+
+  Moodle.prototype.getSummary = function() {
+    var response = this.response;
+    if (!this.hasCourses()) {
+      return response.ERROR_NOT_SYNC_COURSES;
+    }
+    var course = this.courses.filter(function(e) {
+      return e.selected;
+    })[0];
+    if (!course.hasOwnProperty('users')) {
+      return response.ERROR_NOT_SYNC_USERS;
+    }
+    return {
+      recorded: {
+        users: course.users.length,
+        actions: actions(true),
+        date: {
+          min: course.date.min,
+          max: course.date.max
+        }
+      },
+      selected: {
+        users: course.users.filter(function(user) {
+          return user.selected;
+        }).length,
+        actions: actions(),
+        date: course.date.selected
+      }
+    };
+    function actions(recorded) {
+      var actions = [];
+      course.users.forEach(function(user) {
+        if (user.selected || recorded) {
+          user.components.forEach(function(component) {
+            component.actions.forEach(function(action) {
+              action.informations.forEach(function(information) {
+                if (checkTime(information.times, recorded ? course.date : course.date.selected) > 0) {
+                  addInArray(actions, 'name', action['action'] + information['information'], {
+                    'name': action['action'] + information['information']
+                  });
+                }
+              });
+            });
+          });
+        }
+      });
+      return actions.length;
+    }
+  };
+
+  /**
    * Get list of users x interactions
    */
 

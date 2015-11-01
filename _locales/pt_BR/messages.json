@@ -75,6 +75,10 @@
     "message": "Visualizações"
   },
 
+  "summary": {
+    "message": "Resumo"
+  },
+
   "actions": {
     "message": "Ações"
   },
@@ -97,5 +101,33 @@
 
   "no_data": {
     "message": "Sem dados para exibir."
+  },
+
+  "metrics": {
+    "message": "Métrica"
+  },
+
+  "selected": {
+    "message": "Selecionado"
+  },
+
+  "recorded": {
+    "message": "Gravado"
+  },
+
+  "total_unique_users": {
+    "message": "Total de usuários únicos"
+  },
+
+  "total_unique_actions": {
+    "message": "Total de atividades únicas"
+  },
+
+  "first_activity": {
+    "message": "Primeira atividade"
+  },
+
+  "last_activity": {
+    "message": "Última atividade"
   }
 }

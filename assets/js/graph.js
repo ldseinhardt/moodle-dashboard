@@ -22,8 +22,10 @@
    * Bubble graphic
    */
 
-  Graph.prototype.bubble = function() {
-    // Arguments
+  Graph.prototype.bubble = function(options) {
+    if (options) {
+      this.setProperty(options);
+    }
     if (!this.argExists(['context', 'data', 'size'])) {
       return null;
     }
@@ -92,8 +94,10 @@
    * Bar graphic
    */
 
-  Graph.prototype.bar = function() {
-    // Arguments
+  Graph.prototype.bar = function(options) {
+    if (options) {
+      this.setProperty(options);
+    }
     if (!this.argExists(['context', 'data', 'size'])) {
       return null;
     }

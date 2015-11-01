@@ -60,6 +60,7 @@
     'settings',
     'settings_message',
     'views',
+    'summary',
     'actions',
     'users_interaction',
     'ok',
@@ -395,29 +396,68 @@
         CARD_SETTINGS.show();
         break;
       case '2':
-        showGraph(__('users_interaction'), function(graph) {
-          var data = moodle.getUsersInteraction();
-          if (data === moodle.response.ERROR_NO_DATA) {
-            CARD_GRAPHICS_BODY.html(__('no_data'));
-          } else {
-            graph.setProperty({
-              data: data
-            }).bar();
-          }
-        });
-        break;
-      default:
         showGraph(__('actions'), function(graph) {
           var data = moodle.getInteractionsSize();
           if (data === moodle.response.ERROR_NO_DATA) {
             CARD_GRAPHICS_BODY.html(__('no_data'));
           } else {
-            graph.setProperty({
+            graph.bubble({
               size: 430,
               data: data
-            }).bubble();
+            });
           }
         });
+        break;
+      case '3':
+        showGraph(__('users_interaction'), function(graph) {
+          var data = moodle.getUsersInteraction();
+          if (data === moodle.response.ERROR_NO_DATA) {
+            CARD_GRAPHICS_BODY.html(__('no_data'));
+          } else {
+            graph.bar({
+              data: data
+            });
+          }
+        });
+        break;
+      default:
+        var summary = moodle.getSummary();
+        CARDS.hide();
+        CARD_GRAPHICS_TITLE.html(__('summary'));
+        var html = '';
+        html += '<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="margin: auto">';
+        html += '<thead>';
+        html += '<tr>';
+        html += '<th class="mdl-data-table__cell--non-numeric">' + __('metrics') + '</th>';
+        html += '<th>' + __('selected') + '</th>';
+        html += '<th>' + __('recorded') + '</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+        html += '<tr>';
+        html += '<td class="mdl-data-table__cell--non-numeric">' + __('total_unique_users') + '</td>';
+        html += '<td style="text-align: center; font-weight: bold">' + summary.selected.users + '</td>';
+        html += '<td style="text-align: center">' + summary.recorded.users + '</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="mdl-data-table__cell--non-numeric">' + __('total_unique_actions') + '</td>';
+        html += '<td style="text-align: center; font-weight: bold">' + summary.selected.actions + '</td>';
+        html += '<td style="text-align: center">' + summary.recorded.actions + '</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="mdl-data-table__cell--non-numeric">' + __('first_activity') + '</td>';
+        html += '<td style="font-weight: bold">' + new Date(summary.selected.date.min).toLocaleDateString() + '</td>';
+        html += '<td>' + new Date(summary.recorded.date.min).toLocaleDateString() + '</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="mdl-data-table__cell--non-numeric">' + __('last_activity') + '</td>';
+        html += '<td style="font-weight: bold">' + new Date(summary.selected.date.max).toLocaleDateString() + '</td>';
+        html += '<td>' + new Date(summary.recorded.date.max).toLocaleDateString() + '</td>';
+        html += '</tr>';
+        html += '</tbody>';
+        html += '</table>';
+        CARD_GRAPHICS_BODY.html(html);
+        CARD_GRAPHICS.show();
     }
     function showGraph(title, callback) {
       if (moodle.hasLogs()) {
