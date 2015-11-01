@@ -1,4 +1,4 @@
-(function(chrome, Moodle, graph) {
+(function(chrome, Moodle, Graph) {
   'use strict';
 
   /**
@@ -395,23 +395,27 @@
         CARD_SETTINGS.show();
         break;
       case '2':
-        showGraph(__('users_interaction'), function(options) {
-          options.data = moodle.getUsersInteraction();
-          if (options.data === moodle.response.ERROR_NO_DATA) {
+        showGraph(__('users_interaction'), function(graph) {
+          var data = moodle.getUsersInteraction();
+          if (data === moodle.response.ERROR_NO_DATA) {
             CARD_GRAPHICS_BODY.html(__('no_data'));
           } else {
-            graph.Bar(options);
+            graph.setProperty({
+              data: data
+            }).bar();
           }
         });
         break;
       default:
-        showGraph(__('actions'), function(options) {
-          options.data = moodle.getInteractionsSize();
-          options.size = 430;
-          if (options.data === moodle.response.ERROR_NO_DATA) {
+        showGraph(__('actions'), function(graph) {
+          var data = moodle.getInteractionsSize();
+          if (data === moodle.response.ERROR_NO_DATA) {
             CARD_GRAPHICS_BODY.html(__('no_data'));
           } else {
-            graph.Bubble(options);
+            graph.setProperty({
+              size: 430,
+              data: data
+            }).bubble();
           }
         });
     }
@@ -419,11 +423,10 @@
       if (moodle.hasLogs()) {
         CARDS.hide();
         CARD_GRAPHICS_TITLE.html(title);
-        CARD_GRAPHICS_BODY.html('');
-        callback({
+        callback(new Graph({
           context: CARD_GRAPHICS_BODY,
           size: window.innerWidth * 0.91
-        });
+        }));
         CARD_GRAPHICS.show();
       } else {
         CARDS.hide();
@@ -441,4 +444,4 @@
     return message || key;
   }
 
-})(this.chrome, this.Moodle, this.graph);
+})(this.chrome, this.Moodle, this.Graph);

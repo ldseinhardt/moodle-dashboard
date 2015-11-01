@@ -1,37 +1,56 @@
 (function(global, d3) {
   'use strict';
 
-  var graph = {};
+  /**
+   * =========================================================================
+   * Public functions
+   * =========================================================================
+   */
 
-  // Gráfico de bolhas
-  graph.Bubble = function(options) {
-    // Define valores padrão para argumentos
-    var context = options.context || 'body'
-      , diameter = options.size || 960;
+  /**
+   * Graph constructor
+   */
+
+  var Graph = function(options) {
+    if (!options) {
+      return this; 
+    }
+    return this.setProperty(options);
+  };
+
+  /**
+   * Bubble graphic
+   */
+
+  Graph.prototype.bubble = function() {
+    // Arguments
+    if (!this.argExists(['context', 'data', 'size'])) {
+      return null;
+    }
 
     // Define formatação e escala de cores
-    var format = d3.format('.d'),
-        color = d3.scale.category20c();
+    var format = d3.format('.d')
+      , color = d3.scale.category20c();
 
     // Define o layout do gráfico
     var bubble = d3.layout.pack()
       .sort(null)
-      .size([diameter, diameter])
+      .size([this.size, this.size])
       .padding(1.5);
 
     // Cria o svg e insere na página
-    var svg = d3.select(context)
+    var svg = d3.select(this.context).html('')
       .append('div')
         .attr('class', 'graph')
       .append('div')
         .attr('class', 'bubble_chart')
       .append('svg')
-        .attr('width', diameter)
-        .attr('height', diameter);
+        .attr('width', this.size)
+        .attr('height', this.size);
 
     // Cria e insere os nodos
     var node = svg.selectAll('.node')
-      .data(bubble.nodes(options.data)
+      .data(bubble.nodes(this.data)
       .filter(function(d) {
         return !d.children;
       }))
@@ -65,13 +84,22 @@
       .text(function(d) {
         return d.className.substring(0, d.r / 3);
       });
+
+    return this;
   };
 
-  // Gráfico de barras
-  graph.Bar = function(options) {
+  /**
+   * Bar graphic
+   */
+
+  Graph.prototype.bar = function() {
+    // Arguments
+    if (!this.argExists(['context', 'data', 'size'])) {
+      return null;
+    }
+
     // Define valores padrão para argumentos
-    var context  = options.context || 'body'
-      , width = options.size || 900
+    var width = this.size
       , height;
 
     // Define largura das barras    
@@ -80,8 +108,8 @@
     // Define as margens
     var margin = {top: 20, right: 20, bottom: 20, left: 0};
     
-    for (var i = 0; i < options.data.length; i++) {
-      var d = options.data[i].name.split(' ');
+    for (var i = 0; i < this.data.length; i++) {
+      var d = this.data[i].name.split(' ');
       var v = d[0].length + d[d.length - 1].length + 1;
       if (v > margin.left) {
         margin.left = v;
@@ -93,7 +121,7 @@
 
     // Ajusta o tamanho
     width -= margin.left + margin.right;
-    height = options.data.length * barHeight;
+    height = this.data.length * barHeight;
 
     // Define a escala para x e y
     var x = d3.scale.linear()
@@ -103,11 +131,11 @@
       .rangeRoundBands([0, height], .1);
 
     // Define o dominio para x e y
-    x.domain([0, d3.max(options.data, function(d) {
+    x.domain([0, d3.max(this.data, function(d) {
       return d.size;
     })]);
 
-    y.domain(options.data.map(function(d) {
+    y.domain(this.data.map(function(d) {
       return d.name;
     }));
 
@@ -122,7 +150,7 @@
       .orient('left');
 
     // Cria o svg e insere na página
-    var svg = d3.select(context)
+    var svg = d3.select(this.context).html('')
       .append('div')
         .attr('class', 'graph')
       .append('div')
@@ -143,7 +171,7 @@
       .attr('transform', 'translate(-10, 0)')
       .call(yAxis)
       .selectAll('text')
-      .data(options.data)
+      .data(this.data)
       .text(function(d) {
         var name = d.name.split(' ');
         return (name[0] + ' ' + name[name.length-1])
@@ -162,7 +190,7 @@
 
     // Insere as barras  
     svg.selectAll('.bar')
-      .data(options.data)
+      .data(this.data)
       .enter()
       .append('rect')
         .attr('class', 'bar')
@@ -179,10 +207,42 @@
             return a.toUpperCase();
           })) + ': ' + d.size;
         });
+
+    return this;
   };
 
+  /**
+   * Set all properties of options in Graph
+   */
+
+  Graph.prototype.setProperty = function(options) {
+    Object.keys(options).forEach(function(key) {
+      this[key] = options[key];
+    }, this);
+    return this;
+  };
+
+  /**
+   * Check if has properties
+   */
+
+  Graph.prototype.argExists = function(args) {
+    for (var i = 0; i < args.length; i++) {
+      if (!this.hasOwnProperty(args[i])) {
+        return false;
+      }
+    }    
+    return true;    
+  };
+
+  /**
+   * =========================================================================
+   * Exports
+   * =========================================================================
+   */
+
   if (global) {
-    global.graph = graph;
+    global.Graph = Graph;
   }
 
 })(this, this.d3);
