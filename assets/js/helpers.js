@@ -61,11 +61,27 @@
   };
 
   /**
+   * Get first element of array
+   */
+
+  Array.prototype.first = function() {
+    return this[0];
+  };
+
+  /**
+   * Get last element of array
+   */
+
+  Array.prototype.last = function() {
+    return this[this.length - 1];
+  };
+
+  /**
    * Hide all elements of array
    */
 
   Array.prototype.hide = function() {
-    if (this[0] instanceof Element) {
+    if (this.first() instanceof Element) {
       this.forEach(function(e) {
         e.hide();
       }); 
@@ -77,7 +93,7 @@
    */
 
   Array.prototype.addEventListener = function(evt, callback) {
-    if (this[0] instanceof Element) {
+    if (this.first() instanceof Element) {
       this.forEach(function(e) {
         e.addEventListener(evt, callback);
       });

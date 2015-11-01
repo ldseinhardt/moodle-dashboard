@@ -32,7 +32,7 @@
     location.href = url;
     var paths = location.pathname
       .replace(/\/$/, '').split('/').filter(function(path) {
-        return !/\.|\0/.test(path);
+        return !/\./.test(path);
       });
     var sync = {
       success: false,
@@ -129,9 +129,7 @@
       return callback(response.ERROR_NOT_SYNC_COURSES);
     }
     var url = this.url;
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     ajax({
       url: url + '/enrol/users.php',
       data: {
@@ -184,9 +182,7 @@
     if (!this.hasCourses()) {
       return callback(response.ERROR_NOT_SYNC_COURSES);
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     if (!course.hasOwnProperty('users')) {
       return callback(response.ERROR_NOT_SYNC_USERS);
     }
@@ -215,21 +211,19 @@
           return callback(response.ERROR_MOODLE_PERMISSION);
         }
       },
-      error: function(xhr) {
-        ajax({
-          url: url + '/?lang=' + lang,
-          type: 'HEAD'
-        });
+      error: function() {
+        setDefaultLang();
         return callback(response.ERROR_MOODLE_ACCESS);
       },
-      received: function(xhr) {
-        ajax({
-          url: url + '/?lang=' + lang,
-          type: 'HEAD'
-        });
-      }
+      received: setDefaultLang
     });
     return this;
+    function setDefaultLang() {
+      ajax({
+        url: url + '/?lang=' + lang,
+        type: 'HEAD'
+      });
+    }
   };
 
   /**
@@ -237,15 +231,12 @@
    */
 
   Moodle.prototype.getSummary = function() {
-    var response = this.response;
     if (!this.hasCourses()) {
-      return response.ERROR_NOT_SYNC_COURSES;
+      return this.response.ERROR_NOT_SYNC_COURSES;
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     if (!course.hasOwnProperty('users')) {
-      return response.ERROR_NOT_SYNC_USERS;
+      return this.response.ERROR_NOT_SYNC_USERS;
     }
     return {
       recorded: {
@@ -294,9 +285,7 @@
     if (!this.hasCourses()) {
       return response.ERROR_NOT_SYNC_COURSES;
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     if (!course.hasOwnProperty('users')) {
       return response.ERROR_NOT_SYNC_USERS;
     }
@@ -345,9 +334,7 @@
     if (!this.hasCourses()) {
       return response.ERROR_NOT_SYNC_COURSES;
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     if (!course.hasOwnProperty('users')) {
       return response.ERROR_NOT_SYNC_USERS;
     }
@@ -402,9 +389,7 @@
    */
 
   Moodle.prototype.setUsers = function(users) {
-    var us = this.courses.filter(function(e) {
-      return e.selected;
-    })[0].users;
+    var us = this.getCourse().users;
     for (var i = 0; i < us.length; i++) {
       us[i].selected = (users.indexOf(i) >= 0);
     }
@@ -416,9 +401,7 @@
    */
 
   Moodle.prototype.setDate = function(date) {
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
+    var course = this.getCourse();
     if (date.hasOwnProperty('min')) {
       course.date.selected.min = date.min;
     }
@@ -426,6 +409,16 @@
       course.date.selected.max = date.max;
     }
     return this;
+  };
+
+  /**
+   * Get Course selected
+   */
+
+  Moodle.prototype.getCourse = function() {
+    return this.courses.filter(function(e) {
+      return e.selected;
+    }).first();
   };
 
   /**
@@ -449,9 +442,7 @@
 
   Moodle.prototype.getUsers = function() {
     var users = [];
-    this.courses.filter(function(e) {
-      return e.selected;
-    })[0].users.forEach(function(user, i) {
+    this.getCourse().users.forEach(function(user, i) {
       users.push({
         id: i,
         name: user.name,
@@ -466,9 +457,7 @@
    */
 
   Moodle.prototype.getDate = function() {
-    return this.courses.filter(function(e) {
-      return e.selected;
-    })[0].date;
+    return this.getCourse().date;
   };
 
   /**
@@ -490,10 +479,7 @@
     if (!this.hasCourses()) {
       return false;
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
-    if (!course.hasOwnProperty('users')) {
+    if (!this.getCourse().hasOwnProperty('users')) {
       return false;
     }
     return true;
@@ -507,10 +493,7 @@
     if (!this.hasCourses()) {
       return false;
     }
-    var course = this.courses.filter(function(e) {
-      return e.selected;
-    })[0];
-    return course.hasOwnProperty('date');
+    return this.getCourse().hasOwnProperty('date');
   };
 
   /**
@@ -611,8 +594,8 @@
       dates.sort(function(a, b){
         return new Date(a) - new Date(b);
       });
-      var min = new Date(dates[0]).toISOString().slice(0, 10);
-      var max = new Date(dates[dates.length-1]).toISOString().slice(0, 10);
+      var min = new Date(dates.first()).toISOString().slice(0, 10);
+      var max = new Date(dates.last()).toISOString().slice(0, 10);
       course.date = {
         min: min,
         max: max,
@@ -652,7 +635,7 @@
               users[i].components = [];
             }
             processRow(users[i].components, {
-              component: row['Event name'].trim().split(' ')[0],
+              component: row['Event name'].trim().split(' ').first(),
               action: row['Event name'].trim(),
               information: row['Description'].trim(),
               time: Date.parse(row['Time'])
@@ -679,9 +662,9 @@
             if (!users[i].hasOwnProperty('components')) {
               users[i].components = [];
             }
-            var action = row['Action'].split(' (')[0].trim();
+            var action = row['Action'].split(' (').first().trim();
             processRow(users[i].components, {
-              component: action.trim().split(' ')[0],
+              component: action.trim().split(' ').first(),
               action: action,
               information: row['Information'].trim(),
               time: Date.parse(row['Time'])
@@ -698,7 +681,7 @@
 
     function processRow(data, row, nodes) {
       var a, b, i, obj;
-      a = nodes[0];
+      a = nodes.first();
       b = nodes.length > 1 ? nodes[1] + 's' : null;
       if (b) {
         obj = {};
