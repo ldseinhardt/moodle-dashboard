@@ -274,18 +274,17 @@
        */
 
       function processRow(data, row, nodes) {
-        var a, b, i, obj;
-        a = nodes.first();
-        b = nodes.length > 1 ? nodes[1] + 's' : null;
-        if (b) {
-          obj = {};
-          obj[a] = row[a];
-          obj[b] = [];
+        var item = nodes.shift();
+        if (nodes.length) {
+          var children = nodes.first() + 's';
+          var obj = {};
+          obj[item] = row[item];
+          obj[children] = [];
+          var i = addInArray(data, item, row[item], obj);
+          return processRow(data[i][children], row, nodes);
         } else {
-          obj = row[a];
-        }    
-        i = addInArray(data, a, row[a], obj);
-        return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
+          addInArray(data, item, row[item], row[item]);
+        }
       }
 
       /**
