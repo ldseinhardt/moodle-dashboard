@@ -115,12 +115,20 @@
     "message": "Gravado"
   },
 
+  "total_page_views": {
+    "message": "Total de visualizações de páginas"
+  },
+
   "total_unique_users": {
     "message": "Total de usuários únicos"
   },
 
   "total_unique_actions": {
     "message": "Total de atividades únicas"
+  },
+
+  "total_unique_pages": {
+    "message": "Total de páginas únicas"
   },
 
   "first_activity": {

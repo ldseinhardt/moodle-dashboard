@@ -338,44 +338,62 @@
     if (!course.hasOwnProperty('users')) {
       return this.response.ERROR_NOT_SYNC_USERS;
     }
+    var recorded_view = 0
+      , selected_view = 0
+      , recorded_actn = []
+      , selected_actn = []
+      , recorded_page = []
+      , selected_page = [];
+    course.users.forEach(function(user) {
+      if (user.hasOwnProperty('components')) {
+        user.components.forEach(function(component) {
+          component.actions.forEach(function(action) {
+            action.informations.forEach(function(information) {
+              var unique = action['action'] + information['information'];
+              var rapu = checkTime(information.times, course.date);
+              if (rapu) {
+                addInArray(recorded_actn, null, unique, unique);
+                if (/view/.test(action['action'])) {
+                  recorded_view += rapu;
+                  addInArray(recorded_page, null, unique, unique);
+                }
+              }
+              if (user.selected) {
+                var sapu = checkTime(information.times, course.date.selected);
+                if (sapu) {
+                  addInArray(selected_actn, null, unique, unique);
+                  if (/view/.test(action['action'])) {
+                    selected_view += sapu;
+                    addInArray(selected_page, null, unique, unique);
+                  }
+                }
+              }
+            });
+          });
+        });
+      }
+    });
     return {
       recorded: {
+        views: recorded_view,
         users: course.users.length,
-        actions: actions(true),
+        actions: recorded_actn.length,
+        pages: recorded_page.length,
         date: {
           min: course.date.min,
           max: course.date.max
         }
       },
       selected: {
+        views: selected_view,
         users: course.users.filter(function(user) {
           return user.selected;
         }).length,
-        actions: actions(),
+        actions: selected_actn.length,
+        pages: selected_page.length,
         date: course.date.selected
       }
     };
-    function actions(recorded) {
-      var actions = [];
-      course.users.forEach(function(user) {
-        if (user.selected || recorded) {
-          if (user.hasOwnProperty('components')) {
-            user.components.forEach(function(component) {
-              component.actions.forEach(function(action) {
-                action.informations.forEach(function(information) {
-                  var date = recorded ? course.date : course.date.selected;
-                  if (checkTime(information.times, date) > 0) {
-                    var value = action['action'] + information['information'];
-                    addInArray(actions, null, value, value);
-                  }
-                });
-              });
-            });
-          }
-        }
-      });
-      return actions.length;
-    }
   };
 
   /**

@@ -115,12 +115,20 @@
     "message": "Recorded"
   },
 
+  "total_page_views": {
+    "message": "Total page views"
+  },
+
   "total_unique_users": {
     "message": "Total unique users"
   },
 
   "total_unique_actions": {
     "message": "Total unique actions"
+  },
+
+  "total_unique_pages": {
+    "message": "Total unique pages"
   },
 
   "first_activity": {
