@@ -194,18 +194,13 @@
         id: course.id,
         chooselog: 1,
         logformat: 'downloadascsv',
-        download: 'csv',
+        download: 'tsv',
         lang: 'en'
       },
       success: function(xhr) {
         var type = xhr.getResponseHeader('content-type') || '';
-        if (/application\/download/.test(type)) {
-          processRaw(xhr.responseText, 'tsv', course.users);
-          processDates(course);
-          return callback(response.SUCCESS);
-        } else if (/text\/csv/.test(type)) {
-          processRaw(xhr.responseText, 'csv', course.users);
-          processDates(course);
+        if (/application\/download|text\/tab-separated-values/.test(type)) {
+          processRaw(xhr.responseText, course);
           return callback(response.SUCCESS);
         } else {
           return callback(response.ERROR_MOODLE_PERMISSION);
@@ -218,11 +213,114 @@
       received: setDefaultLang
     });
     return this;
+
+    /**
+     * Set Moodle language
+     */
+
     function setDefaultLang() {
       ajax({
         url: url + '/?lang=' + lang,
         type: 'HEAD'
       });
+    }
+
+    /**
+     * Process Raw Moodle data
+     * logs:
+     *  - Action / Event name
+     *  - Information / Description
+     *  - Time
+     */
+
+    function processRaw(logs, course) {
+      logs = logs.replace(/\"Saved\sat\:(.+)\s/, '');
+      d3.tsv.parse(logs).forEach(function(row) {
+        var user = row['User full name'].replace(/\s/g, '').toLowerCase();
+        for (var i = 0; i < course.users.length; i++) {
+          if (course.users[i].name.replace(/\s/g, '').toLowerCase() == user) {
+            if (!course.users[i].hasOwnProperty('components')) {
+              course.users[i].components = [];
+            }
+            var options = {
+              information: row[row.hasOwnProperty('Information')
+                ? 'Information'
+                : 'Description'
+              ].trim(),
+              time: Date.parse(row['Time'])
+            };
+            if (row.hasOwnProperty('Action')) {
+              options.action = row['Action'].split(' (').first().trim();
+            } else {
+              options.action = row['Event name'].trim();
+            }
+            options.component = options.action.split(' ').first();
+            processRow(
+              course.users[i].components,
+              options,
+              ['component', 'action', 'information', 'time']
+            );
+            break;
+          }
+        }
+      });
+      processDates(course);
+
+      /**
+       * Process line logs and insert in data object
+       */
+
+      function processRow(data, row, nodes) {
+        var a, b, i, obj;
+        a = nodes.first();
+        b = nodes.length > 1 ? nodes[1] + 's' : null;
+        if (b) {
+          obj = {};
+          obj[a] = row[a];
+          obj[b] = [];
+        } else {
+          obj = row[a];
+        }    
+        i = addInArray(data, a, row[a], obj);
+        return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
+      }
+
+      /**
+       * Process dates (min, max)
+       */
+
+      function processDates(course) {
+        var dates = [];
+        course.users.forEach(function(user) {
+          if (user.hasOwnProperty('components')) {
+            user.components.forEach(function(component) {
+              component.actions.forEach(function(action) {
+                action.informations.forEach(function(information) {
+                  information.times.forEach(function(time) {
+                    addInArray(dates, null, time, time);
+                  });
+                });
+              });
+            });
+          }
+        });
+        if (dates.length) {
+           // Sort by date asc
+          dates.sort(function(a, b){
+            return new Date(a) - new Date(b);
+          });
+          var min = new Date(dates.first()).toISOString().slice(0, 10);
+          var max = new Date(dates.last()).toISOString().slice(0, 10);
+          course.date = {
+            min: min,
+            max: max,
+            selected: {
+              min: min,
+              max: max
+            }
+          };     
+        }
+      }
     }
   };
 
@@ -259,17 +357,19 @@
       var actions = [];
       course.users.forEach(function(user) {
         if (user.selected || recorded) {
-          user.components.forEach(function(component) {
-            component.actions.forEach(function(action) {
-              action.informations.forEach(function(information) {
-                if (checkTime(information.times, recorded ? course.date : course.date.selected) > 0) {
-                  addInArray(actions, 'name', action['action'] + information['information'], {
-                    'name': action['action'] + information['information']
-                  });
-                }
+          if (user.hasOwnProperty('components')) {
+            user.components.forEach(function(component) {
+              component.actions.forEach(function(action) {
+                action.informations.forEach(function(information) {
+                  if (checkTime(information.times, recorded ? course.date : course.date.selected) > 0) {
+                    addInArray(actions, 'name', action['action'] + information['information'], {
+                      'name': action['action'] + information['information']
+                    });
+                  }
+                });
               });
             });
-          });
+          }
         }
       });
       return actions.length;
@@ -295,7 +395,7 @@
       'children': []
     };
     course.users.forEach(function(user) {
-      if (user.selected) {
+      if (user.selected && user.hasOwnProperty('components')) {
         user.components.forEach(function(component) {
           var i = addInArray(
             data.children, 'name', component['component'], {
@@ -341,7 +441,7 @@
     var date = course.date.selected;
     var data = [];
     course.users.forEach(function(user) {
-      if (user.selected) {
+      if (user.selected && user.hasOwnProperty('components')) {
         var i = addInArray(data, 'name', user.name, {
           'name': user.name,
           'size': 0
@@ -568,131 +668,6 @@
     return {
       children: classes
     };
-  }
-
-  /**
-   * Process dates (min, max)
-   */
-
-  function processDates(course) {
-    var dates = [];
-    course.users.forEach(function(user) {
-      if (user.hasOwnProperty('components')) {
-        user.components.forEach(function(component) {
-          component.actions.forEach(function(action) {
-            action.informations.forEach(function(information) {
-              information.times.forEach(function(time) {
-                addInArray(dates, null, time, time);
-              });
-            });
-          });
-        });
-      }
-    });
-    if (dates.length) {
-       // Sort by date asc
-      dates.sort(function(a, b){
-        return new Date(a) - new Date(b);
-      });
-      var min = new Date(dates.first()).toISOString().slice(0, 10);
-      var max = new Date(dates.last()).toISOString().slice(0, 10);
-      course.date = {
-        min: min,
-        max: max,
-        selected: {
-          min: min,
-          max: max
-        }
-      };     
-    }
-  }
-
-  /**
-   * Process Raw Moodle data
-   */
-
-  function processRaw(logs, type, users) {
-    switch (type) {
-      case 'csv':
-        return processCSV(logs, users);
-      case 'tsv':
-        return processTSV(logs, users);
-    }
-
-    /**
-     * Process CSV data:
-     * Event name
-     * Description
-     * Time
-     */
-
-    function processCSV(csv, users) {
-      d3.csv.parse(csv).forEach(function(row) {
-        var user = row['User full name'].replace(/\s/g, '').toLowerCase();
-        for (var i = 0; i < users.length; i++) {
-          if (users[i].name.replace(/\s/g, '').toLowerCase() == user) {
-            if (!users[i].hasOwnProperty('components')) {
-              users[i].components = [];
-            }
-            processRow(users[i].components, {
-              component: row['Event name'].trim().split(' ').first(),
-              action: row['Event name'].trim(),
-              information: row['Description'].trim(),
-              time: Date.parse(row['Time'])
-            }, ['component', 'action', 'information', 'time']);
-            break;
-          }
-        }
-      }, this);
-    }
-
-    /**
-     * Process TSV data:
-     * Action
-     * Information
-     * Time
-     */
-
-    function processTSV(tsv, users) {
-      tsv = tsv.replace(/\"Saved\sat\:(.+)\s/, '');
-      d3.tsv.parse(tsv).forEach(function(row) {
-        var user = row['User full name'].replace(/\s/g, '').toLowerCase();
-        for (var i = 0; i < users.length; i++) {
-          if (users[i].name.replace(/\s/g, '').toLowerCase() == user) {
-            if (!users[i].hasOwnProperty('components')) {
-              users[i].components = [];
-            }
-            var action = row['Action'].split(' (').first().trim();
-            processRow(users[i].components, {
-              component: action.trim().split(' ').first(),
-              action: action,
-              information: row['Information'].trim(),
-              time: Date.parse(row['Time'])
-            }, ['component', 'action', 'information', 'time']);
-            break;
-          }
-        }
-      }, this);
-    }
-
-    /**
-     * Process line logs and insert in data object
-     */
-
-    function processRow(data, row, nodes) {
-      var a, b, i, obj;
-      a = nodes.first();
-      b = nodes.length > 1 ? nodes[1] + 's' : null;
-      if (b) {
-        obj = {};
-        obj[a] = row[a];
-        obj[b] = [];
-      } else {
-        obj = row[a];
-      }    
-      i = addInArray(data, a, row[a], obj);
-      return b ? processRow(data[i][b], row, nodes.slice(1)) : null;
-    }
   }
 
   /**
