@@ -220,7 +220,10 @@
 
     function setDefaultLang() {
       ajax({
-        url: url + '/?lang=' + lang,
+        url: url,
+        data: {
+          lang: lang
+        },
         type: 'HEAD'
       });
     }
@@ -361,10 +364,10 @@
             user.components.forEach(function(component) {
               component.actions.forEach(function(action) {
                 action.informations.forEach(function(information) {
-                  if (checkTime(information.times, recorded ? course.date : course.date.selected) > 0) {
-                    addInArray(actions, 'name', action['action'] + information['information'], {
-                      'name': action['action'] + information['information']
-                    });
+                  var date = recorded ? course.date : course.date.selected;
+                  if (checkTime(information.times, date) > 0) {
+                    var value = action['action'] + information['information'];
+                    addInArray(actions, null, value, value);
                   }
                 });
               });
