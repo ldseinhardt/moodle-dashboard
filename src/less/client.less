@@ -1,0 +1,382 @@
+@white: #fff;
+@black: #111;
+@gray: #ccc;
+@dark: #273135;
+@orange: #ff8533;
+@orange-medium: #ff751a;
+@orange-dark: #f60;
+@max-index: 16777271;
+
+html,
+body {
+  height: 100%;
+  background-color: @white;
+}
+
+.interface {
+  height: 100%;
+  display: none;
+}
+
+#moodle-select,
+#moodle-error {
+  color: @white;
+  background-color: @orange;
+
+  .box {
+    background-color: @orange;
+    padding: 8% 5%;
+    text-align: center;
+
+    .logo {
+      font-size: 124pt;
+    }
+
+    .title {
+      font-size: 24pt;
+      font-weight: bold;
+    }
+
+    .text {
+      font-size: 16pt;
+    }
+  }
+}
+
+#moodle-sync {
+  text-align: center;
+
+  .message {
+    padding-bottom: 10px;
+  }
+}
+
+#moodle-message {
+  text-align: center;
+}
+
+#moodle-select {
+  .box {
+    .moodle-list .moodle-item {
+      display: none;
+
+      .url {
+        font-size: 16pt;
+      }
+    }
+
+    a {
+      &:-webkit-any-link {
+        color: @black;
+        background-color: @white !important;
+        margin: 1%;
+      }
+
+      &:hover {
+        color: @orange;
+        background-color: @white !important;
+      }
+    }
+  }
+}
+
+#moodle-dashboard {
+  @sidebar-width: 360px;
+  @header-height: 200px;
+
+  color: @dark;
+  background-color: @white;
+
+  .sidebar {
+    position: fixed;
+    width: @sidebar-width;
+    height: 100%;
+    color: @gray;
+    background-color: @dark;
+
+    header {
+      height: @header-height;
+
+      .head {
+        width: 100%;
+        height: @header-height - 55;
+        text-align: center;
+        background-color: @orange;
+        display: table;
+
+        .box {
+          color: @white;
+          font-size: 12pt;
+          display: table-cell;
+          vertical-align: middle;
+        }
+      }
+
+      .menu {
+        padding: 12px 0;
+        background-color: @orange-medium;
+        border-bottom: 1px solid @white;
+
+        ul {
+          margin: 0;
+          padding: 3px;
+
+          li {
+            display: inline;
+
+            a {
+              &:-webkit-any-link {
+                padding: 17px 15px;
+                color: @white;
+              }
+
+              &:hover {
+                background-color: @orange-dark;
+              }
+            }
+
+            .active {
+              background-color: @orange-dark;
+            }
+          }
+        }
+      }
+    }
+
+    .nav {
+      li {
+        a {
+          &:-webkit-any-link {
+            color: @gray;
+            background-color: @dark;
+          }
+
+          &:hover {
+            color: @dark !important;
+            background-color: @white;
+          }
+        }
+
+        .active {
+          color: @orange !important;
+
+          &:hover {
+            color: @orange !important;
+            background-color: @white;
+          }
+        }
+      }
+    }
+
+    .content-box {
+      height: 100%;
+    }
+
+    .content {
+      margin-bottom: @header-height;
+
+      .submenu-item {
+        &:not(:first-child) {
+          display: none;
+        }
+      }
+
+      #submenu-daterange .box {
+        margin: 13px 30px;
+
+        .datetimepicker:not(:first-child) {
+          display: none;
+        }
+
+        .message {
+          padding: 10px;
+          text-align: center;
+          color: @gray;
+        }
+      }
+    }
+
+    .role-users-list {
+      padding: 10px 3px;
+      display: none;
+    }
+
+    .list-group-item-heading {
+      color: @gray;
+    }
+
+    .more-options {
+      top: 205px;
+      left: 330px;
+    }
+
+    a {
+      color: @gray;
+
+      &:-webkit-any-link {
+        color: @gray;
+      }
+
+      &:hover {
+        color: @orange;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .main {
+    margin-left: @sidebar-width;
+    height: 100%;
+
+    &:not(:first-child) {
+      display: none;
+    }
+
+    .long-content {
+      padding: 15px;
+
+      & > .title {
+        padding: 20px;
+        font-size: 18pt;
+        text-align: center;
+        border-bottom: 1px solid @white;
+      }
+    }
+  }
+
+  & > div:not(.sidebar) {
+    height: 100%;
+
+    .more-options {
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+  .more-options {
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .dropdown-menu {
+    a {
+      color: @dark;
+
+      &:-webkit-any-link {
+        color: @dark;
+      }
+
+      &:hover {
+        color: @orange;
+        cursor: pointer;
+      }
+    }
+
+    .active {
+      color: @orange !important;
+    }
+  }
+
+  #dashboard-content {
+    .default {
+      color: @gray;
+      padding: 10px;
+      text-align: center;
+
+      .message {
+        font-size: 14pt;
+      }
+
+      .material-icons {
+        font-size: 250pt;
+        font-weight: normal;
+      }
+    }
+
+    .data {
+      display: none;
+    }
+  }
+}
+
+a {
+  color: @dark;
+  box-shadow: none !important;
+
+  &:-webkit-any-link {
+    color: @dark;
+    box-shadow: none !important;
+  }
+
+  &:hover {
+    color: @orange;
+    cursor: pointer;
+  }
+}
+
+.btn-primary {
+  color: @orange !important;
+  box-shadow: none !important;
+
+  &:hover {
+    color: @orange-dark !important;
+  }
+}
+
+.long {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  & > .long-content {
+    position: absolute;
+    overflow: scroll;
+    overflow-x: hidden;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    &:focus {
+      outline: thin dotted;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.togglebutton {
+  label {
+    color: @orange-dark;
+
+    input[type="checkbox"]:checked + .toggle {
+      background-color: rgba(255, 85, 33, 0.5);
+
+      &::after {
+        background-color: rgba(255, 85, 20, 0.9);
+      }
+    }
+  }
+}
+
+.datepicker {
+  .active {
+    background-color: @orange !important;
+  }
+
+  .day:not(.active)::before {
+      border-bottom-color: @orange !important;
+  }
+
+  .day:not(.active):not(.disabled):hover,
+  .month:not(.active):not(.disabled):hover,
+  .year:not(.active):not(.disabled):hover,
+  .next:hover,
+  .picker-switch:hover,
+  .prev:hover {
+    color: @dark !important;
+  }
+}

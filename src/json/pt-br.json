@@ -1,0 +1,229 @@
+{
+  "sync_no_moodle_access": {
+    "message": "Houve um erro de sincronização por não estar logado ao Moodle como professsor."
+  },
+
+  "sync_no_courses": {
+    "message": "Houve um erro de sincronização por não estar logado ao Moodle como professsor ou então por não haver acesso às disciplinas disponíveis."
+  },
+
+  "sync_no_users": {
+    "message": "Houve um erro de sincronização por não estar logado ao Moodle como professsor ou então por não haver acesso aos usuários disponíveis."
+  },
+
+  "sync_no_data": {
+    "message": "Houve um erro de sincronização por não estar logado ao Moodle como professsor ou então por não haver acesso aos dados de logs disponíveis."
+  },
+
+  "select_all": {
+    "message": "Selecionar todos"
+  },
+
+  "invert_selection": {
+    "message": "Inverter seleção"
+  },
+
+  "manager": {
+    "message": "Gerente"
+  },
+
+  "course_creator": {
+    "message": "Criador de cursos"
+  },
+
+  "teacher": {
+    "message": "Professor"
+  },
+
+  "non_editing_teacher": {
+    "message": "Moderador"
+  },
+
+  "student": {
+    "message": "Estudante"
+  },
+
+  "guest": {
+    "message": "Visitante"
+  },
+
+  "authenticated_user": {
+    "message": "Usuário autenticado"
+  },
+
+  "authenticated_user_on_frontpage": {
+    "message": "Usuário autenticado na página inicial"
+  },
+
+  "naughty_student": {
+    "message": "Estudante impertinente"
+  },
+
+  "question_creator": {
+    "message": "Criador de questões"
+  },
+
+  "calendar_editor": {
+    "message": "Editor de calendário"
+  },
+
+  "member": {
+    "message": "Membro"
+  },
+
+  "participant": {
+    "message": "Participante"
+  },
+
+  "start_date": {
+    "message": "Data de início"
+  },
+
+  "end_date": {
+    "message": "Data de fim"
+  },
+
+  "go_to_today": {
+    "message": "Ir para hoje"
+  },
+
+  "clear_selection": {
+    "message": "Cancelar seleção"
+  },
+
+  "close_the_picker": {
+    "message": "Fechar o selecionador"
+  },
+
+  "select_month": {
+    "message": "Selecionar o mês"
+  },
+
+  "previous_month": {
+    "message": "Mês anterior"
+  },
+
+  "next_month": {
+    "message": "Próximo mês"
+  },
+
+  "select_year": {
+    "message": "Selecionar o ano"
+  },
+
+  "previous_year": {
+    "message": "Ano anterior"
+  },
+
+  "next_year": {
+    "message": "Próximo ano"
+  },
+
+  "select_decade": {
+    "message": "Selecionar década"
+  },
+
+  "previous_decade": {
+    "message": "Década anterior"
+  },
+
+  "next_decade": {
+    "message": "Próxima década"
+  },
+
+  "previous_century": {
+    "message": "Século anterior"
+  },
+
+  "next_century": {
+    "message": "Próximo século"
+  },
+
+  "last_day": {
+    "message": "Último dia"
+  },
+
+  "last_week": {
+    "message": "Última semana"
+  },
+
+  "last_month": {
+    "message": "Último mês"
+  },
+
+  "select_all_days": {
+    "message": "Selecionar todos os dias"
+  },
+
+  "days": {
+    "message": "dias"
+  },
+
+  "of": {
+    "message": "de"
+  },
+
+  "settings": {
+    "message": "Configurações"
+  },
+
+  "help": {
+    "message": "Ajuda"
+  },
+
+  "fullscreen": {
+    "message": "Tela cheia"
+  },
+
+  "fullscreen_exit": {
+    "message": "Tela cheia (sair)"
+  },
+
+  "exit": {
+    "message": "Sair"
+  },
+
+  "moodle_not_found": {
+    "message": "Nenhum moodle encontrado"
+  },
+
+  "moodle_not_found_msg": {
+    "message": "Acesse o seu moodle como professor para\nsincronizar os dados."
+  },
+
+  "synchronizing": {
+    "message": "Sincronizando"
+  },
+
+  "synchronizing_msg": {
+    "message": "Aguarde, enquanto os logs são sincronizados."
+  },
+
+  "close": {
+    "message": "Fechar"
+  },
+
+  "error_synchronizing": {
+    "message": "Erro ao sincronizar"
+  },
+
+  "error_synchronizing_msg": {
+    "message": "Houve um erro ao sincronizar os logs desse curso.\nVerifique se você está logado ao Moodle como professor e tente novamente."
+  },
+
+  "participants": {
+    "message": "Participantes"
+  },
+
+  "warning": {
+    "message": "Aviso"
+  },
+
+  "warning_users_not_found_msg": {
+    "message": "Os participantes do Moodle listados abaixo foram encontrados nos logs, mas não estão configurados como participantes do curso. Caso queira que estes possam ser visualizados por aqui, configure estes como participantes do curso no Moodle."
+  },
+
+  "content_default_msg": {
+    "message": "Sem dados"
+  }
+}

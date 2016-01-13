@@ -1,0 +1,12 @@
+node_modules
+bower_components
+build
+temp
+dist/*.html
+dist/js
+dist/css
+dist/fonts
+dist/LICENSE
+dist/_locales/*.json
+**/*.zip
+**/*.tar.gz

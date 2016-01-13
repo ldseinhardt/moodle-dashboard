@@ -1,0 +1,67 @@
+.moodle-dashboard {  
+  @white: #fff;
+  @orange: #ff8533;
+  @max-index: 16777271;
+  @button-size: 48px;
+  @message-width: 400px;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: @max-index;
+  opacity: 0.8;
+  cursor: pointer;
+
+    .button {
+      position: fixed;
+      top: 5px;
+      right: 5px;
+      width: @button-size;
+      height: @button-size;
+    }
+
+    img {
+      width: @button-size;
+      height: @button-size;
+    }
+
+    .message {
+      position: fixed;
+      top: 15px;
+      right: @button-size + 7;
+      max-width: @message-width;
+      color: @white;
+      background-color: @orange;
+      padding: 5px;
+      border-radius: 10px 0 10px 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .tada {
+      -webkit-animation: tada 0.6s;
+      -moz-animation: tada 0.6s;
+      animation: tada 0.6s;
+    }
+}
+
+@keyframes tada {
+  50% {
+    transform: scale3d(.3, .3, .3) rotate3d(0, 0, 1, -20deg);
+    transform-origin: center;
+  }
+  70%,
+  90% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 20deg);
+    transform-origin: center;
+  }
+  60%,
+  80% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -20deg);
+    transform-origin: center;
+  }
+  100% {
+    transform: scale3d(1, 1, 1);
+    transform-origin: center;
+  }
+}

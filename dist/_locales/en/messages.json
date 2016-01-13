@@ -1,0 +1,17 @@
+{
+  "lang": {
+    "message": "en"
+  },
+
+  "name": {
+    "message": "Moodle dashboard"
+  },
+
+  "description": {
+    "message": "Learning analytics dashboard for moodle logs data"
+  },
+
+  "access_dashboard": {
+    "message": "Click here to access Moodle dashboard"
+  }
+}

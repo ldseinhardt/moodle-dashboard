@@ -1,0 +1,89 @@
+{
+  "sync_no_moodle_access": {
+    "message": "There was a synchronization error for not being logged in as Moodle professsor."
+  },
+
+  "sync_no_courses": {
+    "message": "There was a synchronization error for not being logged in as Moodle professsor or else because there is no access to the available disciplines."
+  },
+
+  "sync_no_users": {
+    "message": "There was a synchronization error for not being logged in as Moodle professsor or else because there is no access to available users."
+  },
+
+  "sync_no_data": {
+    "message": "There was a synchronization error for not being logged in as Moodle professsor or else because there is no access to available data logs."
+  },
+
+  "moodle_not_found_msg": {
+    "message": "Access your Moodle as a teacher to\nsynchronize data."
+  },
+
+  "gerente": {
+    "message": "Manager"
+  },
+
+  "criador_de_cursos": {
+    "message": "Course Creator"
+  },
+
+  "professor": {
+    "message": "Teacher"
+  },
+
+  "moderador": {
+    "message": "Non-editing Teacher"
+  },
+
+  "estudante": {
+    "message": "Student"
+  },
+
+  "visitante": {
+    "message": "Guest"
+  },
+
+  "usuário_autenticado": {
+    "message": "Authenticated user"
+  },
+
+  "usuário_autenticado_na_página_inicial": {
+    "message": "Authenticated user on frontpage"
+  },
+
+  "estudante_impertinente": {
+    "message": "Naughty Student"
+  },
+
+  "criador_de_questões": {
+    "message": "Question Creator"
+  },
+
+  "editor_de_calendário": {
+    "message": "Calendar Editor"
+  },
+
+  "membro": {
+    "message": "Member"
+  },
+
+  "participante": {
+    "message": "Participant"
+  },
+
+  "synchronizing_msg": {
+    "message": "Wait while the logs are synchronized."
+  },
+
+  "error_synchronizing_msg": {
+    "message": "There was an error synchronize the logs of this course.\nMake sure you are logged in to Moodle as a teacher and try again."
+  },
+
+  "warning_users_not_found_msg": {
+    "message": "Participants Moodle listed below were found in the logs, but are not configured as course participants. If you want them to be displayed here, configure these as course participants in Moodle."
+  },
+
+  "content_default_msg": {
+    "message": "No data"
+  }
+}
