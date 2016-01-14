@@ -184,11 +184,11 @@
   },
 
   "moodle_not_found": {
-    "message": "Nenhum moodle encontrado"
+    "message": "Nenhum Moodle encontrado"
   },
 
   "moodle_not_found_msg": {
-    "message": "Acesse o seu moodle como professor para\nsincronizar os dados."
+    "message": "Acesse o Moodle como professor para\nsincronizar os dados."
   },
 
   "synchronizing": {
