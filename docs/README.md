@@ -74,6 +74,9 @@ Plataforma: Extensão para Google Chrome | Chromium
 ### Moodle dashboard - Ajuda
 ![](24_moodle_dashboard_-_ajuda.png)
 
+### Moodle dashboard - Visualizações (em desenvolvimento)
+![](25_moodle_dashboard_-_visualizacoes.png)
+
 ## Próximas etapas de desenvolvimento
 
 1. Visualização de dados (gráficos)
