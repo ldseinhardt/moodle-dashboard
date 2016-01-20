@@ -63,21 +63,25 @@ class Client
     html += '</ul>'
     $('#submenu-courses').html(html)
     @navActive()
-    $('.course-list li a').on('click', => @onCourseSelect())
+    $('.course-list li a').on('click',
+      ((self) ->
+        -> self.onCourseSelect(@)
+      )(@)
+    )
     @onCourseSelect()
     @
 
-  onCourseSelect: ->
+  onCourseSelect: (evt) ->
     content  = $('#dashboard-content')
-    course = $('.course-list li .active')
+    course = if evt then $(evt) else $('.course-list li .active')
+    @course = parseInt(course.attr('index'))
+    @role = 0
     if !content.is(':visible') || $('.title', content).text() != course.text()
-      $('.long > .long-content > .title', content).text(course.text())
+      $('.title', content).text(course.text())
       $('.main').hide()
-      content.fadeIn()
+      content.show()
     @sendMessage('getUsers')
     .sendMessage('getDates')
-    .sendMessage('getData')
-    .sendMessage('syncData')
     @
 
   responseUsers: (message) ->
@@ -127,12 +131,16 @@ class Client
     $('#submenu-users').html(html + husr)
     $.material.init()
     @navActive()
-    $('.role-list').on('click', =>
-      index = @getRole()
-      unless $($('.role-users-list')[index]).is(':visible')
-        @sendMessage('getData')
-        $('.role-users-list').hide()
-        $($('.role-users-list')[index]).fadeIn()
+    $('.role-list').on('click',
+      ((self) ->
+        ->
+          self.role = parseInt($(@).attr('index'))
+          index = self.role
+          unless $($('.role-users-list')[index]).is(':visible')
+            self.sendMessage('getData')
+            $('.role-users-list').hide()
+            $($('.role-users-list')[index]).show()
+      )(@)
     )
     $('.btn-users-select-all').on('click', =>
       index = @getRole()
@@ -163,6 +171,8 @@ class Client
       )
       .sendMessage('getData')
     )
+    @sendMessage('getData')
+    .sendMessage('syncData')
     @
 
   responseDates: (message) ->
@@ -220,38 +230,249 @@ class Client
       for key, value of message.data
         @data[key] = value
     @updateData()
+    .updateData()
     @
 
   updateData: ->
     content = $('#dashboard-content')
-    $('.data', content).html('')
+    $('.data-options a', content).unbind('click')
     if !@data || @data.error
       unless $('.default', content).is(':visible')
         $('.data', content).hide()
         $('.default', content).show()
     else
-      $('.data', content)
-        .append('<div class="graph-a"></div>')
-        .append('<div class="graph-b"></div>')
-      # if @data.summary
-      #   console.log('summary:', @data.summary)
+      content_width = $('body').innerWidth() - (380 + 100)
+      colors = ['#0074D9', '#FF4136']
+      download = (url, filename) =>
+        chrome.downloads.download(
+          url: url
+          saveAs: @isNotFullScreen()
+          filename: filename
+        )
+      if @data.summary
+        dataGroup = [
+          {
+            title: __('Total page views')
+            unity: __('page views')
+            data: @data.summary.pageViews
+          },
+          {
+            title: __('Total users')
+            unity: __('users')
+            data: @data.summary.uniqueUsers
+          },
+          {
+            title: __('Total unique activities')
+            unity: __('activities')
+            data: @data.summary.uniqueActivities
+          },
+          {
+            title: __('Total unique pages')
+            unity: __('pages')
+            data: @data.summary.uniquePages
+          },
+          {
+            title: __('Mean session length')
+            unity: __('Time (min)')
+            data: @data.summary.meanSession
+          },
+          {
+            title: __('Activity time')
+            unity: __('days')
+            data: @data.summary.dateRange
+          }
+        ]
+        options =
+          width: width = $('.data-summary .graph', content).innerWidth() ||
+            Math.floor(content_width * .25)
+          height: 179
+          colors: colors
+          legend: 'bottom'
+          hAxis:
+            textPosition: 'none'
+          vAxis:
+            minValue: 0
+            format: 'decimal'
+            viewWindowMode: 'maximized'
+          tooltip:
+            isHtml: true
+          series:
+            1:
+              type: 'function'
+        btns = $('.data-summary .btn-download', content)
+        for item, i in dataGroup
+          options.title = item.title
+          options.vAxis.title = item.unity
+          data = new google.visualization.DataTable()
+          data.addColumn('string', 'id')
+          data.addColumn('number', __('Saved'))
+          data.addColumn('number', __('Selected'))
+          data.addRows([[options.title].concat(item.data)])
+          chart = new google.visualization.ColumnChart(
+            $('.data-summary .graph', content)[i]
+          )
+          chart.draw(data, options)
+          $(btns[i]).click(
+            ((chart) ->
+              -> download(chart.getImageURI(), 'chart.png')
+            )(chart)
+          )
+      else
+        $('.data-summary .graph', content).html(
+          '<span>' + __('content_default_msg') + '</span>'
+        )
+      if @data.activity?.pageViews?.total[0].length > 1
+        data = new google.visualization.DataTable()
+        data.addColumn('string', 'id')
+        data.addColumn('number', __('Total page views'))
+        data.addRows(@data.activity.pageViews.total)
+        options =
+          title:  __('Page views per day')
+          width: $('.data-activity .graph', content).innerWidth() ||
+            Math.floor(content_width * .75) + 50
+          height: 380
+          legend: 'top'
+          hAxis:
+            title: __('days')
+            slantedText: true
+            slantedTextAngle: 35
+          vAxis:
+            title: __('page views')
+            format: 'decimal'
+            viewWindowMode: 'maximized'
+          tooltip:
+            isHtml: true
+        chart = new google.visualization.LineChart(
+          $('.data-activity .graph', content)[0]
+        )
+        if @view?.activity
+          [data, options] = @view?.activity?(data, options, @data.activity)
+        chart.draw(data, options)
+        $('.data-activity .btn-data-page-views', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                data.addColumn('number', __('Total page views'))
+                data.addRows(activity.pageViews.total)
+                options.title = __('Page views per day')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-page-views-users', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                for user in activity.pageViews.byUsers.users
+                  data.addColumn('number', user)
+                data.addRows(activity.pageViews.byUsers.rows)
+                options.title = __('Page views per day (users)')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-download', content).click(
+          ((chart) ->
+            -> download(chart.getImageURI(), 'chart.png')
+          )(chart)
+        )
+      else
+        $('.data-activity .graph', content).html(
+          '<span>' + __('content_default_msg') + '</span>'
+        )
       if @data.usersInteraction
-        sidebar_width = 380
-        content_width = $('body').innerWidth() - sidebar_width
-        new Graph(
-          data: @data.usersInteraction
-          size: $('.graph-a').innerWidth() || content_width
-          context: $('.graph-a')[0]
-        ).show('bar')
+        maxNameLength = 0
+        for user in @data.usersInteraction
+          if user[0].length > maxNameLength
+            maxNameLength = user[0].length
+        options =
+          width: $('.data-users-interaction .graph', content).innerWidth() ||
+            Math.floor(content_width * .375) + 15
+          height: (@data.usersInteraction.length * 17) + 120
+          colors: colors
+          legend: 'none'
+          title: __('User interactions')
+          chartArea:
+            left: Math.floor(maxNameLength * 7.5)
+          hAxis:
+            title: __('Total interactions')
+            minValue: 0
+            fotmat: 'decimal'
+            viewWindowMode: 'maximized'
+          tooltip:
+            isHtml: true
+        data = new google.visualization.DataTable()
+        data.addColumn('string', __('user'))
+        data.addColumn('number', options.hAxis.title)
+        data.addRows(@data.usersInteraction)
+        @view?.usersInteraction?(data)
+        chart = new google.visualization.BarChart(
+          $('.data-users-interaction .graph', content)[0]
+        )
+        chart.draw(data, options)
+        $('.data-users-interaction .btn-sort-name', content).click(
+          ((chart, data, options) =>
+            =>
+              unless @view
+                @view = {}
+              @view.usersInteraction = (data) ->
+                data.sort([{column: 0, desc: false}])
+              @view.usersInteraction(data)
+              chart.draw(data, options)
+          )(chart, data, options)
+        )
+        $('.data-users-interaction .btn-sort-data', content).click(
+          ((chart, data, options) =>
+            =>
+              unless @view
+                @view = {}
+              @view.usersInteraction = (data) ->
+                data.sort([{column: 1, desc: true}])
+              @view.usersInteraction(data)
+              chart.draw(data, options)
+          )(chart, data, options)
+        )
+        $('.data-users-interaction .btn-download', content).click(
+          ((chart) ->
+            -> download(chart.getImageURI(), 'chart.png')
+          )(chart)
+        )
+      else
+        $('.data-users-interaction .graph', content).html(
+          '<span>' + __('content_default_msg') + '</span>'
+        )
+
+      $('.data-day-time .graph, .data-test-1 .graph', content).html(
+        '<span>' + __('content_default_msg') + '</span>'
+      )
+
+      $('.data-test-2 .graph, .data-test-3 .graph', content).html(
+        '<span>' + __('content_default_msg') + '</span>'
+      )
+
+      ###
       if @data.interactionsSize
         new Graph(
           data: @data.interactionsSize
           size: 400
           context: $('.graph-b')[0]
         ).show('bubble')
+      ###
+
       unless $('.data', content).is(':visible')
         $('.default', content).hide()
         $('.data', content).show()
+      @navActive()
     @
 
   responseSync: (message) ->
@@ -307,10 +528,10 @@ class Client
     @url
 
   getCourse: ->
-    parseInt($('.sidebar .course-list li .active').attr('index')) || 0
+    @course || 0
 
   getRole: ->
-    parseInt($('.sidebar .role-list.active').attr('index')) || 0
+    @role || 0
 
   moodleSelect: ->
     moodle_list = $('#moodle-select .moodle-item')
@@ -347,12 +568,14 @@ class Client
       $(moodle_list[@index]).fadeIn()
     @
 
+  navActiveFn: ->
+    unless $(@).hasClass('not-actived')
+      $('li .active', $(@).parent().parent()).removeClass('active')
+      $(@).addClass('active')
+
   navActive: ->
-    $('ul li a').on('click', ->
-      unless $(@).hasClass('not-actived')
-        $('li .active', $(@).parent().parent()).removeClass('active')
-        $(@).addClass('active')
-    )
+    $('ul li a').unbind('click', @navActiveFn)
+    $('ul li a').on('click', @navActiveFn)
     @
 
   refreshURL: (moodle = '') ->
@@ -417,16 +640,15 @@ class Client
     $('.btn-settings', nav).click(->
       unless $('#dashboard-settings').is(':visible')
         $('.main').hide()
-        $('#dashboard-settings').fadeIn()
+        $('#dashboard-settings').show()
     )
     $('.btn-help', nav).click(->
       unless $('#dashboard-help').is(':visible')
         $('.main').hide()
-        $('#dashboard-help').fadeIn()
+        $('#dashboard-help').show()
     )
-    $('.btn-fullscreen').click(->
-      if ((document.fullScreenElement && document.fullScreenElement != null) ||
-       (!document.mozFullScreen && !document.webkitIsFullScreen))
+    $('.btn-fullscreen').click(=>
+      if @isNotFullScreen()
         if (document.documentElement.requestFullScreen)
           document.documentElement.requestFullScreen()
         else if (document.documentElement.mozRequestFullScreen)
@@ -474,6 +696,10 @@ class Client
     )
     @
 
+  isNotFullScreen: ->
+    document.fullScreenElement? ||
+      (!document.mozFullScreen && !document.webkitIsFullScreen)
+
   configDatepickers: ->
     daterange = $('#submenu-daterange')
     $('.btn-daterange-min', daterange).on('click', ->
@@ -481,14 +707,14 @@ class Client
       datetimepicker = $('.date-min', daterange)
       unless datetimepicker.is(':visible')
         $('.datetimepicker', daterange).hide()
-        datetimepicker.fadeIn()
+        datetimepicker.show()
     )
     $('.btn-daterange-max', daterange).on('click', ->
       daterange = $('#submenu-daterange')
       datetimepicker = $('.date-max', daterange)
       unless datetimepicker.is(':visible')
         $('.datetimepicker', daterange).hide()
-        datetimepicker.fadeIn()
+        datetimepicker.show()
     )
     $('.btn-daterange-last-day', daterange).on('click', =>
       if @dates

@@ -1,4 +1,4 @@
-<div class="interface" id="moodle-dashboard">
+<div id="moodle-dashboard" class="interface">
   <div class="sidebar">
     <header>
       <div class="head">
@@ -99,28 +99,274 @@
   <div>
     <div class="main" id="dashboard-content">
       <div class="long">
+        <div class="title"></div>
         <div class="long-content">
-          <div class="title"></div>
           <div class="default">
             <i class="material-icons">school</i>
             <div class="message __MSG_content_default_msg__"></div>
           </div>
-          <div class="data"></div>
+
+          <div class="data">
+            <div class="data-row">
+              <div class="data-col" style="width: 75%">
+                <div class="data-row">
+                  <div class="data-view data-activity">
+
+                    <div class="btn-group data-options">
+                      <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                        <i class="material-icons">more_vert</i>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                          <a href="#" class="btn-data-page-views active">
+                            <i class="material-icons">visibility</i>&nbsp;
+                            <span class="__MSG_page_views_per_day__"></span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="btn-data-page-views-users">
+                            <i class="material-icons">visibility</i>&nbsp;
+                            <span class="__MSG_page_views_per_day_(users)__"></span>
+                          </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                          <a href="#" class="btn-download not-actived">
+                            <i class="material-icons">file_download</i>&nbsp;
+                            <span class="__MSG_download__"></span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="graph"></div>
+                  </div>
+                  <div class="data-view data-day-time">
+
+                    <div class="btn-group data-options">
+                      <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                        <i class="material-icons">more_vert</i>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                          <a href="#" class="btn-sort-name not-actived">
+                            <i class="material-icons">sort_by_alpha</i>&nbsp;
+                            <span class="__MSG_sort_by_name__"></span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="btn-sort-data not-actived">
+                            <i class="material-icons">sort</i>&nbsp;
+                            <span class="__MSG_sort_by_interactions__"></span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="btn-download not-actived">
+                            <i class="material-icons">file_download</i>&nbsp;
+                            <span class="__MSG_download__"></span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="graph"></div>
+                  </div>
+                </div>
+                <div class="data-row">
+                  <div class="data-col" style="width: 50%">
+                    <div class="data-view data-users-interaction">
+
+                      <div class="btn-group data-options">
+                        <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                          <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li>
+                            <a href="#" class="btn-sort-name not-actived">
+                              <i class="material-icons">sort_by_alpha</i>&nbsp;
+                              <span class="__MSG_sort_by_name__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-sort-data not-actived">
+                              <i class="material-icons">sort</i>&nbsp;
+                              <span class="__MSG_sort_by_interactions__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-download not-actived">
+                              <i class="material-icons">file_download</i>&nbsp;
+                              <span class="__MSG_download__"></span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="graph"></div>
+                    </div>
+                    <div class="data-view data-test-2">
+
+                      <div class="btn-group data-options">
+                        <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                          <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li>
+                            <a href="#" class="btn-sort-name not-actived">
+                              <i class="material-icons">sort_by_alpha</i>&nbsp;
+                              <span class="__MSG_sort_by_name__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-sort-data not-actived">
+                              <i class="material-icons">sort</i>&nbsp;
+                              <span class="__MSG_sort_by_interactions__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-download not-actived">
+                              <i class="material-icons">file_download</i>&nbsp;
+                              <span class="__MSG_download__"></span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="graph"></div>
+                    </div>
+                  </div>
+                  <div class="data-col" style="width: 50%">
+                    <div class="data-view data-test-1">
+
+                      <div class="btn-group data-options">
+                        <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                          <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li>
+                            <a href="#" class="btn-sort-name not-actived">
+                              <i class="material-icons">sort_by_alpha</i>&nbsp;
+                              <span class="__MSG_sort_by_name__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-sort-data not-actived">
+                              <i class="material-icons">sort</i>&nbsp;
+                              <span class="__MSG_sort_by_interactions__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-download not-actived">
+                              <i class="material-icons">file_download</i>&nbsp;
+                              <span class="__MSG_download__"></span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="graph"></div>
+                    </div>
+                    <div class="data-view data-test-3">
+
+                      <div class="btn-group data-options">
+                        <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
+                          <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li>
+                            <a href="#" class="btn-sort-name not-actived">
+                              <i class="material-icons">sort_by_alpha</i>&nbsp;
+                              <span class="__MSG_sort_by_name__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-sort-data not-actived">
+                              <i class="material-icons">sort</i>&nbsp;
+                              <span class="__MSG_sort_by_interactions__"></span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#" class="btn-download not-actived">
+                              <i class="material-icons">file_download</i>&nbsp;
+                              <span class="__MSG_download__"></span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="graph"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="data-col" style="width: 25%">
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a href="#" class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a href="#" class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a href="#" class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a href="#" class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+                <div class="data-view data-summary">
+                  <div class="btn-group data-options">
+                    <a href="#" class="btn-download">
+                      <i class="material-icons">file_download</i>
+                    </a>
+                  </div>
+                  <div class="graph"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
     <div class="main" id="dashboard-settings">
       <div class="long">
+        <div class="title __MSG_settings__"></div>
         <div class="long-content">
-          <div class="title __MSG_settings__"></div>
 
         </div>
       </div>
     </div>
     <div class="main" id="dashboard-help">
       <div class="long">
-        <div class="long-content">
         <div class="title __MSG_help__"></div>
+        <div class="long-content">
 
         </div>
       </div>

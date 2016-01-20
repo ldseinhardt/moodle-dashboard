@@ -225,5 +225,85 @@
 
   "content_default_msg": {
     "message": "Sem dados"
+  },
+
+  "total_page_views": {
+    "message": "Total de visualizações de páginas"
+  },
+
+  "page_views": {
+    "message": "visualizações de páginas"
+  },
+
+  "total_users": {
+    "message": "Total de usuários"
+  },
+
+  "users": {
+    "message": "usuários"
+  },
+
+  "total_unique_activities": {
+    "message": "Total de atividades únicas"
+  },
+
+  "activities": {
+    "message": "atividades"
+  },
+
+  "total_unique_pages": {
+    "message": "Total de páginas únicas"
+  },
+
+  "pages": {
+    "message": "páginas"
+  },
+
+  "mean_session_length": {
+    "message": "Tempo médio de sessão"
+  },
+
+  "time_min": {
+    "message": "tempo (min)"
+  },
+
+  "activity_time": {
+    "message": "Período de atividades"
+  },
+
+  "saved": {
+    "message": "Salvo"
+  },
+
+  "selected": {
+    "message": "Selecionado"
+  },
+
+  "user_interactions": {
+    "message": "Interações de usuários"
+  },
+
+  "total_interactions": {
+    "message": "Total de interações"
+  },
+
+  "user": {
+    "message": "Usuário"
+  },
+
+  "sort_by_name": {
+    "message": "Ordenar por nome"
+  },
+
+  "sort_by_interactions": {
+    "message": "Ordenar por interações"
+  },
+
+  "page_views_per_day": {
+    "message": "Visualizações de páginas por dia"
+  },
+
+  "page_views_per_day_users": {
+    "message": "Visualizações de páginas por dia (usuários)"
   }
 }

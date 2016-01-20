@@ -210,6 +210,7 @@ class Moodle
         last = timelist[timelist.length - 1] * 1000
         if course.dates
           old = @clone(course.dates)
+          timelist = timelist[timelist.indexOf(old.max.value / 1000)..]
           course.dates.min.value = first
           course.dates.max.value = last
           if old.max.selected == old.max.value
@@ -227,8 +228,6 @@ class Moodle
               value: last
               selected: last
         course.users_not_found = {}
-        if old
-          timelist = timelist[timelist.indexOf(old.max.value / 1000)..]
         console.log('timelist:', timelist, course.errors)
         timelist = timelist.concat(course.errors)
         course.errors = []
@@ -378,57 +377,98 @@ class Moodle
     @selected = @equals(url) && @hasUsers()
     @
 
+  getActivity: (role = 0) ->
+    unless @hasData()
+      return
+    course = @getCourse()
+    data =
+      pageViews:
+        total: []
+        byUsers:
+          users: []
+          rows: []
+    users = {}
+    pageViews = {}
+    @dataInteraction(
+      role
+      (d) ->
+        unless users[d.user.name]
+          users[d.user.name] = 1
+        unless pageViews[d.day]
+          pageViews[d.day] = {}
+        unless pageViews[d.day][d.user.name]
+          pageViews[d.day][d.user.name] = 0
+        if /view/.test(d.event.name)
+          pageViews[d.day][d.user.name] += d.size
+    )
+    unless Object.keys(users).length
+      return
+    for user of users
+      data.pageViews.byUsers.users.push(user)
+    for day, value of pageViews
+      rows = []
+      for user of users
+        rows.push(value[user] || 0)
+      date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
+      data.pageViews.total.push([date, rows.reduce((a, b) -> a + b)])
+      rows.unshift(date)
+      data.pageViews.byUsers.rows.push(rows)
+    console.log(data)
+    data
+
   getSummary: (role = 0) ->
     unless @hasData()
       return
     course = @getCourse()
     dates = course.dates
     data =
-      recorded:
-        users: course.users[role].list.length
-        date:
-          min: new Date(dates.min.value).toLocaleString().split(/\s/)[0]
-          max: new Date(dates.max.value).toLocaleString().split(/\s/)[0]
-        views: 0
-        actions: 0
-        pages: 0
-      selected:
-        users: course.users[role].list.filter((user) -> user.selected).length
-        date:
-          min: new Date(dates.min.selected).toLocaleString().split(/\s/)[0]
-          max: new Date(dates.max.selected).toLocaleString().split(/\s/)[0]
-        views: 0
-        actions: 0
-        pages: 0
+      uniqueUsers: [
+        course.users[role].list.length,
+        course.users[role].list.filter((user) -> user.selected).length
+      ]
+      dateRange: [
+        Math.floor(
+          (dates.max.value - dates.min.value) / (1000 * 60 * 60 * 24)
+        ) + 1,
+        Math.floor(
+          (dates.max.selected - dates.min.selected) / (1000 * 60 * 60 * 24)
+        ) + 1
+      ]
+      pageViews: [0, 0]
+      meanSession: [15.8, 10] # not implemented
     recorded =
-      actions: {}
+      activities: {}
       pages: {}
     selected =
-      actions: {}
+      activities: {}
       pages: {}
     @dataInteraction(
       role
       (d) ->
         unique = d.component + d.event.name + d.event.context + d.description
-        unless selected.actions[unique]
-          selected.actions[unique] = 1
+        unless selected.activities[unique]
+          selected.activities[unique] = 1
         if /view/.test(d.event.name)
-          data.selected.views += d.size
+          data.pageViews[1] += d.size
           unless selected.pages[unique]
             selected.pages[unique] = 1
       (d) ->
         unique = d.component + d.event.name + d.event.context + d.description
-        unless recorded.actions[unique]
-          recorded.actions[unique] = 1
+        unless recorded.activities[unique]
+          recorded.activities[unique] = 1
         if /view/.test(d.event.name)
-          data.recorded.views += d.size
+          data.pageViews[0] += d.size
           unless recorded.pages[unique]
             recorded.pages[unique] = 1
     )
-    data.recorded.actions = Object.keys(recorded.actions).length
-    data.selected.actions = Object.keys(selected.actions).length
-    data.recorded.pages = Object.keys(recorded.pages).length
-    data.selected.pages = Object.keys(selected.pages).length
+    data.uniqueActivities = [
+      Object.keys(recorded.activities).length,
+      Object.keys(selected.activities).length
+    ]
+    data.uniquePages = [
+      Object.keys(recorded.pages).length,
+      Object.keys(selected.pages).length
+    ]
     data
 
   getInteractionsSize: (role = 0) ->
@@ -472,15 +512,12 @@ class Moodle
       return
     data = []
     for name, size of users
-      data.push(
-        name: name
-        size: size
-      )
+      data.push([name, size])
     data.sort(
       (a, b) ->
-        if a.size > b.size
+        if a[1] > b[1]
           return -1
-        if a.size < b.size
+        if a[1] < b[1]
           return 1
         return 0
     )

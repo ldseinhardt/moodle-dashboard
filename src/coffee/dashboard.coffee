@@ -135,6 +135,7 @@ class Dashboard
     unless message.error
       role = message.role
       message.data =
+        activity: moodle.getActivity(role)
         summary: moodle.getSummary(role)
         interactionsSize: moodle.getInteractionsSize(role)
         usersInteraction: moodle.getUsersInteraction(role)
