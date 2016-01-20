@@ -22,7 +22,6 @@
 
   "dependencies": {
     "bootstrap-material-design": "^0.5.7",
-    "d3": "^3.5.12",
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
     "jquery": "^2.1.4",
     "material-design-icons": "^2.1.1"

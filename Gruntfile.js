@@ -13,7 +13,7 @@ module.exports = function(grunt) {
           'en.json',
           'pt-br.json'
         ],
-        dest: 'dist/_locales'
+        dest: 'dist/_locales/'
       },
       jquery: {
         expand: true,
@@ -23,32 +23,63 @@ module.exports = function(grunt) {
       },
       d3: {
         expand: true,
-        cwd: 'bower_components/d3/',
-        src: 'd3.min.js',
-        dest: 'dist/js/'
+        cwd: 'vendor/d3/',
+        src: 'd3-tsv-parse.min.js',
+        dest: 'build/js/min/'
+      },
+      google: {
+        files: [
+          {
+            expand: true,
+            cwd: 'vendor/google/',
+            src: 'google-visualization.min.css',
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'vendor/google/js/',
+            src: 'google-visualization.min.js',
+            dest: 'build/js/min/'
+          }
+        ]
       },
       bootstrap_material_design: {
         files: [
           {
             expand: true,
             cwd: 'bower_components/bootstrap/dist/',
-            src: [
-              'css/bootstrap.min.css',
-              'fonts/*.woff2',
-              'js/bootstrap.min.js'
-            ],
+            src: 'fonts/*.woff2',
             dest: 'dist/'
           },
           {
             expand: true,
-            cwd: 'bower_components/bootstrap-material-design/dist/',
+            cwd: 'bower_components/bootstrap/dist/css/',
+            src: 'bootstrap.min.css',
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap/dist/js/',
+            src: 'bootstrap.min.js',
+            dest: 'build/js/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-material-design/dist/css/',
             src: [
-              'css/bootstrap-material-design.min.css',
-              'css/ripples.min.css',
-              'js/material.min.js',
-              'js/ripples.min.js'
+              'bootstrap-material-design.min.css',
+              'ripples.min.css'
             ],
-            dest: 'dist/'
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-material-design/dist/js/',
+            src: [
+              'material.min.js',
+              'ripples.min.js'
+            ],
+            dest: 'build/js/min/'
           }
         ]
       },
@@ -70,17 +101,26 @@ module.exports = function(grunt) {
           {
             expand: true,
             cwd: 'bower_components/moment/min/',
-            src: 'moment-with-locales.min.js',
-            dest: 'dist/js'
+            src: 'moment.min.js',
+            dest: 'build/js/min/'
           },
           {
             expand: true,
-            cwd: 'bower_components/eonasdan-bootstrap-datetimepicker/build/',
-            src: [
-              'css/bootstrap-datetimepicker.min.css',
-              'js/bootstrap-datetimepicker.min.js'
-            ],
-            dest: 'dist/'
+            cwd: 'bower_components/moment/locale/',
+            src: 'pt-br.js',
+            dest: 'build/js/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/',
+            src: 'bootstrap-datetimepicker.min.css',
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/',
+            src: 'bootstrap-datetimepicker.min.js',
+            dest: 'build/js/min/'
           }
         ]
       }
@@ -107,15 +147,37 @@ module.exports = function(grunt) {
     less: {
       compile: {
         files: {
-          "build/css/main.css": [
-            "src/less/material-icons.less",
-            "src/less/client.less",
-            "src/less/graph.less"
+          'build/css/main.css': [
+            'src/less/material-icons.less',
+            'src/less/client.less',
+            'src/less/graph.less'
           ],
-          "build/css/inject.css": [
-            "src/less/inject.less"
+          'build/css/inject.css': [
+            'src/less/inject.less'
           ]
         }
+      }
+    },
+    uglify: {
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'build/js/',
+          src: ['*.js', '!*.min.js'],
+          dest: 'build/js/min/',
+          ext: '.min.js'
+        }]
+      }
+    },
+    cssmin: {
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'build/css/',
+          src: ['*.css', '!*.min.css'],
+          dest: 'build/css/min/',
+          ext: '.min.css'
+        }]
       }
     },
     concat: {
@@ -129,32 +191,50 @@ module.exports = function(grunt) {
           'src/html/moodle-message.html',
           'src/html/footer.html',
         ],
-        dest: 'build/main.html',
-      }
-    },
-    uglify: {
-      options: {
-        banner: '/*!\n * Moodle dashboard v<%= pkg.version %> (<%= pkg.homepage %>)\n * Copyright 2015-2016 <%= pkg.author %>.\n * Licensed under the <%= pkg.license %> license\n */\n'
+        dest: 'build/main.html'
       },
-      target: {
-        files: [{
-          expand: true,
-          cwd: 'build/js',
-          src: ['*.js', '!*.min.js'],
-          dest: 'dist/js',
-          ext: '.min.js'
-        }]
-      }
-    },
-    cssmin: {
-      target: {
-        files: [{
-          expand: true,
-          cwd: 'build/css',
-          src: ['*.css', '!*.min.css'],
-          dest: 'dist/css',
-          ext: '.min.css'
-        }]
+      css_main: {
+        src: [
+          'build/css/min/bootstrap.min.css',
+          'build/css/min/bootstrap-material-design.min.css',
+          'build/css/min/ripples.min.css',
+          'build/css/min/bootstrap-datetimepicker.min.css',
+          'build/css/min/google-visualization.min.css',
+          'build/css/min/main.min.css'
+        ],
+        dest: 'dist/css/main.min.css',
+      },
+      css_inject: {
+        src: [
+          'build/css/min/inject.min.css'
+        ],
+        dest: 'dist/css/inject.min.css',
+      },
+      js_main: {
+        src: [
+          'build/js/min/bootstrap.min.js',
+          'build/js/min/material.min.js',
+          'build/js/min/ripples.min.js',
+          'build/js/min/moment.min.js',
+          'build/js/min/pt-br.min.js',
+          'build/js/min/bootstrap-datetimepicker.min.js',
+          'build/js/min/google-visualization.min.js',
+          'build/js/min/main.min.js'
+        ],
+        dest: 'dist/js/main.min.js',
+      },
+      js_background: {
+        src: [
+          'build/js/min/d3-tsv-parse.min.js',
+          'build/js/min/background.min.js'
+        ],
+        dest: 'dist/js/background.min.js',
+      },
+      js_inject: {
+        src: [
+          'build/js/min/inject.min.js'
+        ],
+        dest: 'dist/js/inject.min.js',
       }
     },
     htmlmin: {
@@ -195,9 +275,9 @@ module.exports = function(grunt) {
     'copy',
     'coffee',
     'less',
-    'concat',
     'uglify',
     'cssmin',
+    'concat',
     'htmlmin'
   ]);
 
