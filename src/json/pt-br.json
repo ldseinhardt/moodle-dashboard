@@ -299,11 +299,31 @@
     "message": "Ordenar por interações"
   },
 
-  "page_views_per_day": {
-    "message": "Visualizações de páginas por dia"
+  "total_page_views_per_day": {
+    "message": "Total de visualizações de páginas por dia"
   },
 
-  "page_views_per_day_users": {
-    "message": "Visualizações de páginas por dia (usuários)"
+  "total_page_views_per_day_users": {
+    "message": "Total de visualizações de páginas por dia (usuários)"
+  },
+
+  "user_access_per_day": {
+    "message": "Acesso de usuários por dia"
+  },
+
+  "total_unique_activities_per_day": {
+    "message": "Total de atividades únicas por dia"
+  },
+
+  "total_unique_activities_per_day_users": {
+    "message": "Total de atividades únicas por dia (usuários)"
+  },
+
+  "total_unique_pages_per_day": {
+    "message": "Total de visualizações de páginas únicas por dia"
+  },
+
+  "total_unique_pages_per_day_users": {
+    "message": "Total de visualizações de páginas únicas por dia (usuários)"
   }
 }

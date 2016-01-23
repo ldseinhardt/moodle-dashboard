@@ -296,10 +296,8 @@ class Client
             viewWindowMode: 'maximized'
           tooltip:
             isHtml: true
-          series:
-            1:
-              type: 'function'
-        btns = $('.data-summary .btn-download', content)
+        buttons = $('.data-summary .btn-download', content)
+        graphics = $('.data-summary .graph', content)
         for item, i in dataGroup
           options.title = item.title
           options.vAxis.title = item.unity
@@ -308,11 +306,9 @@ class Client
           data.addColumn('number', __('Saved'))
           data.addColumn('number', __('Selected'))
           data.addRows([[options.title].concat(item.data)])
-          chart = new google.visualization.ColumnChart(
-            $('.data-summary .graph', content)[i]
-          )
+          chart = new google.visualization.ColumnChart(graphics[i])
           chart.draw(data, options)
-          $(btns[i]).click(
+          $(buttons[i]).click(
             ((chart) ->
               -> download(chart.getImageURI(), 'chart.png')
             )(chart)
@@ -327,7 +323,7 @@ class Client
         data.addColumn('number', __('Total page views'))
         data.addRows(@data.activity.pageViews.total)
         options =
-          title:  __('Page views per day')
+          title:  __('total page views per day')
           width: $('.data-activity .graph', content).innerWidth() ||
             Math.floor(content_width * .75) + 50
           height: 380
@@ -337,6 +333,7 @@ class Client
             slantedText: true
             slantedTextAngle: 35
           vAxis:
+            minValue: 0
             title: __('page views')
             format: 'decimal'
             viewWindowMode: 'maximized'
@@ -358,7 +355,8 @@ class Client
                 data.addColumn('string', 'id')
                 data.addColumn('number', __('Total page views'))
                 data.addRows(activity.pageViews.total)
-                options.title = __('Page views per day')
+                options.title = __('Total page views per day')
+                options.vAxis.title = __('page views')
                 [data, options]
               [data, options] = @view.activity(data, options, activity)
               chart.draw(data, options)
@@ -372,10 +370,98 @@ class Client
               @view.activity = (data, options, activity) ->
                 data = new google.visualization.DataTable()
                 data.addColumn('string', 'id')
-                for user in activity.pageViews.byUsers.users
+                for user in activity.users
                   data.addColumn('number', user)
-                data.addRows(activity.pageViews.byUsers.rows)
-                options.title = __('Page views per day (users)')
+                data.addRows(activity.pageViews.parcial)
+                options.title = __('Total page views per day (users)')
+                options.vAxis.title = __('page views')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-unique-users', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                data.addColumn('number', __('Total users'))
+                data.addRows(activity.uniqueUsers)
+                options.title = __('User access per day')
+                options.vAxis.title = __('users')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-unique-activities', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                data.addColumn('number', __('Total unique activities'))
+                data.addRows(activity.uniqueActivities.total)
+                options.title = __('Total unique activities per day')
+                options.vAxis.title = __('activities')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-unique-activities-users', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                for user in activity.users
+                  data.addColumn('number', user)
+                data.addRows(activity.uniqueActivities.parcial)
+                options.title = __('Total unique activities per day (users)')
+                options.vAxis.title = __('activities')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-unique-pages', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                data.addColumn('number', __('Total unique page views'))
+                data.addRows(activity.uniquePages.total)
+                options.title = __('Total unique pages per day')
+                options.vAxis.title = __('page views')
+                [data, options]
+              [data, options] = @view.activity(data, options, activity)
+              chart.draw(data, options)
+          )(chart, data, options, @data.activity)
+        )
+        $('.data-activity .btn-data-unique-pages-users', content).click(
+          ((chart, data, options, activity) =>
+            =>
+              unless @view
+                @view = {}
+              @view.activity = (data, options, activity) ->
+                data = new google.visualization.DataTable()
+                data.addColumn('string', 'id')
+                for user in activity.users
+                  data.addColumn('number', user)
+                data.addRows(activity.uniquePages.parcial)
+                options.title = __('Total unique pages per day (users)')
+                options.vAxis.title = __('page views')
                 [data, options]
               [data, options] = @view.activity(data, options, activity)
               chart.draw(data, options)

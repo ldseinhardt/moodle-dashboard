@@ -377,45 +377,6 @@ class Moodle
     @selected = @equals(url) && @hasUsers()
     @
 
-  getActivity: (role = 0) ->
-    unless @hasData()
-      return
-    course = @getCourse()
-    data =
-      pageViews:
-        total: []
-        byUsers:
-          users: []
-          rows: []
-    users = {}
-    pageViews = {}
-    @dataInteraction(
-      role
-      (d) ->
-        unless users[d.user.name]
-          users[d.user.name] = 1
-        unless pageViews[d.day]
-          pageViews[d.day] = {}
-        unless pageViews[d.day][d.user.name]
-          pageViews[d.day][d.user.name] = 0
-        if /view/.test(d.event.name)
-          pageViews[d.day][d.user.name] += d.size
-    )
-    unless Object.keys(users).length
-      return
-    for user of users
-      data.pageViews.byUsers.users.push(user)
-    for day, value of pageViews
-      rows = []
-      for user of users
-        rows.push(value[user] || 0)
-      date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
-      data.pageViews.total.push([date, rows.reduce((a, b) -> a + b)])
-      rows.unshift(date)
-      data.pageViews.byUsers.rows.push(rows)
-    console.log(data)
-    data
-
   getSummary: (role = 0) ->
     unless @hasData()
       return
@@ -445,21 +406,21 @@ class Moodle
     @dataInteraction(
       role
       (d) ->
-        unique = d.component + d.event.name + d.event.context + d.description
-        unless selected.activities[unique]
-          selected.activities[unique] = 1
+        event = d.event.name + ' (' +  d.event.context + ')'
+        unless selected.activities[event]
+          selected.activities[event] = 1
         if /view/.test(d.event.name)
           data.pageViews[1] += d.size
-          unless selected.pages[unique]
-            selected.pages[unique] = 1
+          unless selected.pages[event]
+            selected.pages[event] = 1
       (d) ->
-        unique = d.component + d.event.name + d.event.context + d.description
-        unless recorded.activities[unique]
-          recorded.activities[unique] = 1
+        event = d.event.name + ' (' +  d.event.context + ')'
+        unless recorded.activities[event]
+          recorded.activities[event] = 1
         if /view/.test(d.event.name)
           data.pageViews[0] += d.size
-          unless recorded.pages[unique]
-            recorded.pages[unique] = 1
+          unless recorded.pages[event]
+            recorded.pages[event] = 1
     )
     data.uniqueActivities = [
       Object.keys(recorded.activities).length,
@@ -469,6 +430,96 @@ class Moodle
       Object.keys(recorded.pages).length,
       Object.keys(selected.pages).length
     ]
+    data
+
+  getActivity: (role = 0) ->
+    unless @hasData()
+      return
+    course = @getCourse()
+    data =
+      users: []
+      pageViews:
+        total: []
+        parcial: []
+      uniqueUsers: []
+      uniqueActivities:
+        total: []
+        parcial: []
+      uniquePages:
+        total: []
+        parcial: []
+    userList = {}
+    dataTree = {}
+    @dataInteraction(
+      role
+      (d) ->
+        # d.user, d.day, d.component, d.event.name,
+        # d.event.context, d.description, d.time, d.size
+        unless userList[d.user]
+          userList[d.user] = 1
+        unless dataTree[d.day]
+          dataTree[d.day] =
+            users: {}
+            activities: {}
+            pages: {}
+        unless dataTree[d.day].users[d.user]
+          dataTree[d.day].users[d.user] = 0
+        event = d.event.name + ' (' +  d.event.context + ')'
+        unless dataTree[d.day].activities[event]
+          dataTree[d.day].activities[event] = {}
+        unless dataTree[d.day].activities[event][d.user]
+          dataTree[d.day].activities[event][d.user] = 1
+        if /view/.test(d.event.name)
+          dataTree[d.day].users[d.user] += d.size
+          unless dataTree[d.day].pages[event]
+            dataTree[d.day].pages[event] = {}
+          unless dataTree[d.day].pages[event][d.user]
+            dataTree[d.day].pages[event][d.user] = 1
+    )
+    unless Object.keys(userList).length
+      return
+    course = @getCourse()
+    for user of userList
+      usr = course.users[role].list[user]
+      data.users.push(usr.firstname + ' ' + usr.lastname)
+    timelist = Object.keys(dataTree)
+    timelist.sort(
+      (a, b) ->
+        if a < b
+          return -1
+        if a > b
+          return 1
+        return 0
+    )
+    for day in timelist
+      value = dataTree[day]
+      pageViews = []
+      activities = []
+      pages = []
+      for user of userList
+        pageViews.push(value.users[user] || 0)
+        count = 0
+        for activitie, users of value.activities
+          if users[user]
+            count++
+        activities.push(count)
+        count = 0
+        for page, users of value.pages
+          if users[user]
+            count++
+        pages.push(count)
+      date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
+      data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
+      data.uniqueActivities.total
+        .push([date, Object.keys(value.activities).length])
+      data.uniquePages.total.push([date, Object.keys(value.pages).length])
+      pageViews.unshift(date)
+      activities.unshift(date)
+      pages.unshift(date)
+      data.pageViews.parcial.push(pageViews)
+      data.uniqueUsers.push([date, Object.keys(value.users).length])
+      data.uniqueActivities.parcial.push(activities)
+      data.uniquePages.parcial.push(pages)
     data
 
   getInteractionsSize: (role = 0) ->
@@ -504,15 +555,17 @@ class Moodle
       return
     users = {}
     @dataInteraction(role, (d) ->
-      unless users[d.user.name]
-        users[d.user.name] = 0
-      users[d.user.name] += d.size
+      unless users[d.user]
+        users[d.user] = 0
+      users[d.user] += d.size
     )
     unless Object.keys(users).length
       return
     data = []
-    for name, size of users
-      data.push([name, size])
+    course = @getCourse()
+    for user, size of users
+      usr = course.users[role].list[user]
+      data.push([usr.firstname + ' ' + usr.lastname, size])
     data.sort(
       (a, b) ->
         if a[1] > b[1]
@@ -527,7 +580,7 @@ class Moodle
     course = @getCourse()
     min = course.dates.min.selected
     max = course.dates.max.selected
-    for user in course.users[role].list
+    for user, userid in course.users[role].list
       if user.data
         for day, components of user.data
           for component, eventnames of components
@@ -536,9 +589,7 @@ class Moodle
                 for description, hours of descriptions
                   for time, size of hours
                     data =
-                      user:
-                        name: user.firstname + ' ' + user.lastname
-                        fullname: user.name
+                      user: userid
                       day: day
                       component: component
                       event:
