@@ -377,206 +377,227 @@ class Moodle
     @selected = @equals(url) && @hasUsers()
     @
 
-  getSummary: (role = 0) ->
+  getData: (role) ->
     unless @hasData()
       return
     course = @getCourse()
-    dates = course.dates
-    data =
-      uniqueUsers: [
-        course.users[role].list.length,
-        course.users[role].list.filter((user) -> user.selected).length
-      ]
-      dateRange: [
-        Math.floor(
-          (dates.max.value - dates.min.value) / (1000 * 60 * 60 * 24)
-        ) + 1,
-        Math.floor(
-          (dates.max.selected - dates.min.selected) / (1000 * 60 * 60 * 24)
-        ) + 1
-      ]
-      pageViews: [0, 0]
-      meanSession: [15.8, 10] # not implemented
-    recorded =
-      activities: {}
-      pages: {}
-    selected =
-      activities: {}
-      pages: {}
-    @dataInteraction(
+    callbacks =
+      summary: @getSummary()
+      activity: @getActivity()
+      dayTime: @getDayTime()
+      usersInteraction: @getUsersInteraction()
+    data = {}
+    temp = {}
+    for name, method of callbacks
+      [data[name], temp[name]] = method.init(course, role)
+    @loop(
       role
-      (d) ->
-        event = d.event.name + ' (' +  d.event.context + ')'
-        unless selected.activities[event]
-          selected.activities[event] = 1
-        if /view/.test(d.event.name)
-          data.pageViews[1] += d.size
-          unless selected.pages[event]
-            selected.pages[event] = 1
-      (d) ->
-        event = d.event.name + ' (' +  d.event.context + ')'
-        unless recorded.activities[event]
-          recorded.activities[event] = 1
-        if /view/.test(d.event.name)
-          data.pageViews[0] += d.size
-          unless recorded.pages[event]
-            recorded.pages[event] = 1
+      (row) ->
+        for name, method of callbacks
+          method.selected?(row, data[name], temp[name])
+      (row) ->
+        for name, method of callbacks
+          method.recorded?(row, data[name], temp[name])
     )
-    data.uniqueActivities = [
-      Object.keys(recorded.activities).length,
-      Object.keys(selected.activities).length
-    ]
-    data.uniquePages = [
-      Object.keys(recorded.pages).length,
-      Object.keys(selected.pages).length
-    ]
+    for name, method of callbacks
+      data[name] = method.end(course, role, data[name], temp[name])
+      delete temp[name]
     data
 
-  getActivity: (role = 0) ->
-    unless @hasData()
-      return
-    course = @getCourse()
-    data =
-      users: []
-      pageViews:
-        total: []
-        parcial: []
-      uniqueUsers: []
-      uniqueActivities:
-        total: []
-        parcial: []
-      uniquePages:
-        total: []
-        parcial: []
-    userList = {}
-    dataTree = {}
-    @dataInteraction(
-      role
-      (d) ->
-        # d.user, d.day, d.component, d.event.name,
-        # d.event.context, d.description, d.time, d.size
-        unless userList[d.user]
-          userList[d.user] = 1
-        unless dataTree[d.day]
-          dataTree[d.day] =
-            users: {}
+  getSummary: ->
+    init: (course, role) ->
+      dates = course.dates
+      timeday = 1000 * 60 * 60 * 24
+      [
+        {
+          uniqueUsers: [
+            course.users[role].list.length,
+            course.users[role].list.filter((user) -> user.selected).length
+          ]
+          dateRange: [
+            Math.floor(
+              (dates.max.value - dates.min.value) / timeday
+            ) + 1,
+            Math.floor(
+              (dates.max.selected - dates.min.selected) / timeday
+            ) + 1
+          ]
+          pageViews: [0, 0]
+          meanSession: [15.8, 10] # not implemented
+        },
+        {
+          recorded:
             activities: {}
             pages: {}
-        unless dataTree[d.day].users[d.user]
-          dataTree[d.day].users[d.user] = 0
-        event = d.event.name + ' (' +  d.event.context + ')'
-        unless dataTree[d.day].activities[event]
-          dataTree[d.day].activities[event] = {}
-        unless dataTree[d.day].activities[event][d.user]
-          dataTree[d.day].activities[event][d.user] = 1
-        if /view/.test(d.event.name)
-          dataTree[d.day].users[d.user] += d.size
-          unless dataTree[d.day].pages[event]
-            dataTree[d.day].pages[event] = {}
-          unless dataTree[d.day].pages[event][d.user]
-            dataTree[d.day].pages[event][d.user] = 1
-    )
-    unless Object.keys(userList).length
-      return
-    course = @getCourse()
-    for user of userList
-      usr = course.users[role].list[user]
-      data.users.push(usr.firstname + ' ' + usr.lastname)
-    timelist = Object.keys(dataTree)
-    timelist.sort(
-      (a, b) ->
+          selected:
+            activities: {}
+            pages: {}
+        }
+      ]
+    selected: (row, data, temp) ->
+      event = row.event.name + ' (' +  row.event.context + ')'
+      unless temp.selected.activities[event]
+        temp.selected.activities[event] = 1
+      if /view/.test(row.event.name)
+        data.pageViews[1] += row.size
+        unless temp.selected.pages[event]
+          temp.selected.pages[event] = 1
+    recorded: (row, data, temp) ->
+      event = row.event.name + ' (' +  row.event.context + ')'
+      unless temp.recorded.activities[event]
+        temp.recorded.activities[event] = 1
+      if /view/.test(row.event.name)
+        data.pageViews[0] += row.size
+        unless temp.recorded.pages[event]
+          temp.recorded.pages[event] = 1
+    end: (course, role, data, temp) ->
+      data.uniqueActivities = [
+        Object.keys(temp.recorded.activities).length,
+        Object.keys(temp.selected.activities).length
+      ]
+      data.uniquePages = [
+        Object.keys(temp.recorded.pages).length,
+        Object.keys(temp.selected.pages).length
+      ]
+      data
+
+  getActivity: ->
+    init: (course, role) ->
+      [
+        {
+          users: []
+          pageViews:
+            total: []
+            parcial: []
+          uniqueUsers: []
+          uniqueActivities:
+            total: []
+            parcial: []
+          uniquePages:
+            total: []
+            parcial: []
+        },
+        {
+          users: {}
+          tree: {}
+        }
+      ]
+    selected: (row, data, temp) ->
+      unless temp.users[row.user]
+        temp.users[row.user] = 1
+      unless temp.tree[row.day]
+        temp.tree[row.day] =
+          users: {}
+          activities: {}
+          pages: {}
+      unless temp.tree[row.day].users[row.user]
+        temp.tree[row.day].users[row.user] = 0
+      event = row.event.name + ' (' +  row.event.context + ')'
+      unless temp.tree[row.day].activities[event]
+        temp.tree[row.day].activities[event] = {}
+      unless temp.tree[row.day].activities[event][row.user]
+        temp.tree[row.day].activities[event][row.user] = 1
+      if /view/.test(row.event.name)
+        temp.tree[row.day].users[row.user] += row.size
+        unless temp.tree[row.day].pages[event]
+          temp.tree[row.day].pages[event] = {}
+        unless temp.tree[row.day].pages[event][row.user]
+          temp.tree[row.day].pages[event][row.user] = 1
+    end: (course, role, data, temp) ->
+      unless Object.keys(temp.users).length
+        return
+      for i of temp.users
+        user = course.users[role].list[i]
+        data.users.push(user.firstname + ' ' + user.lastname)
+      timelist = Object.keys(temp.tree)
+      timelist.sort((a, b) ->
         if a < b
           return -1
         if a > b
           return 1
         return 0
-    )
-    for day in timelist
-      value = dataTree[day]
-      pageViews = []
-      activities = []
-      pages = []
-      for user of userList
-        pageViews.push(value.users[user] || 0)
-        count = 0
-        for activitie, users of value.activities
-          if users[user]
-            count++
-        activities.push(count)
-        count = 0
-        for page, users of value.pages
-          if users[user]
-            count++
-        pages.push(count)
-      date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
-      data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
-      data.uniqueActivities.total
-        .push([date, Object.keys(value.activities).length])
-      data.uniquePages.total.push([date, Object.keys(value.pages).length])
-      pageViews.unshift(date)
-      activities.unshift(date)
-      pages.unshift(date)
-      data.pageViews.parcial.push(pageViews)
-      data.uniqueUsers.push([date, Object.keys(value.users).length])
-      data.uniqueActivities.parcial.push(activities)
-      data.uniquePages.parcial.push(pages)
-    data
+      )
+      for day in timelist
+        value = temp.tree[day]
+        pageViews = []
+        activities = []
+        pages = []
+        for i of temp.users
+          pageViews.push(value.users[i] || 0)
+          count = 0
+          for activitie, users of value.activities
+            if users[i]
+              count++
+          activities.push(count)
+          count = 0
+          for page, users of value.pages
+            if users[i]
+              count++
+          pages.push(count)
+        date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
+        data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
+        data.uniqueActivities.total
+          .push([date, Object.keys(value.activities).length])
+        data.uniquePages.total.push([date, Object.keys(value.pages).length])
+        pageViews.unshift(date)
+        activities.unshift(date)
+        pages.unshift(date)
+        data.pageViews.parcial.push(pageViews)
+        data.uniqueUsers.push([date, Object.keys(value.users).length])
+        data.uniqueActivities.parcial.push(activities)
+        data.uniquePages.parcial.push(pages)
+      unless data.pageViews?.total[0]?.length > 1
+        return
+      data
 
-  getInteractionsSize: (role = 0) ->
-    unless @hasData()
-      return
-    interactions = {}
-    @dataInteraction(role, (d) ->
-      unless interactions[d.component]
-        interactions[d.component] = {}
-      unless interactions[d.component][d.event.name]
-        interactions[d.component][d.event.name] = 0
-      interactions[d.component][d.event.name] += d.size
-    )
-    unless Object.keys(interactions).length
-      return
-    data =
-      name: 'Interactions'
-      children: []
-    for component, events of interactions
-      i = data.children.push(
-        name: component,
-        children: []
-      ) - 1
-      for name, size of events
-        data.children[i].children.push(
-          name: name
-          size: size
+  getDayTime: ->
+    init: (course, role) ->
+      data = {}
+      for i in [0..7]
+        data[i] = []
+        for n in [0..23]
+          data[i].push(0)
+      [data, {}]
+    selected: (row, data, temp) ->
+      day = parseInt(row.day)
+      week = new Date(day).getDay() + 1
+      hour = new Date(day + parseInt(row.time)).getHours()
+      data[week][hour] += row.size
+      data[0][hour] += row.size
+    end: (course, role, data, temp) ->
+      total = 0
+      for size in data[0]
+        total += size
+        if total > 0
+          break
+      unless total
+        return
+      data
+
+  getUsersInteraction: ->
+    init: (course, role) ->
+      [[], {}]
+    selected: (row, data, temp) ->
+      unless temp[row.user]
+        temp[row.user] = 0
+      temp[row.user] += row.size
+    end: (course, role, data, temp) ->
+      unless Object.keys(temp).length
+        data = null
+        return
+      for i, size of temp
+        user = course.users[role].list[i]
+        data.push([user.firstname + ' ' + user.lastname, size])
+        data.sort((a, b) ->
+          if a[1] > b[1]
+            return -1
+          if a[1] < b[1]
+            return 1
+          return 0
         )
-    @classes(data)
+      data
 
-  getUsersInteraction: (role = 0) ->
-    unless @hasData()
-      return
-    users = {}
-    @dataInteraction(role, (d) ->
-      unless users[d.user]
-        users[d.user] = 0
-      users[d.user] += d.size
-    )
-    unless Object.keys(users).length
-      return
-    data = []
-    course = @getCourse()
-    for user, size of users
-      usr = course.users[role].list[user]
-      data.push([usr.firstname + ' ' + usr.lastname, size])
-    data.sort(
-      (a, b) ->
-        if a[1] > b[1]
-          return -1
-        if a[1] < b[1]
-          return 1
-        return 0
-    )
-    data
-
-  dataInteraction: (role = 0, selected, recorded) ->
+  loop: (role, selected, recorded) ->
     course = @getCourse()
     min = course.dates.min.selected
     max = course.dates.max.selected
@@ -588,7 +609,7 @@ class Moodle
               for eventcontext, descriptions of eventcontexts
                 for description, hours of descriptions
                   for time, size of hours
-                    data =
+                    row =
                       user: userid
                       day: day
                       component: component
@@ -598,9 +619,9 @@ class Moodle
                       description: description
                       time: time
                       size: size
-                    recorded?(data)
+                    recorded?(row)
                     if user.selected && min <= day <= max
-                      selected?(data)
+                      selected?(row)
     @
 
   getTitle: ->

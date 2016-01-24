@@ -325,5 +325,45 @@
 
   "total_unique_pages_per_day_users": {
     "message": "Total de visualizações de páginas únicas por dia (usuários)"
+  },
+
+  "total_activities_per_hour": {
+    "message": "Total de atividades por hora"
+  },
+
+  "hour": {
+    "message": "horário"
+  },
+
+  "all_days": {
+    "message": "Todos os dias"
+  },
+
+  "sunday": {
+    "message": "Domingo"
+  },
+
+  "monday": {
+    "message": "Segunda"
+  },
+
+  "tuesday": {
+    "message": "Terça"
+  },
+
+  "wednesday": {
+    "message": "Quarta"
+  },
+
+  "thursday": {
+    "message": "Quinta"
+  },
+
+  "friday": {
+    "message": "Sexta"
+  },
+
+  "saturday": {
+    "message": "Sábado"
   }
 }

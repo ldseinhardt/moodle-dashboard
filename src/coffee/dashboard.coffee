@@ -134,11 +134,7 @@ class Dashboard
     message.error = !moodle.hasData()
     unless message.error
       role = message.role
-      message.data =
-        activity: moodle.getActivity(role)
-        summary: moodle.getSummary(role)
-        interactionsSize: moodle.getInteractionsSize(role)
-        usersInteraction: moodle.getUsersInteraction(role)
+      message.data = moodle.getData(role)
     @sendMessage(message)
     @
 

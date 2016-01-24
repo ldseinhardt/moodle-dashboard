@@ -17,6 +17,7 @@ class Client
     .onKeydown()
     .onResize()
     .configDatepickers()
+    .dropdownOpened()
     $.material.init()
 
   responseMoodles: (message) ->
@@ -234,15 +235,22 @@ class Client
     @
 
   updateData: ->
+    console.log('data', @data)
     content = $('#dashboard-content')
     $('.data-options a', content).unbind('click')
+    $('.data-options .togglebutton').unbind('change')
     if !@data || @data.error
       unless $('.default', content).is(':visible')
         $('.data', content).hide()
         $('.default', content).show()
     else
       content_width = $('body').innerWidth() - (380 + 100)
-      colors = ['#0074D9', '#FF4136']
+      colors = [
+        '#0074d9', '#ff4136', '#ffdc00', '#3d9970',
+        '#85144b', '#39cccc', '#b10dc9', '#01ff70',
+        '#111111', '#ff851b', '#001f3f', '#f012be',
+        '#dddddd', '#7fdbff', '#2ecc40', '#aaaaaa'
+      ]
       download = (url, filename) =>
         chrome.downloads.download(
           url: url
@@ -317,7 +325,7 @@ class Client
         $('.data-summary .graph', content).html(
           '<span>' + __('content_default_msg') + '</span>'
         )
-      if @data.activity?.pageViews?.total[0].length > 1
+      if @data.activity
         data = new google.visualization.DataTable()
         data.addColumn('string', 'id')
         data.addColumn('number', __('Total page views'))
@@ -327,14 +335,15 @@ class Client
           width: $('.data-activity .graph', content).innerWidth() ||
             Math.floor(content_width * .75) + 50
           height: 380
+          colors: colors
           legend: 'top'
           hAxis:
             title: __('days')
             slantedText: true
             slantedTextAngle: 35
           vAxis:
-            minValue: 0
             title: __('page views')
+            minValue: 0
             format: 'decimal'
             viewWindowMode: 'maximized'
           tooltip:
@@ -476,6 +485,91 @@ class Client
         $('.data-activity .graph', content).html(
           '<span>' + __('content_default_msg') + '</span>'
         )
+      if @data.dayTime
+        options =
+          title:  __('Total activities per hour')
+          width: $('.data-day-time .graph', content).innerWidth() ||
+            Math.floor(content_width * .75) + 50
+          height: 250
+          colors: colors
+          legend: 'top'
+          hAxis:
+            title: __('hour')
+            ticks: [0..23]
+            format: '#h'
+          vAxis:
+            title: __('activities')
+            minValue: 0
+            format: 'decimal'
+            viewWindowMode: 'maximized'
+          tooltip:
+            isHtml: true
+        unless @view
+          @view = {}
+        unless @view.dayTime
+          @view.dayTime = {}
+          for i in [0..7]
+            @view.dayTime[i] = !i
+        showDayTime = (options) =>
+          temp = []
+          for _, i in @data.dayTime[0]
+            row = [i]
+            for n, hours of @data.dayTime
+              p = parseInt(n)
+              if @view.dayTime[p]
+                row.push(hours[i])
+            temp.push(row)
+          if temp[0].length == 1
+            return
+          data = new google.visualization.DataTable()
+          data.addColumn('number', 'id')
+          cases = [
+            'All days',
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday'
+          ]
+          for i, selected of @view.dayTime
+            if selected
+              data.addColumn('number', __(cases[parseInt(i)]))
+          data.addRows(temp)
+          new google.visualization.NumberFormat(pattern: '#h').format(data, 0)
+          chart = new google.visualization.LineChart(
+            $('.data-day-time .graph', content)[0]
+          )
+          chart.draw(data, options)
+          $('.data-day-time .btn-download', content).unbind('click')
+          $('.data-day-time .btn-download', content).click(
+            ((chart) ->
+              -> download(chart.getImageURI(), 'chart.png')
+            )(chart)
+          )
+        unless showDayTime(options)
+          $('.data-day-time .graph', content).html(
+            '<span>' + __('content_default_msg') + '</span>'
+          )
+        buttons = $('.data-day-time .togglebutton')
+        for button, i in buttons
+          $(button).on('change',
+            ((chart, options, i) =>
+              (evt) =>
+                checked = $('input[type="checkbox"]', evt.currentTarget)
+                  .is(':checked')
+                @view.dayTime[i] = checked
+                unless showDayTime(options)
+                  $('.data-day-time .graph', content).html(
+                    '<span>' + __('content_default_msg') + '</span>'
+                  )
+            )(chart, options, i)
+          )
+      else
+        $('.data-day-time .graph', content).html(
+          '<span>' + __('content_default_msg') + '</span>'
+        )
       if @data.usersInteraction
         maxNameLength = 0
         for user in @data.usersInteraction
@@ -538,22 +632,10 @@ class Client
           '<span>' + __('content_default_msg') + '</span>'
         )
 
-      $('.data-day-time .graph, .data-test-1 .graph', content).html(
-        '<span>' + __('content_default_msg') + '</span>'
-      )
-
-      $('.data-test-2 .graph, .data-test-3 .graph', content).html(
-        '<span>' + __('content_default_msg') + '</span>'
-      )
-
-      ###
-      if @data.interactionsSize
-        new Graph(
-          data: @data.interactionsSize
-          size: 400
-          context: $('.graph-b')[0]
-        ).show('bubble')
-      ###
+      $(
+        '.data-test-1 .graph, .data-test-2 .graph, .data-test-3 .graph',
+        content
+      ).html('<span>' + __('content_default_msg') + '</span>')
 
       unless $('.data', content).is(':visible')
         $('.default', content).hide()
@@ -662,6 +744,12 @@ class Client
   navActive: ->
     $('ul li a').unbind('click', @navActiveFn)
     $('ul li a').on('click', @navActiveFn)
+    @
+
+  dropdownOpened: ->
+    $('.dropdown-menu-opened li').on('click', ->
+      $(@).parent().parent().toggleClass('open')
+    )
     @
 
   refreshURL: (moodle = '') ->
@@ -867,7 +955,7 @@ class Client
         prevCentury: __('Previous Century')
         nextCentury: __('Next Century')
     )
-  @
+    @
 
   sendMessage: (cmd, msg = {}) ->
     msg.cmd = cmd

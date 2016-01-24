@@ -319,6 +319,10 @@ body {
       text-align: center;
       min-height: 55px;
 
+      .dropdown-menu-opened .togglebutton {
+        margin-left: 10px;
+      }
+
       &:first-child {
         margin-top: 5px;
       }
@@ -388,13 +392,18 @@ a {
 
 .togglebutton {
   label {
-    color: @orange-dark;
+    color: @dark;
 
-    input[type="checkbox"]:checked + .toggle {
-      background-color: rgba(255, 85, 33, 0.5);
+    input[type="checkbox"]:checked {
+      & + .toggle {
+        background-color: rgba(255, 85, 33, 0.5);
 
-      &::after {
-        background-color: rgba(255, 85, 20, 0.9);
+        &::after {
+          background-color: rgba(255, 85, 20, 0.9);
+        }
+        + span {
+          color: @orange-medium;
+        }
       }
     }
   }
