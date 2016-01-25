@@ -231,11 +231,10 @@ class Client
       for key, value of message.data
         @data[key] = value
     @updateData()
-    .updateData()
+    $(window).trigger('resize')
     @
 
   updateData: ->
-    console.log('data', @data)
     content = $('#dashboard-content')
     $('.data-options a', content).unbind('click')
     $('.data-options .togglebutton').unbind('change')
@@ -275,7 +274,7 @@ class Client
             data: @data.summary.uniqueActivities
           },
           {
-            title: __('Total unique pages')
+            title: __('Total unique page views')
             unity: __('pages')
             data: @data.summary.uniquePages
           },
@@ -291,9 +290,9 @@ class Client
           }
         ]
         options =
-          width: width = $('.data-summary .graph', content).innerWidth() ||
+          width: $('.data-summary .graph', content).innerWidth() ||
             Math.floor(content_width * .25)
-          height: 179
+          height: 214
           colors: colors
           legend: 'bottom'
           hAxis:
@@ -334,13 +333,11 @@ class Client
           title:  __('total page views per day')
           width: $('.data-activity .graph', content).innerWidth() ||
             Math.floor(content_width * .75) + 50
-          height: 380
+          height: 450
           colors: colors
           legend: 'top'
           hAxis:
             title: __('days')
-            slantedText: true
-            slantedTextAngle: 35
           vAxis:
             title: __('page views')
             minValue: 0
@@ -348,6 +345,9 @@ class Client
             viewWindowMode: 'maximized'
           tooltip:
             isHtml: true
+        if @data.activity.pageViews.total.length > 7
+           options.hAxis.slantedText = true
+           options.hAxis.slantedTextAngle = 45
         chart = new google.visualization.LineChart(
           $('.data-activity .graph', content)[0]
         )
@@ -451,7 +451,7 @@ class Client
                 data.addColumn('string', 'id')
                 data.addColumn('number', __('Total unique page views'))
                 data.addRows(activity.uniquePages.total)
-                options.title = __('Total unique pages per day')
+                options.title = __('Total unique page views per day')
                 options.vAxis.title = __('page views')
                 [data, options]
               [data, options] = @view.activity(data, options, activity)
@@ -469,7 +469,7 @@ class Client
                 for user in activity.users
                   data.addColumn('number', user)
                 data.addRows(activity.uniquePages.parcial)
-                options.title = __('Total unique pages per day (users)')
+                options.title = __('Total unique page views per day (users)')
                 options.vAxis.title = __('page views')
                 [data, options]
               [data, options] = @view.activity(data, options, activity)
@@ -490,7 +490,7 @@ class Client
           title:  __('Total activities per hour')
           width: $('.data-day-time .graph', content).innerWidth() ||
             Math.floor(content_width * .75) + 50
-          height: 250
+          height: 300
           colors: colors
           legend: 'top'
           hAxis:
@@ -523,19 +523,19 @@ class Client
             return
           data = new google.visualization.DataTable()
           data.addColumn('number', 'id')
-          cases = [
+          labels = [
             'All days',
-            'sunday',
-            'monday',
-            'tuesday',
-            'wednesday',
-            'thursday',
-            'friday',
-            'saturday'
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
           ]
           for i, selected of @view.dayTime
             if selected
-              data.addColumn('number', __(cases[parseInt(i)]))
+              data.addColumn('number', __(labels[parseInt(i)]))
           data.addRows(temp)
           new google.visualization.NumberFormat(pattern: '#h').format(data, 0)
           chart = new google.visualization.LineChart(
@@ -555,7 +555,7 @@ class Client
         buttons = $('.data-day-time .togglebutton')
         for button, i in buttons
           $(button).on('change',
-            ((chart, options, i) =>
+            ((i, options) =>
               (evt) =>
                 checked = $('input[type="checkbox"]', evt.currentTarget)
                   .is(':checked')
@@ -564,79 +564,64 @@ class Client
                   $('.data-day-time .graph', content).html(
                     '<span>' + __('content_default_msg') + '</span>'
                   )
-            )(chart, options, i)
+            )(i, options)
           )
       else
         $('.data-day-time .graph', content).html(
           '<span>' + __('content_default_msg') + '</span>'
         )
-      if @data.usersInteraction
-        maxNameLength = 0
-        for user in @data.usersInteraction
-          if user[0].length > maxNameLength
-            maxNameLength = user[0].length
+      if @data.ranking
         options =
-          width: $('.data-users-interaction .graph', content).innerWidth() ||
+          width: $('.data-ranking .graph', content).innerWidth() ||
             Math.floor(content_width * .375) + 15
-          height: (@data.usersInteraction.length * 17) + 120
+          height: 600
           colors: colors
-          legend: 'none'
-          title: __('User interactions')
-          chartArea:
-            left: Math.floor(maxNameLength * 7.5)
-          hAxis:
-            title: __('Total interactions')
+          legend: 'top'
+          title: __('Top users')
+          vAxis:
             minValue: 0
             fotmat: 'decimal'
             viewWindowMode: 'maximized'
           tooltip:
             isHtml: true
+        if @data.ranking.users.length > 7
+           options.hAxis =
+              slantedText: true
+              slantedTextAngle: 45
         data = new google.visualization.DataTable()
-        data.addColumn('string', __('user'))
-        data.addColumn('number', options.hAxis.title)
-        data.addRows(@data.usersInteraction)
-        @view?.usersInteraction?(data)
-        chart = new google.visualization.BarChart(
-          $('.data-users-interaction .graph', content)[0]
+        data.addColumn('string', 'id')
+        data.addColumn('number', __('Total page views'))
+        data.addColumn('number', __('Total unique activities'))
+        data.addColumn('number', __('Total unique page views'))
+        data.addColumn('number', __('Total days'))
+        data.addRows(@data.ranking.users)
+        chart = new google.visualization.ColumnChart(
+          $('.data-ranking .graph', content)[0]
         )
+        @view?.ranking?(data)
         chart.draw(data, options)
-        $('.data-users-interaction .btn-sort-name', content).click(
-          ((chart, data, options) =>
-            =>
-              unless @view
-                @view = {}
-              @view.usersInteraction = (data) ->
-                data.sort([{column: 0, desc: false}])
-              @view.usersInteraction(data)
-              chart.draw(data, options)
-          )(chart, data, options)
-        )
-        $('.data-users-interaction .btn-sort-data', content).click(
-          ((chart, data, options) =>
-            =>
-              unless @view
-                @view = {}
-              @view.usersInteraction = (data) ->
-                data.sort([{column: 1, desc: true}])
-              @view.usersInteraction(data)
-              chart.draw(data, options)
-          )(chart, data, options)
-        )
-        $('.data-users-interaction .btn-download', content).click(
+        buttons = $('.data-ranking .btn-sort', content)
+        for button, i in buttons
+          $(button).click(
+            ((chart, data, options, i) =>
+              =>
+                unless @view
+                  @view = {}
+                @view.ranking = (data) ->
+                  data.sort([{column: i, desc: i > 0}])
+                @view.ranking(data)
+                chart.draw(data, options)
+            )(chart, data, options, i)
+          )
+        $('.data-ranking .btn-download', content).click(
           ((chart) ->
             -> download(chart.getImageURI(), 'chart.png')
           )(chart)
         )
       else
-        $('.data-users-interaction .graph', content).html(
+        $('.data-ranking .graph', content).html(
           '<span>' + __('content_default_msg') + '</span>'
         )
-
-      $(
-        '.data-test-1 .graph, .data-test-2 .graph, .data-test-3 .graph',
-        content
-      ).html('<span>' + __('content_default_msg') + '</span>')
-
       unless $('.data', content).is(':visible')
         $('.default', content).hide()
         $('.data', content).show()

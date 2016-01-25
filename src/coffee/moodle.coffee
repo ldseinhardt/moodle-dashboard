@@ -385,7 +385,7 @@ class Moodle
       summary: @getSummary()
       activity: @getActivity()
       dayTime: @getDayTime()
-      usersInteraction: @getUsersInteraction()
+      ranking: @getRanking()
     data = {}
     temp = {}
     for name, method of callbacks
@@ -574,27 +574,45 @@ class Moodle
         return
       data
 
-  getUsersInteraction: ->
+  getRanking: ->
     init: (course, role) ->
-      [[], {}]
+      [
+        {
+          users: [] # pages, activities
+        },
+        {
+          users: {}
+        }
+      ]
     selected: (row, data, temp) ->
-      unless temp[row.user]
-        temp[row.user] = 0
-      temp[row.user] += row.size
+      unless temp.users[row.user]
+        temp.users[row.user] =
+          totalViews: 0
+          activities: {}
+          pages: {}
+          dates: {}
+      unless temp.users[row.user].dates[row.day]
+        temp.users[row.user].dates[row.day] = 1
+      event = row.event.name + ' (' +  row.event.context + ')'
+      unless temp.users[row.user].activities[event]
+        temp.users[row.user].activities[event] = 1
+      if /view/.test(row.event.name)
+        temp.users[row.user].totalViews += row.size
+        unless temp.users[row.user].pages[event]
+          temp.users[row.user].pages[event] = 1
     end: (course, role, data, temp) ->
-      unless Object.keys(temp).length
-        data = null
+      unless Object.keys(temp.users).length
         return
-      for i, size of temp
+      for i, values of temp.users
         user = course.users[role].list[i]
-        data.push([user.firstname + ' ' + user.lastname, size])
-        data.sort((a, b) ->
-          if a[1] > b[1]
-            return -1
-          if a[1] < b[1]
-            return 1
-          return 0
-        )
+        data.users.push([
+          user.firstname + ' ' + user.lastname,
+          values.totalViews,
+          Object.keys(values.activities).length,
+          Object.keys(values.pages).length,
+          Object.keys(values.dates).length
+        ])
+      console.log(data, temp)
       data
 
   loop: (role, selected, recorded) ->

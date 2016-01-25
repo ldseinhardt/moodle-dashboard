@@ -251,8 +251,8 @@
     "message": "atividades"
   },
 
-  "total_unique_pages": {
-    "message": "Total de páginas únicas"
+  "total_unique_page_views": {
+    "message": "Total de páginas únicas visualizadas"
   },
 
   "pages": {
@@ -279,24 +279,24 @@
     "message": "Selecionado"
   },
 
-  "user_interactions": {
-    "message": "Interações de usuários"
-  },
-
-  "total_interactions": {
-    "message": "Total de interações"
-  },
-
-  "user": {
-    "message": "Usuário"
-  },
-
   "sort_by_name": {
     "message": "Ordenar por nome"
   },
 
-  "sort_by_interactions": {
-    "message": "Ordenar por interações"
+  "sort_by_total_page_views": {
+    "message": "Ordenar por total de visualizações de páginas"
+  },
+
+  "sort_by_total_unique_activities": {
+    "message": "Ordenar por total de atividades únicas"
+  },
+
+  "sort_by_total_unique_page_views": {
+    "message": "Ordenar por total de páginas únicas visualizadas"
+  },
+
+  "sort_by_total_days": {
+    "message": "Ordenar por total de dias"
   },
 
   "total_page_views_per_day": {
@@ -319,12 +319,12 @@
     "message": "Total de atividades únicas por dia (usuários)"
   },
 
-  "total_unique_pages_per_day": {
-    "message": "Total de visualizações de páginas únicas por dia"
+  "total_unique_page_views_per_day": {
+    "message": "Total de páginas únicas visualizadas por dia"
   },
 
-  "total_unique_pages_per_day_users": {
-    "message": "Total de visualizações de páginas únicas por dia (usuários)"
+  "total_unique_page_views_per_day_users": {
+    "message": "Total de páginas únicas visualizadas por dia (usuários)"
   },
 
   "total_activities_per_hour": {
@@ -365,5 +365,13 @@
 
   "saturday": {
     "message": "Sábado"
+  },
+
+  "total_days": {
+    "message": "Total de dias"
+  },
+
+  "top_users": {
+    "message": "Top usuários"
   }
 }
