@@ -1,5 +1,5 @@
 ###
-# dashboard: moodle list
+# dashboard: moodle collection
 ###
 
 class Dashboard

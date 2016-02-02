@@ -167,8 +167,36 @@
     "message": "Configurações"
   },
 
+  "filters": {
+    "message": "Filtros"
+  },
+
+  "synchronization": {
+    "message": "Sincronização"
+  },
+
+  "privacy": {
+    "message": "Privacidade"
+  },
+
+  "other_options": {
+    "message": "Outras opções"
+  },
+
   "help": {
     "message": "Ajuda"
+  },
+
+  "comments": {
+    "message": "Comentários"
+  },
+
+  "support": {
+    "message": "Suporte"
+  },
+
+  "about": {
+    "message": "Sobre"
   },
 
   "fullscreen": {
@@ -267,10 +295,6 @@
     "message": "tempo (min)"
   },
 
-  "activity_time": {
-    "message": "Período de atividades"
-  },
-
   "saved": {
     "message": "Salvo"
   },
@@ -279,24 +303,16 @@
     "message": "Selecionado"
   },
 
+  "sort_by": {
+    "message": "Ordenar por"
+  },
+
   "sort_by_name": {
     "message": "Ordenar por nome"
   },
 
-  "sort_by_total_page_views": {
-    "message": "Ordenar por total de visualizações de páginas"
-  },
-
-  "sort_by_total_unique_activities": {
-    "message": "Ordenar por total de atividades únicas"
-  },
-
-  "sort_by_total_unique_page_views": {
-    "message": "Ordenar por total de páginas únicas visualizadas"
-  },
-
-  "sort_by_total_days": {
-    "message": "Ordenar por total de dias"
+  "sort_by_data": {
+    "message": "Ordenar por dados"
   },
 
   "total_page_views_per_day": {
@@ -371,7 +387,47 @@
     "message": "Total de dias"
   },
 
-  "top_users": {
-    "message": "Top usuários"
+  "top_users_page_views": {
+    "message": "Top usuários (visualizações de páginas)"
+  },
+
+  "top_users_unique_activities": {
+    "message": "Top usuários (atividades únicas)"
+  },
+
+  "top_users_unique_page_views": {
+    "message": "Top usuários (páginas únicas visualizadas)"
+  },
+
+  "top_users_days": {
+    "message": "Top usuários (dias)"
+  },
+
+  "top_pages_page_views": {
+    "message": "Top páginas (visualizações de páginas)"
+  },
+
+  "top_pages_users": {
+    "message": "Top páginas (usuários)"
+  },
+
+  "top_pages_unique_activities": {
+    "message": "Top páginas (atividades únicas)"
+  },
+
+  "top_pages_days": {
+    "message": "Top páginas (dias)"
+  },
+
+  "top_activities_page_views": {
+    "message": "Top atividades (visualizações de páginas)"
+  },
+
+  "top_activities_users": {
+    "message": "Top atividades (usuários)"
+  },
+
+  "top_activities_days": {
+    "message": "Top atividades (dias)"
   }
 }

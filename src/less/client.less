@@ -207,7 +207,7 @@ body {
 
     .more-options {
       top: 205px;
-      left: 330px;
+      left: 320px;
     }
 
     a {
@@ -343,11 +343,9 @@ body {
 
 a {
   color: @dark;
-  box-shadow: none !important;
 
   &:-webkit-any-link {
     color: @dark;
-    box-shadow: none !important;
   }
 
   &:hover {
@@ -406,6 +404,44 @@ a {
         }
       }
     }
+  }
+}
+
+.btn-group {
+  & > a {
+    padding: 9px 5px;
+    border-radius: 360px;
+  }
+
+  &.open {
+    & > a {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.nav-tabs {
+  background-color: @orange;
+  margin-bottom: 15px;
+
+  li {
+    margin: 0;
+  }
+
+  .active {
+    background-color: @orange-medium;
+  }
+}
+
+fieldset {
+  margin-bottom: 10px;
+
+  legend {
+    color: @orange;
+  }
+
+  .btn {
+    color: @orange !important;
   }
 }
 

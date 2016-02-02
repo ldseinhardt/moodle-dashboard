@@ -129,7 +129,11 @@ module.exports = function(grunt) {
       compile: {
         files: {
           'build/js/main.js': [
-            'src/coffee/graph.coffee',
+            'src/coffee/view/view.coffee',
+            'src/coffee/view/summary.coffee',
+            'src/coffee/view/activity.coffee',
+            'src/coffee/view/daytime.coffee',
+            'src/coffee/view/ranking.coffee',
             'src/coffee/client.coffee',
             'src/coffee/i18n.coffee'
           ],
@@ -138,6 +142,11 @@ module.exports = function(grunt) {
             'src/coffee/i18n.coffee'
           ],
           'build/js/background.js': [
+            'src/coffee/model/model.coffee',
+            'src/coffee/model/summary.coffee',
+            'src/coffee/model/activity.coffee',
+            'src/coffee/model/daytime.coffee',
+            'src/coffee/model/ranking.coffee',
             'src/coffee/moodle.coffee',
             'src/coffee/dashboard.coffee'
           ]
@@ -149,8 +158,7 @@ module.exports = function(grunt) {
         files: {
           'build/css/main.css': [
             'src/less/material-icons.less',
-            'src/less/client.less',
-            'src/less/graph.less'
+            'src/less/client.less'
           ],
           'build/css/inject.css': [
             'src/less/inject.less'

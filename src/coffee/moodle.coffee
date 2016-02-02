@@ -275,6 +275,7 @@ class Moodle
           Moodle.response().sync_data
         )
       error: ->
+        course.errors.push(time)
         response(
           Moodle.response().sync_no_moodle_access,
           Moodle.response().sync_data
@@ -381,244 +382,9 @@ class Moodle
     unless @hasData()
       return
     course = @getCourse()
-    callbacks =
-      summary: @getSummary()
-      activity: @getActivity()
-      dayTime: @getDayTime()
-      ranking: @getRanking()
-    data = {}
-    temp = {}
-    for name, method of callbacks
-      [data[name], temp[name]] = method.init(course, role)
-    @loop(
-      role
-      (row) ->
-        for name, method of callbacks
-          method.selected?(row, data[name], temp[name])
-      (row) ->
-        for name, method of callbacks
-          method.recorded?(row, data[name], temp[name])
-    )
-    for name, method of callbacks
-      data[name] = method.end(course, role, data[name], temp[name])
-      delete temp[name]
-    data
-
-  getSummary: ->
-    init: (course, role) ->
-      dates = course.dates
-      timeday = 1000 * 60 * 60 * 24
-      [
-        {
-          uniqueUsers: [
-            course.users[role].list.length,
-            course.users[role].list.filter((user) -> user.selected).length
-          ]
-          dateRange: [
-            Math.floor(
-              (dates.max.value - dates.min.value) / timeday
-            ) + 1,
-            Math.floor(
-              (dates.max.selected - dates.min.selected) / timeday
-            ) + 1
-          ]
-          pageViews: [0, 0]
-          meanSession: [15.8, 10] # not implemented
-        },
-        {
-          recorded:
-            activities: {}
-            pages: {}
-          selected:
-            activities: {}
-            pages: {}
-        }
-      ]
-    selected: (row, data, temp) ->
-      event = row.event.name + ' (' +  row.event.context + ')'
-      unless temp.selected.activities[event]
-        temp.selected.activities[event] = 1
-      if /view/.test(row.event.name)
-        data.pageViews[1] += row.size
-        unless temp.selected.pages[event]
-          temp.selected.pages[event] = 1
-    recorded: (row, data, temp) ->
-      event = row.event.name + ' (' +  row.event.context + ')'
-      unless temp.recorded.activities[event]
-        temp.recorded.activities[event] = 1
-      if /view/.test(row.event.name)
-        data.pageViews[0] += row.size
-        unless temp.recorded.pages[event]
-          temp.recorded.pages[event] = 1
-    end: (course, role, data, temp) ->
-      data.uniqueActivities = [
-        Object.keys(temp.recorded.activities).length,
-        Object.keys(temp.selected.activities).length
-      ]
-      data.uniquePages = [
-        Object.keys(temp.recorded.pages).length,
-        Object.keys(temp.selected.pages).length
-      ]
-      data
-
-  getActivity: ->
-    init: (course, role) ->
-      [
-        {
-          users: []
-          pageViews:
-            total: []
-            parcial: []
-          uniqueUsers: []
-          uniqueActivities:
-            total: []
-            parcial: []
-          uniquePages:
-            total: []
-            parcial: []
-        },
-        {
-          users: {}
-          tree: {}
-        }
-      ]
-    selected: (row, data, temp) ->
-      unless temp.users[row.user]
-        temp.users[row.user] = 1
-      unless temp.tree[row.day]
-        temp.tree[row.day] =
-          users: {}
-          activities: {}
-          pages: {}
-      unless temp.tree[row.day].users[row.user]
-        temp.tree[row.day].users[row.user] = 0
-      event = row.event.name + ' (' +  row.event.context + ')'
-      unless temp.tree[row.day].activities[event]
-        temp.tree[row.day].activities[event] = {}
-      unless temp.tree[row.day].activities[event][row.user]
-        temp.tree[row.day].activities[event][row.user] = 1
-      if /view/.test(row.event.name)
-        temp.tree[row.day].users[row.user] += row.size
-        unless temp.tree[row.day].pages[event]
-          temp.tree[row.day].pages[event] = {}
-        unless temp.tree[row.day].pages[event][row.user]
-          temp.tree[row.day].pages[event][row.user] = 1
-    end: (course, role, data, temp) ->
-      unless Object.keys(temp.users).length
-        return
-      for i of temp.users
-        user = course.users[role].list[i]
-        data.users.push(user.firstname + ' ' + user.lastname)
-      timelist = Object.keys(temp.tree)
-      timelist.sort((a, b) ->
-        if a < b
-          return -1
-        if a > b
-          return 1
-        return 0
-      )
-      for day in timelist
-        value = temp.tree[day]
-        pageViews = []
-        activities = []
-        pages = []
-        for i of temp.users
-          pageViews.push(value.users[i] || 0)
-          count = 0
-          for activitie, users of value.activities
-            if users[i]
-              count++
-          activities.push(count)
-          count = 0
-          for page, users of value.pages
-            if users[i]
-              count++
-          pages.push(count)
-        date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
-        data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
-        data.uniqueActivities.total
-          .push([date, Object.keys(value.activities).length])
-        data.uniquePages.total.push([date, Object.keys(value.pages).length])
-        pageViews.unshift(date)
-        activities.unshift(date)
-        pages.unshift(date)
-        data.pageViews.parcial.push(pageViews)
-        data.uniqueUsers.push([date, Object.keys(value.users).length])
-        data.uniqueActivities.parcial.push(activities)
-        data.uniquePages.parcial.push(pages)
-      unless data.pageViews?.total[0]?.length > 1
-        return
-      data
-
-  getDayTime: ->
-    init: (course, role) ->
-      data = {}
-      for i in [0..7]
-        data[i] = []
-        for n in [0..23]
-          data[i].push(0)
-      [data, {}]
-    selected: (row, data, temp) ->
-      day = parseInt(row.day)
-      week = new Date(day).getDay() + 1
-      hour = new Date(day + parseInt(row.time)).getHours()
-      data[week][hour] += row.size
-      data[0][hour] += row.size
-    end: (course, role, data, temp) ->
-      total = 0
-      for size in data[0]
-        total += size
-        if total > 0
-          break
-      unless total
-        return
-      data
-
-  getRanking: ->
-    init: (course, role) ->
-      [
-        {
-          users: [] # pages, activities
-        },
-        {
-          users: {}
-        }
-      ]
-    selected: (row, data, temp) ->
-      unless temp.users[row.user]
-        temp.users[row.user] =
-          totalViews: 0
-          activities: {}
-          pages: {}
-          dates: {}
-      unless temp.users[row.user].dates[row.day]
-        temp.users[row.user].dates[row.day] = 1
-      event = row.event.name + ' (' +  row.event.context + ')'
-      unless temp.users[row.user].activities[event]
-        temp.users[row.user].activities[event] = 1
-      if /view/.test(row.event.name)
-        temp.users[row.user].totalViews += row.size
-        unless temp.users[row.user].pages[event]
-          temp.users[row.user].pages[event] = 1
-    end: (course, role, data, temp) ->
-      unless Object.keys(temp.users).length
-        return
-      for i, values of temp.users
-        user = course.users[role].list[i]
-        data.users.push([
-          user.firstname + ' ' + user.lastname,
-          values.totalViews,
-          Object.keys(values.activities).length,
-          Object.keys(values.pages).length,
-          Object.keys(values.dates).length
-        ])
-      console.log(data, temp)
-      data
-
-  loop: (role, selected, recorded) ->
-    course = @getCourse()
     min = course.dates.min.selected
     max = course.dates.max.selected
+    list = model.list(course, role)
     for user, userid in course.users[role].list
       if user.data
         for day, components of user.data
@@ -635,12 +401,18 @@ class Moodle
                         name: eventname
                         context: eventcontext
                       description: description
+                      page: eventcontext
                       time: time
                       size: size
-                    recorded?(row)
-                    if user.selected && min <= day <= max
-                      selected?(row)
-    @
+                    row.page = description if /^http/.test(eventcontext)
+                    for _, method of list
+                      method.recorded?(row)
+                      if user.selected && min <= day <= max
+                        method.selected?(row)
+    data = {}
+    for name, method of list
+      data[name] = method.data()
+    data
 
   getTitle: ->
     @title
@@ -728,21 +500,6 @@ class Moodle
 
   equals: (url) ->
     @url == url
-
-  classes: (root) ->
-    classes = []
-    recurse = (name, node) ->
-      if node.children
-        node.children.forEach((child) -> recurse(node.name, child))
-      else
-        classes.push(
-          packageName: name
-          className: node.name
-          value: node.size
-        )
-    recurse(null, root)
-    classes = classes.filter((d) -> d.value > 0)
-    children: classes
 
   toString: ->
     JSON.stringify(@)

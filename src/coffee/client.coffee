@@ -58,29 +58,28 @@ class Client
   responseCourses: (message) ->
     html = '<ul class="nav course-list">'
     for course, i in message.courses
-      html += '<li><a href="#" index="' + i + '"'
-      html += ' class="active"' if course.selected
-      html += '>' + course.name + '</a></li>'
+      html += '<li><a href="#" index="' + i + '" class="withripple'
+      html += ' active' if course.selected
+      html += '">' + course.name + '</a></li>'
     html += '</ul>'
     $('#submenu-courses').html(html)
     @navActive()
-    $('.course-list li a').on('click',
-      ((self) ->
-        -> self.onCourseSelect(@)
-      )(@)
+    .onCourseSelect()
+    $('.course-list li a').on('click', (evt) =>
+      @onCourseSelect(evt.currentTarget)
     )
-    @onCourseSelect()
     @
 
-  onCourseSelect: (evt) ->
+  onCourseSelect: (selector) ->
     content  = $('#dashboard-content')
-    course = if evt then $(evt) else $('.course-list li .active')
+    course = if selector then $(selector) else $('.course-list li .active')
     @course = parseInt(course.attr('index'))
     @role = 0
     if !content.is(':visible') || $('.title', content).text() != course.text()
       $('.title', content).text(course.text())
       $('.main').hide()
       content.show()
+      view.resize()
     @sendMessage('getUsers')
     .sendMessage('getDates')
     @
@@ -130,18 +129,14 @@ class Client
     html += '</ul>'
     html += '</div>'
     $('#submenu-users').html(html + husr)
-    $.material.init()
+    $.material.togglebutton()
     @navActive()
-    $('.role-list').on('click',
-      ((self) ->
-        ->
-          self.role = parseInt($(@).attr('index'))
-          index = self.role
-          unless $($('.role-users-list')[index]).is(':visible')
-            self.sendMessage('getData')
-            $('.role-users-list').hide()
-            $($('.role-users-list')[index]).show()
-      )(@)
+    $('.role-list').on('click', (evt) =>
+      @role = parseInt($(evt.currentTarget).attr('index'))
+      unless $($('.role-users-list')[@role]).is(':visible')
+        @sendMessage('getData')
+        $('.role-users-list').hide()
+        $($('.role-users-list')[@role]).show()
     )
     $('.btn-users-select-all').on('click', =>
       index = @getRole()
@@ -170,7 +165,10 @@ class Client
         user: parseInt(checkbox.attr('value'))
         selected: checkbox.is(':checked')
       )
-      .sendMessage('getData')
+      setTimeout(
+        => @sendMessage('getData'),
+        500
+      )
     )
     @sendMessage('getData')
     .sendMessage('syncData')
@@ -211,12 +209,9 @@ class Client
     @
 
   updateDates: ->
-    total = Math.floor(
-      (@dates.max.value - @dates.min.value) / (1000 * 60 * 60 * 24)
-    ) + 1
-    selected = Math.floor(
-      (@dates.max.selected - @dates.min.selected) / (1000 * 60 * 60 * 24)
-    ) + 1
+    day = 1000 * 60 * 60 * 24
+    total = Math.floor((@dates.max.value - @dates.min.value) / day) + 1
+    selected = Math.floor((@dates.max.selected - @dates.min.selected) / day) + 1
     $('#submenu-daterange .message').html(
       selected + ' ' + __('of') + ' ' + total + ' ' + __('days')
     )
@@ -225,408 +220,25 @@ class Client
   responseData: (message) ->
     unless message.course == @getCourse() && message.role == @getRole()
       return
-    @data =
-      error: message.error
-    unless message.error
-      for key, value of message.data
-        @data[key] = value
-    @updateData()
-    $(window).trigger('resize')
-    @
-
-  updateData: ->
     content = $('#dashboard-content')
-    $('.data-options a', content).unbind('click')
-    $('.data-options .togglebutton').unbind('change')
-    if !@data || @data.error
+    if !message.data || message.error
       unless $('.default', content).is(':visible')
         $('.data', content).hide()
         $('.default', content).show()
     else
-      content_width = $('body').innerWidth() - (380 + 100)
-      colors = [
-        '#0074d9', '#ff4136', '#ffdc00', '#3d9970',
-        '#85144b', '#39cccc', '#b10dc9', '#01ff70',
-        '#111111', '#ff851b', '#001f3f', '#f012be',
-        '#dddddd', '#7fdbff', '#2ecc40', '#aaaaaa'
-      ]
-      download = (url, filename) =>
-        chrome.downloads.download(
-          url: url
-          saveAs: @isNotFullScreen()
-          filename: filename
-        )
-      if @data.summary
-        dataGroup = [
-          {
-            title: __('Total page views')
-            unity: __('page views')
-            data: @data.summary.pageViews
-          },
-          {
-            title: __('Total users')
-            unity: __('users')
-            data: @data.summary.uniqueUsers
-          },
-          {
-            title: __('Total unique activities')
-            unity: __('activities')
-            data: @data.summary.uniqueActivities
-          },
-          {
-            title: __('Total unique page views')
-            unity: __('pages')
-            data: @data.summary.uniquePages
-          },
-          {
-            title: __('Mean session length')
-            unity: __('Time (min)')
-            data: @data.summary.meanSession
-          },
-          {
-            title: __('Activity time')
-            unity: __('days')
-            data: @data.summary.dateRange
-          }
-        ]
-        options =
-          width: $('.data-summary .graph', content).innerWidth() ||
-            Math.floor(content_width * .25)
-          height: 214
-          colors: colors
-          legend: 'bottom'
-          hAxis:
-            textPosition: 'none'
-          vAxis:
-            minValue: 0
-            format: 'decimal'
-            viewWindowMode: 'maximized'
-          tooltip:
-            isHtml: true
-        buttons = $('.data-summary .btn-download', content)
-        graphics = $('.data-summary .graph', content)
-        for item, i in dataGroup
-          options.title = item.title
-          options.vAxis.title = item.unity
-          data = new google.visualization.DataTable()
-          data.addColumn('string', 'id')
-          data.addColumn('number', __('Saved'))
-          data.addColumn('number', __('Selected'))
-          data.addRows([[options.title].concat(item.data)])
-          chart = new google.visualization.ColumnChart(graphics[i])
-          chart.draw(data, options)
-          $(buttons[i]).click(
-            ((chart) ->
-              -> download(chart.getImageURI(), 'chart.png')
-            )(chart)
-          )
-      else
-        $('.data-summary .graph', content).html(
-          '<span>' + __('content_default_msg') + '</span>'
-        )
-      if @data.activity
-        data = new google.visualization.DataTable()
-        data.addColumn('string', 'id')
-        data.addColumn('number', __('Total page views'))
-        data.addRows(@data.activity.pageViews.total)
-        options =
-          title:  __('total page views per day')
-          width: $('.data-activity .graph', content).innerWidth() ||
-            Math.floor(content_width * .75) + 50
-          height: 450
-          colors: colors
-          legend: 'top'
-          hAxis:
-            title: __('days')
-          vAxis:
-            title: __('page views')
-            minValue: 0
-            format: 'decimal'
-            viewWindowMode: 'maximized'
-          tooltip:
-            isHtml: true
-        if @data.activity.pageViews.total.length > 7
-           options.hAxis.slantedText = true
-           options.hAxis.slantedTextAngle = 45
-        chart = new google.visualization.LineChart(
-          $('.data-activity .graph', content)[0]
-        )
-        if @view?.activity
-          [data, options] = @view?.activity?(data, options, @data.activity)
-        chart.draw(data, options)
-        $('.data-activity .btn-data-page-views', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                data.addColumn('number', __('Total page views'))
-                data.addRows(activity.pageViews.total)
-                options.title = __('Total page views per day')
-                options.vAxis.title = __('page views')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-page-views-users', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                for user in activity.users
-                  data.addColumn('number', user)
-                data.addRows(activity.pageViews.parcial)
-                options.title = __('Total page views per day (users)')
-                options.vAxis.title = __('page views')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-unique-users', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                data.addColumn('number', __('Total users'))
-                data.addRows(activity.uniqueUsers)
-                options.title = __('User access per day')
-                options.vAxis.title = __('users')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-unique-activities', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                data.addColumn('number', __('Total unique activities'))
-                data.addRows(activity.uniqueActivities.total)
-                options.title = __('Total unique activities per day')
-                options.vAxis.title = __('activities')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-unique-activities-users', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                for user in activity.users
-                  data.addColumn('number', user)
-                data.addRows(activity.uniqueActivities.parcial)
-                options.title = __('Total unique activities per day (users)')
-                options.vAxis.title = __('activities')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-unique-pages', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                data.addColumn('number', __('Total unique page views'))
-                data.addRows(activity.uniquePages.total)
-                options.title = __('Total unique page views per day')
-                options.vAxis.title = __('page views')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-data-unique-pages-users', content).click(
-          ((chart, data, options, activity) =>
-            =>
-              unless @view
-                @view = {}
-              @view.activity = (data, options, activity) ->
-                data = new google.visualization.DataTable()
-                data.addColumn('string', 'id')
-                for user in activity.users
-                  data.addColumn('number', user)
-                data.addRows(activity.uniquePages.parcial)
-                options.title = __('Total unique page views per day (users)')
-                options.vAxis.title = __('page views')
-                [data, options]
-              [data, options] = @view.activity(data, options, activity)
-              chart.draw(data, options)
-          )(chart, data, options, @data.activity)
-        )
-        $('.data-activity .btn-download', content).click(
-          ((chart) ->
-            -> download(chart.getImageURI(), 'chart.png')
-          )(chart)
-        )
-      else
-        $('.data-activity .graph', content).html(
-          '<span>' + __('content_default_msg') + '</span>'
-        )
-      if @data.dayTime
-        options =
-          title:  __('Total activities per hour')
-          width: $('.data-day-time .graph', content).innerWidth() ||
-            Math.floor(content_width * .75) + 50
-          height: 300
-          colors: colors
-          legend: 'top'
-          hAxis:
-            title: __('hour')
-            ticks: [0..23]
-            format: '#h'
-          vAxis:
-            title: __('activities')
-            minValue: 0
-            format: 'decimal'
-            viewWindowMode: 'maximized'
-          tooltip:
-            isHtml: true
-        unless @view
-          @view = {}
-        unless @view.dayTime
-          @view.dayTime = {}
-          for i in [0..7]
-            @view.dayTime[i] = !i
-        showDayTime = (options) =>
-          temp = []
-          for _, i in @data.dayTime[0]
-            row = [i]
-            for n, hours of @data.dayTime
-              p = parseInt(n)
-              if @view.dayTime[p]
-                row.push(hours[i])
-            temp.push(row)
-          if temp[0].length == 1
-            return
-          data = new google.visualization.DataTable()
-          data.addColumn('number', 'id')
-          labels = [
-            'All days',
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday'
-          ]
-          for i, selected of @view.dayTime
-            if selected
-              data.addColumn('number', __(labels[parseInt(i)]))
-          data.addRows(temp)
-          new google.visualization.NumberFormat(pattern: '#h').format(data, 0)
-          chart = new google.visualization.LineChart(
-            $('.data-day-time .graph', content)[0]
-          )
-          chart.draw(data, options)
-          $('.data-day-time .btn-download', content).unbind('click')
-          $('.data-day-time .btn-download', content).click(
-            ((chart) ->
-              -> download(chart.getImageURI(), 'chart.png')
-            )(chart)
-          )
-        unless showDayTime(options)
-          $('.data-day-time .graph', content).html(
-            '<span>' + __('content_default_msg') + '</span>'
-          )
-        buttons = $('.data-day-time .togglebutton')
-        for button, i in buttons
-          $(button).on('change',
-            ((i, options) =>
-              (evt) =>
-                checked = $('input[type="checkbox"]', evt.currentTarget)
-                  .is(':checked')
-                @view.dayTime[i] = checked
-                unless showDayTime(options)
-                  $('.data-day-time .graph', content).html(
-                    '<span>' + __('content_default_msg') + '</span>'
-                  )
-            )(i, options)
-          )
-      else
-        $('.data-day-time .graph', content).html(
-          '<span>' + __('content_default_msg') + '</span>'
-        )
-      if @data.ranking
-        options =
-          width: $('.data-ranking .graph', content).innerWidth() ||
-            Math.floor(content_width * .375) + 15
-          height: 600
-          colors: colors
-          legend: 'top'
-          title: __('Top users')
-          vAxis:
-            minValue: 0
-            fotmat: 'decimal'
-            viewWindowMode: 'maximized'
-          tooltip:
-            isHtml: true
-        if @data.ranking.users.length > 7
-           options.hAxis =
-              slantedText: true
-              slantedTextAngle: 45
-        data = new google.visualization.DataTable()
-        data.addColumn('string', 'id')
-        data.addColumn('number', __('Total page views'))
-        data.addColumn('number', __('Total unique activities'))
-        data.addColumn('number', __('Total unique page views'))
-        data.addColumn('number', __('Total days'))
-        data.addRows(@data.ranking.users)
-        chart = new google.visualization.ColumnChart(
-          $('.data-ranking .graph', content)[0]
-        )
-        @view?.ranking?(data)
-        chart.draw(data, options)
-        buttons = $('.data-ranking .btn-sort', content)
-        for button, i in buttons
-          $(button).click(
-            ((chart, data, options, i) =>
-              =>
-                unless @view
-                  @view = {}
-                @view.ranking = (data) ->
-                  data.sort([{column: i, desc: i > 0}])
-                @view.ranking(data)
-                chart.draw(data, options)
-            )(chart, data, options, i)
-          )
-        $('.data-ranking .btn-download', content).click(
-          ((chart) ->
-            -> download(chart.getImageURI(), 'chart.png')
-          )(chart)
-        )
-      else
-        $('.data-ranking .graph', content).html(
-          '<span>' + __('content_default_msg') + '</span>'
-        )
       unless $('.data', content).is(':visible')
         $('.default', content).hide()
         $('.data', content).show()
+      view.render(message.data, @download)
       @navActive()
     @
+
+  download: (url, filename = 'chart.png') =>
+    chrome.downloads.download(
+      url: url
+      saveAs: @isNotFullScreen()
+      filename: filename
+    )
 
   responseSync: (message) ->
     unless message.course == @getCourse()
@@ -732,7 +344,7 @@ class Client
     @
 
   dropdownOpened: ->
-    $('.dropdown-menu-opened li').on('click', ->
+    $('.dropdown-menu-opened li').click(->
       $(@).parent().parent().toggleClass('open')
     )
     @
@@ -743,11 +355,7 @@ class Client
       moodle = '?moodle=' + moodle
     else
       delete @url
-    window.history.pushState(
-      null,
-      $('title').text(),
-      location.pathname + moodle
-    )
+    history.pushState(null, $('title').text(), location.pathname + moodle)
     @
 
   showMessage: (title, message) ->
@@ -772,7 +380,7 @@ class Client
     $('.btn-courses', nav).click(->
       unless $('#submenu-courses').is(':visible')
         $('.submenu-item').hide()
-        $('#submenu-courses').fadeIn()
+        $('#submenu-courses').show()
     )
     $('#submenu-courses').mouseover(->
       $('.sidebar nav li .active').removeClass('active')
@@ -781,7 +389,7 @@ class Client
     $('.btn-users', nav).click(->
       unless $('#submenu-users').is(':visible')
         $('.submenu-item').hide()
-        $('#submenu-users').fadeIn()
+        $('#submenu-users').show()
     )
     $('#submenu-users').mouseover(->
       $('.sidebar nav li .active').removeClass('active')
@@ -790,7 +398,7 @@ class Client
     $('.btn-daterange', nav).click(->
       unless $('#submenu-daterange').is(':visible')
         $('.submenu-item').hide()
-        $('#submenu-daterange').fadeIn()
+        $('#submenu-daterange').show()
     )
     $('#submenu-daterange').mouseover(->
       $('.sidebar nav li .active').removeClass('active')
@@ -845,7 +453,7 @@ class Client
 
   onResize: ->
     $(window).on('resize', =>
-      @updateData()
+      view.resize()
       fullscreen = '<i class="material-icons">fullscreen'
       if (!window.screenTop && !window.screenY)
         fullscreen += '_exit</i> ' + __('Fullscreen (exit)') + '</a>'
@@ -856,8 +464,8 @@ class Client
     @
 
   isNotFullScreen: ->
-    document.fullScreenElement? ||
-      (!document.mozFullScreen && !document.webkitIsFullScreen)
+    doc = document
+    doc.fullScreenElement? || (!doc.mozFullScreen && !doc.webkitIsFullScreen)
 
   configDatepickers: ->
     daterange = $('#submenu-daterange')
@@ -949,7 +557,7 @@ class Client
     msg.course = @getCourse()
     msg.role = @getRole()
     chrome.runtime.sendMessage(msg)
-    console.log('sendMessage:', msg)
+    # console.log('sendMessage:', msg)
     @
 
   onMessage: ->
