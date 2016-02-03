@@ -323,8 +323,8 @@
     "message": "Total de visualizações de páginas por dia (usuários)"
   },
 
-  "user_access_per_day": {
-    "message": "Acesso de usuários por dia"
+  "total_unique_users_per_day": {
+    "message": "Total de usuários únicos por dia"
   },
 
   "total_unique_activities_per_day": {
@@ -341,6 +341,14 @@
 
   "total_unique_page_views_per_day_users": {
     "message": "Total de páginas únicas visualizadas por dia (usuários)"
+  },
+
+  "mean_session_length_per_day": {
+    "message": "Tempo médio de sessão por dia"
+  },
+
+  "mean_session_length_per_day_users": {
+    "message": "Tempo médio de sessão por dia (usuários)"
   },
 
   "total_activities_per_hour": {

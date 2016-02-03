@@ -34,7 +34,7 @@ class View
         )
       else
         $('.graph', ctx).html('<span>' + __('content_default_msg') + '</span>')
-    @
+    @resize()
 
   resize: ->
     for _, view of @views

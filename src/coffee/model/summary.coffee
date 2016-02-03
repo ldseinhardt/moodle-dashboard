@@ -23,6 +23,7 @@ class Summary
       activities: {}
       pages: {}
       sessions: {}
+
   selected: (d) ->
     unless @s.sessions[d.user]
       @s.sessions[d.user] = {}
@@ -56,9 +57,16 @@ class Summary
       sessions = []
       for user, days of @[type].sessions
         for day, times of days
+          times.sort((a, b) ->
+            if (a < b)
+              return -1
+            if (a > b)
+              return 1
+            return 0
+          )
           a = times[0]
           b = times[0]
-          for t in times.sort()
+          for t in times
             if t - a > 5400
               sessions.push(b - a)
               a = t

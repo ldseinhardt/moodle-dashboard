@@ -156,10 +156,10 @@ class Moodle
                 x = a.name.toLowerCase()
                 y = b.name.toLowerCase()
                 if (x < y)
-                  return -1;
+                  return -1
                 if (x > y)
-                  return 1;
-                return 0;
+                  return 1
+                return 0
               )
             return
         )

@@ -16,6 +16,7 @@ class Client
     .onMenuClick()
     .onKeydown()
     .onResize()
+    .onScroll()
     .configDatepickers()
     .dropdownOpened()
     $.material.init()
@@ -452,7 +453,7 @@ class Client
     @
 
   onResize: ->
-    $(window).on('resize', =>
+    $(window).resize(->
       view.resize()
       fullscreen = '<i class="material-icons">fullscreen'
       if (!window.screenTop && !window.screenY)
@@ -460,6 +461,17 @@ class Client
       else
         fullscreen += '</i> ' + __('Fullscreen') + '</a>'
       $('.btn-fullscreen').html(fullscreen)
+    )
+    @
+
+  onScroll: ->
+    $('.main').scroll(->
+      options = $('.contents > .more-options')
+      if $('.main').scrollTop() > 25
+        if options.is(':visible')
+          options.hide()
+      else if !options.is(':visible')
+        options.show()
     )
     @
 

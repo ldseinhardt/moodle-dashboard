@@ -81,7 +81,7 @@ class Dashboard
           selected: moodle.isSelected()
           access: moodle.getLastAccess()
         )
-    message.list.sort((a, b) -> b.access - a.access);
+    message.list.sort((a, b) -> b.access - a.access)
     @sendMessage(message)
     @
 

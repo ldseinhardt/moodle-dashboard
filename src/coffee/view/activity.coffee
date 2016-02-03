@@ -21,7 +21,7 @@ class Activity
         data: data.pageViews.parcial
       },
       {
-        title: __('User access per day')
+        title: __('Total unique users per day')
         unity: __('users')
         labels: [__('Total users')]
         data: data.uniqueUsers
@@ -49,6 +49,18 @@ class Activity
         unity: __('page views')
         labels: data.users
         data: data.uniquePages.parcial
+      },
+      {
+        title: __('Mean session length per day')
+        unity: __('time (min)')
+        labels: [__('Mean session length')]
+        data: data.meanSession.total
+      },
+      {
+        title: __('Mean session length per day (users)')
+        unity: __('time (min)')
+        labels: data.users
+        data: data.meanSession.parcial
       }
     ]
     options =
