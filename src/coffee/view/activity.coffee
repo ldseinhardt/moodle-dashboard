@@ -54,13 +54,23 @@ class Activity
         title: __('Mean session length per day')
         unity: __('time (min)')
         labels: [__('Mean session length')]
+        format: '# min'
         data: data.meanSession.total
       },
       {
         title: __('Mean session length per day (users)')
         unity: __('time (min)')
         labels: data.users
+        format: '# min'
         data: data.meanSession.parcial
+      },
+      {
+        title: __('Bounce rate per day')
+        unity: __('% of sessions')
+        labels: [__('Bounce rate')]
+        format: '#%'
+        formatter: new google.visualization.NumberFormat(pattern: '#%')
+        data: data.bounceRate
       }
     ]
     options =
@@ -106,6 +116,11 @@ class Activity
     for label in view.labels
       @data.addColumn('number', label)
     @data.addRows(view.data)
+    if view.format
+      @options.vAxis.format = view.format
+    else
+      delete @options.vAxis.format
+    view.formatter?.format(@data, 1)
     @options.title = view.title
     @options.vAxis.title = view.unity
     @options.vAxis.minValue = if @view_index == 2 then 1 else 0

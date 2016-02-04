@@ -19,6 +19,7 @@ class Activity
       meanSession:
         total: []
         parcial: []
+      bounceRate: []
     @s =
       users: {}
       tree: {}
@@ -56,9 +57,9 @@ class Activity
       @d.users.push(user.firstname + ' ' + user.lastname)
     timelist = Object.keys(@s.tree)
     timelist.sort((a, b) ->
-      if (a < b)
+      if a < b
         return -1
-      if (a > b)
+      if a > b
         return 1
       return 0
     )
@@ -72,15 +73,18 @@ class Activity
           value: 0
           users: 0
         parcial: []
+      bounce =
+        value: 0
+        total: 0
       for i of @s.users
         count = 0
         session = 0
         if value.users[i]
           count = value.users[i].pageViews
           times = value.users[i].sessions.sort((a, b) ->
-            if (a < b)
+            if a < b
               return -1
-            if (a > b)
+            if a > b
               return 1
             return 0
           )
@@ -88,11 +92,13 @@ class Activity
           a = times[0]
           b = times[0]
           for t in times
-            if t - a > 5400
+            if t - b > 5400
               _sessions.push(b - a)
               a = t
             b = t
           _sessions.push(b - a)
+          bounce.total += _sessions.length
+          bounce.value += _sessions.filter((e) -> e == 0).length
           minutes = _sessions.reduce((a, b) -> a + b) / (_sessions.length * 60)
           session = Math.round(minutes * 100) / 100
           sessions.total.value += minutes
@@ -125,6 +131,8 @@ class Activity
       @d.uniqueActivities.parcial.push(activities)
       @d.uniquePages.parcial.push(pages)
       @d.meanSession.parcial.push(sessions.parcial)
+      @d.bounceRate
+        .push([date, Math.round((bounce.value / bounce.total) * 100) / 100])
     unless @d.pageViews?.total[0]?.length > 1
       return
     @d

@@ -8,6 +8,7 @@ class Client
     if moodle && moodle.length > 1
       @url = moodle[1]
     @onMessage()
+    .translate()
     chrome.tabs.query({currentWindow: true, active : true}, (tab) =>
       @id = tab[0].id
       @sendMessage('getMoodles')
@@ -88,7 +89,7 @@ class Client
   responseUsers: (message) ->
     html  = '<div class="btn-group more-options users-options">'
     html += '<a class="dropdown-toggle" data-target="#" data-toggle="dropdown">'
-    html += '<i class="material-icons">more_vert</i>'
+    html += '<i class="material-icons">&#xE5D4;</i>'
     html += '</a>'
     html += '<ul class="dropdown-menu dropdown-menu-right">'
     husr  = ''
@@ -120,7 +121,7 @@ class Client
       html += '<li><a href="#" class="role-list'
       html += ' active' unless i
       html += '" index="' + i + '">'
-      html += '<i class="material-icons">people</i> ' + __(role.name)
+      html += '<i class="material-icons">&#xE7FB;</i> ' + __(role.name)
       html += '</a></li>'
     html += '<li class="divider"></li>'
     html += '<li><a href="#" class="btn-users-select-all not-actived">'
@@ -455,11 +456,11 @@ class Client
   onResize: ->
     $(window).resize(->
       view.resize()
-      fullscreen = '<i class="material-icons">fullscreen'
+      fullscreen = '<i class="material-icons">'
       if (!window.screenTop && !window.screenY)
-        fullscreen += '_exit</i> ' + __('Fullscreen (exit)') + '</a>'
+        fullscreen += '&#xE5D1;</i> ' + __('Fullscreen (exit)') + '</a>'
       else
-        fullscreen += '</i> ' + __('Fullscreen') + '</a>'
+        fullscreen += '&#xE5D0;</i> ' + __('Fullscreen') + '</a>'
       $('.btn-fullscreen').html(fullscreen)
     )
     @
@@ -559,6 +560,21 @@ class Client
         nextDecade: __('Next Decade')
         prevCentury: __('Previous Century')
         nextCentury: __('Next Century')
+    )
+    @
+
+  translate: ->
+    $('html').attr('lang', __('lang'))
+    $('*').each((i, e) ->
+      list = $(e).attr('class')?.trim().replace(/\s+/g,' ')
+      if list && list.length && list.split
+        for classname in list.split(/\s/)
+          msg = /^__MSG_([^$]*)/.exec(classname)
+          if msg && msg.length > 1 && msg[1]
+            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
+            key = key.charAt(0).toUpperCase() + key[1..]
+            $(e).html(__(key))
+        @
     )
     @
 

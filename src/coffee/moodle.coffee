@@ -155,9 +155,9 @@ class Moodle
               user.list.sort((a, b) ->
                 x = a.name.toLowerCase()
                 y = b.name.toLowerCase()
-                if (x < y)
+                if x < y
                   return -1
-                if (x > y)
+                if x > y
                   return 1
                 return 0
               )

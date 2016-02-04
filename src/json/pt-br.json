@@ -295,6 +295,14 @@
     "message": "tempo (min)"
   },
 
+  "bounce_rate": {
+    "message": "Taxa de rejeição"
+  },
+
+  "%_of_sessions": {
+    "message": "% de sessões"
+  },
+
   "saved": {
     "message": "Salvo"
   },
@@ -349,6 +357,10 @@
 
   "mean_session_length_per_day_users": {
     "message": "Tempo médio de sessão por dia (usuários)"
+  },
+
+  "bounce_rate_per_day": {
+    "message": "Taxa de rejeição por dia"
   },
 
   "total_activities_per_hour": {

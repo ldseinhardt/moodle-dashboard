@@ -3,9 +3,9 @@
 
   "description": "__MSG_description__",
 
-  "version": "0.1",
+  "version": "0.1.2",
 
-  "homepage_url": "https://github.com/ldseinhardt/moodle-dashboard#readme",
+  "homepage_url": "https://github.com/ldseinhardt/moodle-dashboard/tree/master/dist#readme",
 
   "author": "Luan Einhardt <ldseinhardt@gmail.com>",
 
