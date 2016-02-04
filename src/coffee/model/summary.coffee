@@ -7,13 +7,23 @@ class Summary
     day = 1000 * 60 * 60 * 24
     min = @course.dates.min
     max = @course.dates.max
+    @session_timeout = 90 * 60 #90min
+    role = @course.users[@role].role
     users = @course.users[@role].list
     @d =
-      pageViews: [0, 0]
-      uniqueUsers: [
+      date:
+        min: new Date(min.selected).toLocaleString().split(/\s/)[0]
+        max: new Date(max.selected).toLocaleString().split(/\s/)[0]
+        range: [
+          Math.floor((max.value - min.value) / day) + 1,
+          Math.floor((max.selected - min.selected) / day) + 1
+        ]
+      role: role
+      users: [
         users.length,
         users.filter((user) -> user.selected).length
       ]
+      pageViews: [0, 0]
       meanSession: [0, 0]
     @r =
       activities: {}
@@ -67,7 +77,7 @@ class Summary
           a = times[0]
           b = times[0]
           for t in times
-            if t - b > 5400
+            if t - b > @session_timeout
               sessions.push(b - a)
               a = t
             b = t

@@ -4,6 +4,7 @@
 
 class Activity
   constructor: (@course, @role) ->
+    @session_timeout = 90 * 60 #90min
     @d =
       users: []
       pageViews:
@@ -92,7 +93,7 @@ class Activity
           a = times[0]
           b = times[0]
           for t in times
-            if t - b > 5400
+            if t - b > @session_timeout
               _sessions.push(b - a)
               a = t
             b = t

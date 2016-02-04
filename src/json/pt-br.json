@@ -423,6 +423,10 @@
     "message": "Top usuários (dias)"
   },
 
+  "top_users_bounce_rate": {
+    "message": "Top usuários (taxa de rejeição)"
+  },
+
   "top_pages_page_views": {
     "message": "Top páginas (visualizações de páginas)"
   },
@@ -439,6 +443,10 @@
     "message": "Top páginas (dias)"
   },
 
+  "top_pages_bounce_rate": {
+    "message": "Top páginas (taxa de rejeição)"
+  },
+
   "top_activities_page_views": {
     "message": "Top atividades (visualizações de páginas)"
   },
@@ -449,5 +457,17 @@
 
   "top_activities_days": {
     "message": "Top atividades (dias)"
+  },
+
+  "top_activities_bounce_rate": {
+    "message": "Top atividades (taxa de rejeição)"
+  },
+
+  "date_range": {
+    "message": "Período"
+  },
+
+  "category": {
+    "message": "Categoria"
   }
 }

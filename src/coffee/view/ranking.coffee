@@ -34,6 +34,14 @@ class Ranking
         data: data.users.dates
       },
       {
+        title: __('Top users (bounce rate)')
+        label: __('Bounce rate')
+        unity: __('% of sessions')
+        format: '#%'
+        formatter: new google.visualization.NumberFormat(pattern: '#%')
+        data: data.users.bounceRate
+      },
+      {
         title: __('Top pages (page views)')
         label: __('Total page views')
         unity: __('page views')
@@ -58,6 +66,14 @@ class Ranking
         data: data.pages.dates
       },
       {
+        title: __('Top pages (bounce rate)')
+        label: __('Bounce rate')
+        unity: __('% of sessions')
+        format: '#%'
+        formatter: new google.visualization.NumberFormat(pattern: '#%')
+        data: data.pages.bounceRate
+      },
+      {
         title: __('Top activities (page views)')
         label: __('Total page views')
         unity: __('page views')
@@ -74,6 +90,14 @@ class Ranking
         label: __('Total days')
         unity: __('days')
         data: data.activities.dates
+      },
+      {
+        title: __('Top activities (bounce rate)')
+        label: __('Bounce rate')
+        unity: __('% of sessions')
+        format: '#%'
+        formatter: new google.visualization.NumberFormat(pattern: '#%')
+        data: data.activities.bounceRate
       }
     ]
     options =
@@ -119,6 +143,11 @@ class Ranking
     @data.addColumn('string', 'id')
     @data.addColumn('number', view.label)
     @data.addRows(view.data)
+    if view.format
+      @options.vAxis.format = view.format
+    else
+      delete @options.vAxis.format
+    view.formatter?.format(@data, 1)
     @options.title = view.title
     @options.vAxis.title = view.unity
     @chart = new google.visualization.ColumnChart($('.graph', @ctx)[0])

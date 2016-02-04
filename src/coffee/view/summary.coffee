@@ -4,6 +4,13 @@
 
 class Summary
   render: (data, @options, @ctx, download) ->
+    html  = '<strong>' + __('Date range') + ':</strong> ' + data.date.min
+    html += ' - ' + data.date.max + ' ' + '(' + data.date.range[1] + ' '
+    html += __('of') + ' ' + data.date.range[0] + ' ' + __('days') + '), '
+    html += '<strong>' + __('Category') + ':</strong> ' + data.role + ' ('
+    html += data.users[1] + ' ' + __('of') + ' ' + data.users[0] + ' '
+    html += __('users') + ')'
+    $('.text', @ctx).html(html)
     @views = [
       {
         title: __('Total page views')
@@ -13,7 +20,7 @@ class Summary
       {
         title: __('Total users')
         unity: __('users')
-        data: data.uniqueUsers
+        data: data.users
       },
       {
         title: __('Total unique activities')
