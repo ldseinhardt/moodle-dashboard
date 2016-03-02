@@ -83,11 +83,54 @@ class Client
     )
     @
 
+  setFilters: (filters, lists) ->
+    filter_pages = $('.filter-pages')
+    filter_activities = $('.filter-activities')
+    filter_pages.html('')
+    filter_activities.html('')
+    toggle  = '<div class="togglebutton">'
+    toggle += '<label>'
+    toggle += '<input type="checkbox" checked="">'
+    toggle += '<span>__key__</span>'
+    toggle += '</label>'
+    toggle += '</div>'
+    if lists.pages && lists.pages.length
+      html = ''
+      for page in lists.pages
+        item = toggle.replace('__key__', page)
+        if filters.pages.indexOf(page) >= 0
+          item = item.replace(' checked=""', '')
+        html += item
+      filter_pages.html(html)
+      $.material.togglebutton()
+      $('.togglebutton', filter_pages).change((evt) =>
+        @sendMessage('setConfig',
+          settings:
+            filter_pages:
+              key: $(evt.target).siblings('span').text()
+              value: $(evt.target).prop('checked')
+        )
+      )
+    if lists.activities && lists.activities.length
+      html = ''
+      for activity in lists.activities
+        item = toggle.replace('__key__', activity)
+        if filters.activities.indexOf(activity) >= 0
+          item = item.replace(' checked=""', '')
+        html += item
+      filter_activities.html(html)
+      $.material.togglebutton()
+      $('.togglebutton', filter_activities).change((evt) =>
+        @sendMessage('setConfig',
+          settings:
+            filter_activities:
+              key: $(evt.target).siblings('span').text()
+              value: $(evt.target).prop('checked')
+        )
+      )
+    @
+
   responseConfig: (message) ->
-    ###
-      "filter_pages": [],
-      "filter_activities": [],
-    ###
     $('#input_search_moodle')
       .prop('checked', message.settings.search_moodle)
     $('#input_sync_metadata')
@@ -417,6 +460,8 @@ class Client
         $('.data', content).show()
       view.render(message.data, @download)
       @navActive()
+      if message.filters && message.lists
+        @setFilters(message.filters, message.lists)
     @
 
   download: (url, filename = 'chart.png') =>

@@ -378,7 +378,58 @@ class Moodle
     @selected = @equals(url) && @hasUsers()
     @
 
-  getData: (role) ->
+  getPages: (role) ->
+    unless @hasData()
+      return
+    course = @getCourse()
+    data = {}
+    for user, userid in course.users[role].list
+      if user.data
+        for day, components of user.data
+          for component, eventnames of components
+            for eventname, eventcontexts of eventnames
+              for eventcontext, descriptions of eventcontexts
+                for description, hours of descriptions
+                  page = eventcontext
+                  if /^http/.test(page)
+                    page = description
+                  unless data[page]
+                    data[page] = 1
+    Object.keys(data).sort((a, b) ->
+      x = a.toLowerCase()
+      y = b.toLowerCase()
+      if x < y
+        return -1
+      if x > y
+        return 1
+      return 0
+    )
+
+  getActivities: (role) ->
+    unless @hasData()
+      return
+    course = @getCourse()
+    data = {}
+    for user, userid in course.users[role].list
+      if user.data
+        for day, components of user.data
+          for component, eventnames of components
+            for eventname, eventcontexts of eventnames
+              for eventcontext, descriptions of eventcontexts
+                event = eventname + ' (' + eventcontext + ')'
+                unless data[event]
+                  data[event] = 1
+    Object.keys(data).sort((a, b) ->
+      x = a.toLowerCase()
+      y = b.toLowerCase()
+      if x < y
+        return -1
+      if x > y
+        return 1
+      return 0
+    )
+
+  getData: (role, pages, activities) ->
     unless @hasData()
       return
     course = @getCourse()
@@ -400,6 +451,7 @@ class Moodle
                       event:
                         name: eventname
                         context: eventcontext
+                        fullname: eventname + ' (' + eventcontext + ')'
                       description: description
                       page: eventcontext
                       time: time
@@ -407,7 +459,10 @@ class Moodle
                     row.page = description if /^http/.test(eventcontext)
                     for _, method of list
                       method.recorded?(row)
-                      if user.selected && min <= day <= max
+                      if (user.selected && min <= day <= max &&
+                        pages.indexOf(row.page) < 0 &&
+                        activities.indexOf(row.event.fullname) < 0
+                      )
                         method.selected?(row)
     data = {}
     for name, method of list

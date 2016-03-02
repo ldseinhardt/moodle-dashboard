@@ -139,7 +139,14 @@ class Dashboard
     message.error = !moodle.hasData()
     unless message.error
       role = message.role
-      message.data = moodle.getData(role)
+      message.data = moodle
+        .getData(role, @settings.filter_pages, @settings.filter_activities)
+      message.filters =
+        pages: @settings.filter_pages
+        activities: @settings.filter_activities
+      message.lists =
+        pages: moodle.getPages(role)
+        activities: moodle.getActivities(role)
     @sendMessage(message)
     @
 
@@ -242,6 +249,17 @@ class Dashboard
     @
 
   setConfig: (message) ->
+    filters = [
+      'filter_pages',
+      'filter_activities'
+    ]
+    for filter in filters
+      if message.settings.hasOwnProperty(filter)
+        index = @settings[filter].indexOf(message.settings[filter].key)
+        if message.settings[filter].value && index >= 0
+          @settings[filter].splice(index, 1)
+        else if index < 0
+          @settings[filter].push(message.settings[filter].key)
     settings = [
       'search_moodle',
       'sync_metadata',

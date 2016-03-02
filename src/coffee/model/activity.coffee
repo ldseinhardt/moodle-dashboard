@@ -38,11 +38,10 @@ class Activity
         pageViews: 0
         sessions: []
     @s.tree[d.day].users[d.user].sessions.push(d.time / 1000)
-    event = d.event.name + ' (' + d.event.context + ')'
-    unless @s.tree[d.day].activities[event]
-      @s.tree[d.day].activities[event] = {}
-    unless @s.tree[d.day].activities[event][d.user]
-      @s.tree[d.day].activities[event][d.user] = 1
+    unless @s.tree[d.day].activities[d.event.fullname]
+      @s.tree[d.day].activities[d.event.fullname] = {}
+    unless @s.tree[d.day].activities[d.event.fullname][d.user]
+      @s.tree[d.day].activities[d.event.fullname][d.user] = 1
     if /view/.test(d.event.name)
       @s.tree[d.day].users[d.user].pageViews += d.size
       unless @s.tree[d.day].pages[d.page]

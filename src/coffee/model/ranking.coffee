@@ -29,7 +29,6 @@ class Ranking
       activities: {}
 
   selected: (d) ->
-    event = d.event.name + ' (' + d.event.context + ')'
     unless @s.users[d.user]
       @s.users[d.user] =
         totalViews: 0
@@ -39,31 +38,32 @@ class Ranking
     unless @s.users[d.user].dates[d.day]
       @s.users[d.user].dates[d.day] = []
     @s.users[d.user].dates[d.day].push(d.time / 1000)
-    unless @s.users[d.user].activities[event]
-      @s.users[d.user].activities[event] = 1
-    unless @s.activities[event]
-      @s.activities[event] =
+    unless @s.users[d.user].activities[d.event.fullname]
+      @s.users[d.user].activities[d.event.fullname] = 1
+    unless @s.activities[d.event.fullname]
+      @s.activities[d.event.fullname] =
         totalViews: 0
         sessions:
           count: 0
           users: {}
         users: {}
         dates: {}
-    @s.activities[event].sessions.count++
-    unless @s.activities[event].sessions.users[d.user]
-      @s.activities[event].sessions.users[d.user] = {}
-    unless @s.activities[event].sessions.users[d.user][d.day]
-      @s.activities[event].sessions.users[d.user][d.day] = []
-    @s.activities[event].sessions.users[d.user][d.day].push(d.time / 1000)
-    unless @s.activities[event].users[d.user]
-      @s.activities[event].users[d.user] = 1
-    unless @s.activities[event].dates[d.day]
-      @s.activities[event].dates[d.day] = 1
+    @s.activities[d.event.fullname].sessions.count++
+    unless @s.activities[d.event.fullname].sessions.users[d.user]
+      @s.activities[d.event.fullname].sessions.users[d.user] = {}
+    unless @s.activities[d.event.fullname].sessions.users[d.user][d.day]
+      @s.activities[d.event.fullname].sessions.users[d.user][d.day] = []
+    @s.activities[d.event.fullname].sessions.users[d.user][d.day]
+      .push(d.time / 1000)
+    unless @s.activities[d.event.fullname].users[d.user]
+      @s.activities[d.event.fullname].users[d.user] = 1
+    unless @s.activities[d.event.fullname].dates[d.day]
+      @s.activities[d.event.fullname].dates[d.day] = 1
     if /view/.test(d.event.name)
       @s.users[d.user].totalViews += d.size
       unless @s.users[d.user].pages[d.page]
         @s.users[d.user].pages[d.page] = 1
-      @s.activities[event].totalViews += d.size
+      @s.activities[d.event.fullname].totalViews += d.size
       unless @s.pages[d.page]
         @s.pages[d.page] =
           totalViews: 0
@@ -82,8 +82,8 @@ class Ranking
       @s.pages[d.page].sessions.users[d.user][d.day].push(d.time / 1000)
       unless @s.pages[d.page].users[d.user]
         @s.pages[d.page].users[d.user] = 1
-      unless @s.pages[d.page].activities[event]
-        @s.pages[d.page].activities[event] = 1
+      unless @s.pages[d.page].activities[d.event.fullname]
+        @s.pages[d.page].activities[d.event.fullname] = 1
       unless @s.pages[d.page].dates[d.day]
         @s.pages[d.page].dates[d.day] = 1
 

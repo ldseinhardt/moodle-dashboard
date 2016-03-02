@@ -40,9 +40,8 @@ class Summary
     unless @s.sessions[d.user][d.day]
       @s.sessions[d.user][d.day] = []
     @s.sessions[d.user][d.day].push(d.time / 1000)
-    event = d.event.name + ' (' + d.event.context + ')'
-    unless @s.activities[event]
-      @s.activities[event] = 1
+    unless @s.activities[d.event.fullname]
+      @s.activities[d.event.fullname] = 1
     if /view/.test(d.event.name)
       @d.pageViews[1] += d.size
       unless @s.pages[d.page]
@@ -54,9 +53,8 @@ class Summary
     unless @r.sessions[d.user][d.day]
       @r.sessions[d.user][d.day] = []
     @r.sessions[d.user][d.day].push(d.time / 1000)
-    event = d.event.name + ' (' + d.event.context + ')'
-    unless @r.activities[event]
-      @r.activities[event] = 1
+    unless @r.activities[d.event.fullname]
+      @r.activities[d.event.fullname] = 1
     if /view/.test(d.event.name)
       @d.pageViews[0] += d.size
       unless @r.pages[d.page]

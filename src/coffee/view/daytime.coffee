@@ -60,7 +60,7 @@ class DayTime
           row.push(hours[i])
       temp.push(row)
     if temp[0].length == 1
-      $('.graph', @ctx).html('<span>' + __('content_default_msg') + '</span>')
+      $('.graph', @ctx).html('<span>' + __('No data') + '</span>')
       return
     labels = [
       'All days',

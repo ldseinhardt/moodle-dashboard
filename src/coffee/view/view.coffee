@@ -33,7 +33,7 @@ class View
           download
         )
       else
-        $('.graph', ctx).html('<span>' + __('content_default_msg') + '</span>')
+        $('.graph', ctx).html('<span>' + __('No data') + '</span>')
     @resize()
 
   resize: ->
