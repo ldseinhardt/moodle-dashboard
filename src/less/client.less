@@ -296,21 +296,6 @@ body {
 }
 
 #dashboard-content {
-  .default {
-    color: @gray;
-    padding: 10px;
-    text-align: center;
-
-    .message {
-      font-size: 14pt;
-    }
-
-    .material-icons {
-      font-size: 250pt;
-      font-weight: normal;
-    }
-  }
-
   .data {
     display: none;
 
@@ -354,6 +339,74 @@ body {
       color: @gray;
     }
   }
+}
+
+#dashboard-content,
+#help,
+#faq,
+ {
+  .default {
+    color: @gray;
+    padding: 10px;
+    text-align: center;
+
+    .message {
+      font-size: 14pt;
+    }
+
+    .material-icons {
+      font-size: 250pt;
+      font-weight: normal;
+    }
+  }
+}
+
+#about {
+  text-align: center;
+}
+
+.number-field {
+  input[type=number] {
+    width: 35px;
+  }
+
+  label {
+    color: @dark;
+    margin-left: 15px;
+  }
+}
+
+.form-group.is-focused .form-control {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(@orange), to(@orange)), -webkit-gradient(linear, left top, left bottom, from(#D2D2D2), to(#D2D2D2));
+  background-image: -webkit-linear-gradient(@orange, @orange), -webkit-linear-gradient(#D2D2D2, #D2D2D2);
+  background-image: -o-linear-gradient(@orange, @orange), -o-linear-gradient(#D2D2D2, #D2D2D2);
+  background-image: linear-gradient(@orange, @orange), linear-gradient(#D2D2D2, #D2D2D2);
+}
+
+.form-group.is-focused label,
+.form-group.is-focused label.control-label {
+  color: @orange;
+}
+
+.form-group .checkbox label,
+.form-group .radio label,
+.form-group label {
+  color: @dark;
+}
+
+.radio label .check {
+  background-color: @orange;
+}
+
+.radio input[type=radio]:checked ~ .check {
+  background-color: @orange;
+}
+.radio input[type=radio]:checked ~ .circle {
+  border-color: @orange;
+}
+
+.modal-dialog {
+  width: 700px;
 }
 
 a {

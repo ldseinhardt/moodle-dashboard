@@ -7,6 +7,9 @@ dist/js
 dist/css
 dist/fonts
 dist/LICENSE
+dist/help.json
+dist/questions.json
+dist/settings.json
 dist/_locales/*.json
 **/*.zip
 **/*.tar.gz

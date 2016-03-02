@@ -28,13 +28,13 @@ class Activity
       },
       {
         title: __('Total unique activities per day')
-        unity: __('activities')
+        unity: __('activities').toLowerCase()
         labels: [__('Total unique activities')]
         data: data.uniqueActivities.total
       },
       {
         title: __('Total unique activities per day (users)')
-        unity: __('activities')
+        unity: __('activities').toLowerCase()
         labels: data.users
         data: data.uniqueActivities.parcial
       },

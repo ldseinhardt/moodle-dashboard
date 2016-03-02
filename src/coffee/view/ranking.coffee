@@ -18,13 +18,13 @@ class Ranking
       {
         title: __('Top users (unique activities)')
         label: __('Total unique activities')
-        unity: __('activities')
+        unity: __('activities').toLowerCase()
         data: data.users.activities
       },
       {
         title: __('Top users (unique page views)')
         label: __('Total unique page views')
-        unity: __('pages')
+        unity: __('pages').toLowerCase()
         data: data.users.pages
       },
       {
@@ -56,7 +56,7 @@ class Ranking
       {
         title: __('Top pages (unique activities)')
         label: __('Total unique activities')
-        unity: __('activities')
+        unity: __('activities').toLowerCase()
         data: data.pages.activities
       },
       {

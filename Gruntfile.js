@@ -6,14 +6,28 @@ module.exports = function(grunt) {
         src: 'LICENSE',
         dest: 'dist/'
       },
-      i18n: {
-        expand: true,
-        cwd: 'src/json/',
-        src: [
-          'en.json',
-          'pt-br.json'
-        ],
-        dest: 'dist/_locales/'
+      json: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/json/',
+            src: [
+              'en.json',
+              'pt-br.json'
+            ],
+            dest: 'dist/_locales/'
+          },
+          {
+            expand: true,
+            cwd: 'src/json/',
+            src: [
+              'help.json',
+              'questions.json',
+              'settings.json'
+            ],
+            dest: 'dist/'
+          }
+        ]
       },
       jquery: {
         expand: true,

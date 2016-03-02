@@ -24,12 +24,12 @@ class Summary
       },
       {
         title: __('Total unique activities')
-        unity: __('activities')
+        unity: __('activities').toLowerCase()
         data: data.uniqueActivities
       },
       {
         title: __('Total unique page views')
-        unity: __('pages')
+        unity: __('pages').toLowerCase()
         data: data.uniquePages
       },
       {

@@ -83,7 +83,103 @@
     "message": "Participants Moodle listed below were found in the logs, but are not configured as course participants. If you want them to be displayed here, configure these as course participants in Moodle."
   },
 
-  "content_default_msg": {
-    "message": "No data"
+  "support_success": {
+    "message": "Your message has been sent successfully."
+  },
+
+  "support_error": {
+    "message": "There was an error sending your message."
+  },
+
+  "settings_filter_pages_description": {
+    "message": "Will be filtered to display pages according to your preference."
+  },
+
+  "settings_filter_activities_description": {
+    "message": "Will be filtered to display the activities according to your preference."
+  },
+
+  "settings_search_moodle_action": {
+    "message": "Enable screening for Moodle environments."
+  },
+
+  "settings_search_moodle_description": {
+    "message": "Will detected Moodle environments as you browse the internet."
+  },
+
+  "settings_sync_metadata_action": {
+    "message": "Enable metadata synchronization."
+  },
+
+  "settings_sync_metadata_interval_action": {
+    "message": "Interval for metadata synchronization (min)."
+  },
+
+  "settings_sync_metadata_description": {
+    "message": "Is enabled or not metadata synchronizing (courses, groups and users) in the specified interval."
+  },
+
+  "settings_sync_logs_action": {
+    "message": "Enable logs synchronization."
+  },
+
+  "settings_sync_logs_interval_action": {
+    "message": "Interval for logs synchronization (h)."
+  },
+
+  "settings_sync_logs_description": {
+    "message": "Is enabled or not logs synchronizing in the specified interval."
+  },
+
+  "settings_error_messages_moodle_action": {
+    "message": "Show synchronizing error messages in Moodle."
+  },
+
+  "settings_error_messages_dashboard_action": {
+    "message": "Show synchronizing error messages in dashboard."
+  },
+
+  "settings_error_messages_users_not_found_action": {
+    "message": "Show warning messages on users in logs not found to synchronize."
+  },
+
+  "settings_error_messages_description": {
+    "message": "Show messages according to your preference."
+  },
+
+  "settings_data_download_description": {
+    "message": "Will be held download the preprocessed data."
+  },
+
+  "settings_remove_data_description": {
+    "message": "Will remove all data stored for this Moodle."
+  },
+
+  "settings_analytics_action": {
+    "message": "Enable sending tool usage statistics."
+  },
+
+  "settings_analytics_description": {
+    "message": "Will collect data from the Moodle (name and address), and the tool usage period and nothing else."
+  },
+
+  "settings_language_description": {
+    "message": "The language of your choice will be used."
+  },
+
+  "settings_notice_update_action": {
+    "message": "Inform of new versions."
+  },
+
+  "settings_notice_update_description": {
+    "message": "Show message every new version."
+  },
+
+  "settings_default_setting_action": {
+    "message": "Restore default setting"
+  },
+
+  "settings_default_setting_description": {
+    "message": "The default setting will be restored."
   }
 }

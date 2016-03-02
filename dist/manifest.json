@@ -1,9 +1,9 @@
 {
-  "name": "__MSG_name__",
+  "name": "__MSG_app_name__",
 
-  "description": "__MSG_description__",
+  "description": "__MSG_app_description__",
 
-  "version": "0.1.2",
+  "version": "0.1.2.2",
 
   "homepage_url": "https://github.com/ldseinhardt/moodle-dashboard/tree/master/dist#readme",
 
@@ -14,7 +14,7 @@
       "js/jquery.min.js",
       "js/background.min.js"
     ],
-    "persistent": false
+    "persistent": true
   },
 
   "content_scripts": [

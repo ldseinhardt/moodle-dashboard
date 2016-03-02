@@ -20,7 +20,189 @@ class Client
     .onScroll()
     .configDatepickers()
     .dropdownOpened()
+    .sendMessage('getHelp')
+    .sendMessage('getQuestions')
+    .sendMessage('getVersion')
+    .sendMessage('getConfig')
+    .analytics()
+    .onUnload()
+    .onChangeConfig()
     $.material.init()
+
+  analytics: (status = 'open') ->
+    use = 0
+    if status == 'open'
+      @started = Date.now()
+    else
+      use = Date.now() - @started
+    @sendMessage('analytics',
+      status: status
+      use: use
+    )
+    @
+
+  onChangeConfig: ->
+    checkboxes = [
+      'search_moodle',
+      'sync_metadata',
+      'sync_logs',
+      'message_error_sync_moodle',
+      'message_error_sync_dashboard',
+      'message_alert_users_not_found',
+      'analytics',
+      'message_update'
+    ]
+    texts = [
+      'sync_metadata_interval',
+      'sync_logs_interval'
+    ]
+    for field in checkboxes
+      ((field) =>
+        $('#input_' + field).change((evt) =>
+          args =
+            settings: {}
+          args.settings[field] = $(evt.target).prop('checked')
+          @sendMessage('setConfig', args)
+        )
+      )(field)
+    for field in texts
+      ((field) =>
+        $('#input_' + field).change((evt) =>
+          args =
+            settings: {}
+          args.settings[field] = $(evt.target).val()
+          @sendMessage('setConfig', args)
+        )
+      )(field)
+    $('#others input[name="language"]').change((evt) =>
+      @sendMessage('setConfig',
+        settings:
+          language: $(evt.target).val()
+      )
+      location.reload()
+    )
+    @
+
+  responseConfig: (message) ->
+    ###
+      "filter_pages": [],
+      "filter_activities": [],
+    ###
+    $('#input_search_moodle')
+      .prop('checked', message.settings.search_moodle)
+    $('#input_sync_metadata')
+      .prop('checked', message.settings.sync_metadata)
+    $('#input_sync_metadata_interval')
+      .val(message.settings.sync_metadata_interval)
+    $('#input_sync_logs')
+      .prop('checked', message.settings.sync_logs)
+    $('#input_sync_logs_interval')
+      .val(message.settings.sync_logs_interval)
+    $('#input_message_error_sync_moodle')
+      .prop('checked', message.settings.message_error_sync_moodle)
+    $('#input_message_error_sync_dashboard')
+      .prop('checked', message.settings.message_error_sync_dashboard)
+    $('#input_message_alert_users_not_found')
+      .prop('checked', message.settings.message_alert_users_not_found)
+    $('#input_analytics')
+      .prop('checked', message.settings.analytics)
+    $('#input_language_' + langId)
+      .prop('checked', true)
+    $('#input_message_update')
+      .prop('checked', message.settings.message_update)
+    @
+
+  responseVersion: (message) ->
+    $('#about .data-version').text(message.version)
+    @
+
+  responseUpdate: (message) ->
+    link  = '&nbsp;(<a href="' + message.url + '" target="_blank">'
+    link += message.version + ' ' + __('available').toLowerCase()
+    link += '</a>)'
+    $('#about .data-update').html(link)
+    if message.show
+      title  = __('Update') + ' - ' + __('Version') + ' '
+      title += message.version + ' ' + __('available').toLowerCase()
+      buttons  = '<a href="' + message.url
+      buttons += '" target="_blank" class="btn btn-primary">'
+      buttons += '<i class="material-icons">&#xE2C4;</i> DOWNLOAD'
+      buttons += '</a>'
+      @showMessage(title, message.description[langId], buttons)
+    @
+
+  responseHelp: (message) ->
+    html  = '<div class="panel-group" id="accordionHelp" role="tablist"'
+    html += ' aria-multiselectable="true">'
+    for item, i in message.help[langId]
+      html += '<div class="panel">'
+      html += '<div class="panel-heading" role="tab" id="headingHelp' + i + '">'
+      html += '<h4 class="panel-title">'
+      html += '<a'
+      html += ' class="collapsed"' unless i
+      html += ' role="button" data-toggle="collapse"'
+      html += ' data-parent="#accordionHelp" href="#collapseHelp' + i
+      html += '" aria-expanded="'
+      html += if i then 'false' else 'true'
+      html += '" aria-controls="collapseHelp' + i + '">'
+      html += item.title
+      html += '</a>'
+      html += '</h4>'
+      html += '</div>'
+      html += '<div id="collapseHelp' + i + '" class="panel-collapse collapse'
+      html += ' in' unless i
+      html += '" role="tabpanel" aria-labelledby="headingHelp' + i + '">'
+      html += '<div class="panel-body">'
+      html += item.text
+      html += '</div>'
+      html += '</div>'
+      html += '</div>'
+    html += '</div>'
+    unless message.help[langId] && message.help[langId].length
+      html  = '<div class="default">'
+      html += '<i class="material-icons">&#xE80C;</i>'
+      html += '<div class="message">' + __('No data') + '</div>'
+      html += '</div>'
+    $('#help').html(html)
+    @
+
+
+  responseQuestions: (message) ->
+    html  = '<div class="panel-group" id="accordionQuestions" role="tablist"'
+    html += ' aria-multiselectable="true">'
+    for item, i in message.questions[langId]
+      html += '<div class="panel">'
+      html += '<div class="panel-heading" role="tab" id="headingQuestions'
+      html += i + '">'
+      html += '<h4 class="panel-title">'
+      html += '<a'
+      html += ' class="collapsed"' unless i
+      html += ' role="button" data-toggle="collapse"'
+      html += ' data-parent="#accordionQuestions" href="#collapseQuestions' + i
+      html += '" aria-expanded="'
+      html += if i then 'false' else 'true'
+      html += '" aria-controls="collapseQuestions' + i + '">'
+      html += item.title
+      html += '</a>'
+      html += '</h4>'
+      html += '</div>'
+      html += '<div id="collapseQuestions'
+      html += i + '" class="panel-collapse collapse'
+      html += ' in' unless i
+      html += '" role="tabpanel" aria-labelledby="headingQuestions' + i + '">'
+      html += '<div class="panel-body">'
+      html += item.text
+      html += '</div>'
+      html += '</div>'
+      html += '</div>'
+    html += '</div>'
+    unless message.questions[langId] && message.questions[langId].length
+      html  = '<div class="default">'
+      html += '<i class="material-icons">&#xE80C;</i>'
+      html += '<div class="message">' + __('No data') + '</div>'
+      html += '</div>'
+    $('#faq').html(html)
+    @
 
   responseMoodles: (message) ->
     unless message.list.length
@@ -82,6 +264,8 @@ class Client
       $('.main').hide()
       content.show()
       view.resize()
+      $('.contents > .more-options').show()
+      content.scrollTop(0)
     @sendMessage('getUsers')
     .sendMessage('getDates')
     @
@@ -255,7 +439,7 @@ class Client
     error = Math.floor(progress.error / progress.total * 100)
     total = progress.success + progress.error
     if !total && message.error
-      unless message.silent
+      if !message.silent && message.showError
         @showMessage(__('Error synchronizing'), __('error_synchronizing_msg'))
     else
       if progress.total > 1
@@ -275,7 +459,7 @@ class Client
           =>
             $(sync).modal('hide')
             unless message.silent
-              if error > 0
+              if error && message.showError
                 @showMessage(
                   __('Error synchronizing'),
                   __('error_synchronizing_msg')
@@ -360,11 +544,15 @@ class Client
     history.pushState(null, $('title').text(), location.pathname + moodle)
     @
 
-  showMessage: (title, message) ->
+  showMessage: (title, message, buttons = '') ->
     moodle_message = $('#moodle-message')
     unless moodle_message.is(':visible')
       $('.modal-title', moodle_message).html(title)
       $('.modal-body', moodle_message).html(message)
+      buttons += '<button type="button" class="btn btn-default" data-dismiss="modal">'
+      buttons += __('Close')
+      buttons += '</button>'
+      $('.modal-footer').html(buttons)
       $('.modal').not(moodle_message).modal('hide')
       moodle_message.modal('show')
     @
@@ -407,14 +595,20 @@ class Client
       $('.sidebar nav li .btn-daterange').addClass('active')
     )
     $('.btn-settings', nav).click(->
-      unless $('#dashboard-settings').is(':visible')
+      settings = $('#dashboard-settings')
+      unless settings.is(':visible')
         $('.main').hide()
-        $('#dashboard-settings').show()
+        settings.show()
+        $('.contents > .more-options').show()
+        settings.scrollTop(0)
     )
     $('.btn-help', nav).click(->
-      unless $('#dashboard-help').is(':visible')
+      help = $('#dashboard-help')
+      unless help.is(':visible')
         $('.main').hide()
-        $('#dashboard-help').show()
+        help.show()
+        $('.contents > .more-options').show()
+        help.scrollTop(0)
     )
     $('.btn-fullscreen').click(=>
       if @isNotFullScreen()
@@ -435,6 +629,58 @@ class Client
           document.webkitCancelFullScreen()
     )
     $('.btn-exit').click(-> close())
+    $('.btn-license').click(=>
+      $.get(
+        chrome.extension.getURL('LICENSE'),
+        (data) =>
+          @showMessage(
+            __('MIT License'),
+            '<pre><p style="text-align: left">' + data + '</p></pre>'
+          )
+      )
+    )
+    $('.btn-support').click(=>
+      name = $('#inputName')
+      email = $('#inputEmail')
+      message = $('#inputMessage')
+      if name.val() && email.val() && message.val()
+        @sendMessage('support',
+          name: name.val()
+          email: email.val()
+          subject: __('Support')
+          message: message.val()
+        )
+    )
+    $('.btn-data-download').click(->
+      alert('Não implementado...')
+    )
+    $('.btn-delete').click(=>
+      @sendMessage('deleteMoodle')
+      location.href = location.href.split('?')[0]
+    )
+    $('.btn-default-setting').click(=>
+      @sendMessage('defaultConfig')
+      location.reload()
+    )
+    @
+
+  responseSupport: (message) ->
+    html  = '<div class="alert alert-dismissible alert-__type__">'
+    html += '<button type="button" class="close" data-dismiss="alert">×</button>'
+    html += '<div class="text-center">__message__</div>'
+    html += '</div>'
+    if message.status
+      $('#inputName').val('')
+      $('#inputEmail').val('')
+      $('#inputMessage').val('')
+      html = html
+        .replace('__type__', 'success')
+        .replace('__message__', __('support_success'))
+    else
+      html = html
+        .replace('__type__', 'danger')
+        .replace('__message__', __('support_error'))
+    $('#support .message').html(html)
     @
 
   onKeydown: ->
@@ -468,11 +714,17 @@ class Client
   onScroll: ->
     $('.main').scroll(->
       options = $('.contents > .more-options')
-      if $('.main').scrollTop() > 25
+      if $(@).scrollTop() > 20
         if options.is(':visible')
           options.hide()
       else if !options.is(':visible')
         options.show()
+    )
+    @
+
+  onUnload: ->
+    $(window).unload(=>
+      @analytics('close')
     )
     @
 
@@ -543,7 +795,7 @@ class Client
     )
     $('.datetimepicker', daterange).datetimepicker(
       inline: true
-      locale: __('lang')
+      locale: langId
       format: 'L'
       tooltips:
         today: __('Go to today')
@@ -564,7 +816,7 @@ class Client
     @
 
   translate: ->
-    $('html').attr('lang', __('lang'))
+    $('html').attr('lang', langId)
     $('*').each((i, e) ->
       list = $(e).attr('class')?.trim().replace(/\s+/g,' ')
       if list && list.length && list.split
@@ -592,6 +844,7 @@ class Client
     chrome.runtime.onMessage.addListener((request) =>
       if request.client
         commands_private = [
+          'responseSupport',
           'responseCourses',
           'responseUsers',
           'responseDates',
@@ -599,6 +852,11 @@ class Client
           'responseSync'
         ]
         commands_public = [
+          'responseConfig',
+          'responseVersion',
+          'responseUpdate',
+          'responseHelp',
+          'responseQuestions',
           'responseMoodles'
         ]
         if commands_private.indexOf(request.cmd) >= 0

@@ -5,5 +5,10 @@
     text = (@lang && @lang[key] && @lang[key].message) || msg
   text.replace(/\n/g, '<br>')
 
-$.getJSON(chrome.extension.getURL('_locales/' + __('lang') + '.json'))
-  .done((@lang) => start())
+chrome.storage.local.get(language: __('lang'), (items) =>
+  @langId = items.language
+  $.getJSON(
+    chrome.extension.getURL('_locales/' + items.language + '.json'),
+    (@lang) => start()
+  )
+)

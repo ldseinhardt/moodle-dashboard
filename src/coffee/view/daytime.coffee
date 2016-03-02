@@ -18,7 +18,7 @@ class DayTime
         ticks: [0..23]
         format: '#h'
       vAxis:
-        title: __('activities')
+        title: __('activities').toLowerCase()
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'

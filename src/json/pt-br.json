@@ -187,10 +187,6 @@
     "message": "Ajuda"
   },
 
-  "comments": {
-    "message": "Comentários"
-  },
-
   "support": {
     "message": "Suporte"
   },
@@ -251,7 +247,7 @@
     "message": "Os participantes do Moodle listados abaixo foram encontrados nos logs, mas não estão configurados como participantes do curso. Caso queira que estes possam ser visualizados por aqui, configure estes como participantes do curso no Moodle."
   },
 
-  "content_default_msg": {
+  "no_data": {
     "message": "Sem dados"
   },
 
@@ -276,7 +272,7 @@
   },
 
   "activities": {
-    "message": "atividades"
+    "message": "Atividades"
   },
 
   "total_unique_page_views": {
@@ -284,7 +280,7 @@
   },
 
   "pages": {
-    "message": "páginas"
+    "message": "Páginas"
   },
 
   "mean_session_length": {
@@ -469,5 +465,181 @@
 
   "category": {
     "message": "Categoria"
+  },
+
+  "update": {
+    "message": "Atualização"
+  },
+
+  "version": {
+    "message": "Versão"
+  },
+
+  "available": {
+    "message": "Disponível"
+  },
+
+  "mit_license": {
+    "message": "Licença MIT"
+  },
+
+  "name": {
+    "message": "Nome"
+  },
+
+  "message": {
+    "message": "Mensagem"
+  },
+
+  "send": {
+    "message": "Enviar"
+  },
+
+  "support_success": {
+    "message": "Sua mensagem foi enviada com sucesso."
+  },
+
+  "support_error": {
+    "message": "Houve um erro ao enviar sua mensagem."
+  },
+
+  "moodle_environments": {
+    "message": "Ambientes Moodle"
+  },
+
+  "metadata_synchronization": {
+    "message": "Sincronização de metadados"
+  },
+
+  "logs_synchronization": {
+    "message": "Sincronização de logs"
+  },
+
+  "messages": {
+    "message": "Mensagens"
+  },
+
+  "remove_data": {
+    "message": "Remover dados"
+  },
+
+  "download_data_preprocessed": {
+    "message": "Download de dados pré-processados"
+  },
+
+  "usage_statistics": {
+    "message": "Estatísticas de uso"
+  },
+
+  "interface_language": {
+    "message": "Idioma de interface"
+  },
+
+  "notice_update": {
+    "message": "Aviso de atualização"
+  },
+
+  "default_setting": {
+    "message": "Configuração padrão"
+  },
+
+  "portuguese_brazil": {
+    "message": "Português (Brasil)"
+  },
+
+  "english": {
+    "message": "Inglês"
+  },
+
+  "settings_filter_pages_description": {
+    "message": "Será filtrado as páginas para exibição de acordo com sua preferência."
+  },
+
+  "settings_filter_activities_description": {
+    "message": "Será filtrado as atividades para exibição de acordo com sua preferência."
+  },
+
+  "settings_search_moodle_action": {
+    "message": "Habilitar o rastreio por ambientes Moodle."
+  },
+
+  "settings_search_moodle_description": {
+    "message": "Será detectado ambientes Moodle, conforme você navega pela internet."
+  },
+
+  "settings_sync_metadata_action": {
+    "message": "Habilitar a sincronização de metadados."
+  },
+
+  "settings_sync_metadata_interval_action": {
+    "message": "Intervalo para sincronização de metadados (min)."
+  },
+
+  "settings_sync_metadata_description": {
+    "message": "Será habilitado ou não a sincronização de metadados (cursos, grupos e usuários) no intervalo especificado."
+  },
+
+  "settings_sync_logs_action": {
+    "message": "Habilitar a sincronização de logs."
+  },
+
+  "settings_sync_logs_interval_action": {
+    "message": "Intervalo para sincronização de logs (h)."
+  },
+
+  "settings_sync_logs_description": {
+    "message": "Será habilitado ou não a sincronização de logs no intervalo especificado."
+  },
+
+  "settings_error_messages_moodle_action": {
+    "message": "Exibir mensagens de erro de sincronização no Moodle."
+  },
+
+  "settings_error_messages_dashboard_action": {
+    "message": "Exibir mensagens de erro de sincronização na ferramenta."
+  },
+
+  "settings_error_messages_users_not_found_action": {
+    "message": "Exibir mensagens de aviso sobre usuários em logs não encontrados ao sincronizar."
+  },
+
+  "settings_error_messages_description": {
+    "message": "Será exibido mensagens de acordo com sua preferência."
+  },
+
+  "settings_data_download_description": {
+    "message": "Será realizado o download dos dados pré-processados."
+  },
+
+  "settings_remove_data_description": {
+    "message": "Será removido todos os dados armazenados deste Moodle."
+  },
+
+  "settings_analytics_action": {
+    "message": "Habilitar o envio de estatísticas de uso da ferramenta."
+  },
+
+  "settings_analytics_description": {
+    "message": "Será coletado dados do Moodle que utiliza (nome e endereço), bem como o período de uso da ferramenta e nada mais."
+  },
+
+  "settings_language_description": {
+    "message": "Será utilizado o idioma de sua preferência."
+  },
+
+  "settings_notice_update_action": {
+    "message": "Informar sobre novas versões."
+  },
+
+  "settings_notice_update_description": {
+    "message": "Será exibido uma mensagem toda vez que uma nova versão estiver disponível."
+  },
+
+  "settings_default_setting_action": {
+    "message": "Restaurar configuração padrão"
+  },
+
+  "settings_default_setting_description": {
+    "message": "Será restaurado a configuração padrão."
   }
 }

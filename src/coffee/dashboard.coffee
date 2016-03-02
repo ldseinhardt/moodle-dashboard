@@ -4,63 +4,68 @@
 
 class Dashboard
   constructor: () ->
-    @load()
-    .onMessage()
-    console.log('Dashboard:', @)
+    @load(=>
+      @onMessage()
+      console.log('Dashboard:', @)
+    )
 
   sync: ({url, lang}) ->
-    time_access = 1000 * 60 * 5 #5m
-    unless @contains(url)
+    if !@contains(url) && @settings.search_moodle
       @list.push(new Moodle(
         url: url
         lang: lang
       ).syncTitle(=> @save()))
     moodle = @getMoodle(url)
-    if (Date.now() - moodle.getLastAccess()) > time_access
+    sync = moodle && @settings.sync_metadata
+    time = @settings.sync_metadata_interval
+    if sync && (Date.now() - moodle.getLastAccess()) > (1000 * 60 * time)
       moodle.sync((status, scope) =>
         if status == Moodle.response().success
           @getMoodles()
           @save()
-        else if !moodle.hasUsers()
+        else if !moodle.hasUsers() && @settings.message_error_sync_moodle
           @notification(url, 'error', status)
           console.log('[' + url + ']', scope + ':', status)
       )
     @
 
   syncData: (message) ->
-    time_sync = 1000 * 60 * 60 * 1 #1h
-    progress =
-      success: 0
-      error: 0
-      total: 0
-    moodle = @getMoodle(message.moodle)
-    moodle.setCourse(message.course)
-    moodle.syncDates((status, scope, total) =>
-      message.cmd = 'responseSync'
-      message.error = status != Moodle.response().success
-      message.status = status
-      message.silent = moodle.hasData() && (
-        Date.now() - moodle.getLastSync() <= time_sync
-      )
-      if scope == Moodle.response().sync_dates
-        unless message.error
-          progress.total = total
-      else
-        if message.error
-          progress.error++
+    if @settings.sync_logs
+      time = 1000 * 60 * 60 * @settings.sync_logs_interval
+      progress =
+        success: 0
+        error: 0
+        total: 0
+      moodle = @getMoodle(message.moodle)
+      moodle.setCourse(message.course)
+      moodle.syncDates((status, scope, total) =>
+        message.cmd = 'responseSync'
+        message.error = status != Moodle.response().success
+        message.showError = @settings.message_error_sync_dashboard
+        message.status = status
+        message.silent = moodle.hasData() && (
+          Date.now() - moodle.getLastSync() <= time
+        )
+        if scope == Moodle.response().sync_dates
+          unless message.error
+            progress.total = total
         else
-          progress.success++
-        if progress.success + progress.error == progress.total
-          if !message.error && !progress.error
-            moodle.upLastSync()
-          moodle.setDefaultLang()
-          message.users = moodle.getUsersNotFound()
-      message.progress = progress
-      @sendMessage(message)
-      @save()
-      unless status == Moodle.response().success
-        console.log('[' + message.moodle + ']', scope + ': ', status)
-    )
+          if message.error
+            progress.error++
+          else
+            progress.success++
+          if progress.success + progress.error == progress.total
+            if !message.error && !progress.error
+              moodle.upLastSync()
+            moodle.setDefaultLang()
+            if @settings.message_alert_users_not_found
+              message.users = moodle.getUsersNotFound()
+        message.progress = progress
+        @sendMessage(message)
+        @save()
+        unless status == Moodle.response().success
+          console.log('[' + message.moodle + ']', scope + ': ', status)
+      )
     @
 
   select: (url) ->
@@ -138,6 +143,137 @@ class Dashboard
     @sendMessage(message)
     @
 
+  getHelp: (message) ->
+    message.cmd = 'responseHelp'
+    message.help = @help.langs
+    @sendMessage(message)
+    @
+
+  getQuestions: (message) ->
+    message.cmd = 'responseQuestions'
+    message.questions = @questions.langs
+    @sendMessage(message)
+    @
+
+  getVersion: (message) ->
+    message_version = @clone(message)
+    message_version.cmd = 'responseVersion'
+    message_version.version = @settings.version
+    @sendMessage(message_version)
+    .checkUpdate((data) =>
+      if data.client
+        message_update = @clone(message)
+        message_update.cmd = 'responseUpdate'
+        message_update.url = data.client.url
+        message_update.version = data.client.version
+        message_update.description = data.client.description
+        message_update.show = (
+          @settings.message_update && @settings.newVersion != data.client.version
+        )
+        @settings.newVersion = data.client.version
+        @sendMessage(message_update)
+      if data.help
+        @getHelp(@clone(message))
+      if data.questions
+        @getQuestions(@clone(message))
+    )
+    @
+
+  checkUpdate: (response) ->
+    $.getJSON(@settings.server, {
+      request: JSON.stringify(
+        command: 'update'
+        client: @settings.version
+        help: @help.version
+        questions: @questions.version
+      )
+    }, (data) =>
+      if data
+        if data.help
+          @help = data.help
+        if data.questions
+          @questions = data.questions
+        response?(data)
+    )
+    @
+
+  support: (message) ->
+    moodle = @getMoodle(message.moodle)
+    message.cmd = 'responseSupport'
+    $.post(@settings.server, {
+      request: JSON.stringify(
+        command: 'message'
+        name: message.name
+        email: message.email
+        subject: message.subject
+        message: message.message
+        moodle:
+          title: moodle.getTitle()
+          url: moodle.getURL()
+      )
+    }, =>
+      message.status = true
+      @sendMessage(message)
+    ).fail(=>
+      message.status = false
+      @sendMessage(message)
+    )
+    @
+
+  analytics: (message) ->
+    moodle = @getMoodle(message.moodle)
+    if moodle && @settings.analytics
+      $.post(@settings.server, {
+        request: JSON.stringify(
+          command: 'analytics'
+          status: message.status
+          use: message.use
+          moodle:
+            title: moodle.getTitle()
+            url: moodle.getURL()
+        )
+      })
+    @
+
+  getConfig: (message) ->
+    message.cmd = 'responseConfig'
+    message.settings = @settings
+    @sendMessage(message)
+    @
+
+  setConfig: (message) ->
+    settings = [
+      'search_moodle',
+      'sync_metadata',
+      'sync_metadata_interval',
+      'sync_logs',
+      'sync_logs_interval',
+      'message_error_sync_moodle',
+      'message_error_sync_dashboard',
+      'message_alert_users_not_found',
+      'analytics',
+      'message_update'
+    ]
+    for setting in settings
+      if message.settings.hasOwnProperty(setting)
+        @settings[setting] = message.settings[setting]
+    if message.settings.language
+      chrome.storage.local.set(language: message.settings.language)
+    @
+
+  defaultConfig: (message) ->
+    $.getJSON(chrome.extension.getURL('settings.json'), (@settings) => @)
+    @
+
+  deleteMoodle: (message) ->
+    index = -1
+    for moodle, i in @list
+      if moodle.equals(message.moodle)
+        index = i
+    if index >= 0
+      @list.splice(index, 1)
+    @
+
   getSelected: ->
     for moodle in @list
       if moodle.isSelected()
@@ -155,20 +291,40 @@ class Dashboard
     return false
 
   toString: ->
-    JSON.stringify(@list)
+    JSON.stringify(@)
 
   parse: (str) ->
-    for e in JSON.parse(str)
-      new Moodle(e)
+    for key, value of JSON.parse(str)
+      @[key] = value
+    @list = ((list) ->
+      new Moodle(e) for e in list
+    )(@list)
+    @
 
-  load: ->
-    chrome.storage.local.get(list: '[]', (items) =>
-      @list = @parse(items.list)
+  clone: (obj) ->
+    JSON.parse(JSON.stringify(obj))
+
+  load: (onload) ->
+    @list = []
+    $.when(
+      $.getJSON(chrome.extension.getURL('help.json')),
+      $.getJSON(chrome.extension.getURL('questions.json')),
+      $.getJSON(chrome.extension.getURL('settings.json'))
+    ).done((helpArgs, questionsArgs, settingsArgs) =>
+      @help = helpArgs[0]
+      @questions = questionsArgs[0]
+      @settings = settingsArgs[0]
+      chrome.storage.local.get(data: @toString(), (items) =>
+        @parse(items.data)
+        @settings.version = settingsArgs[0].version
+        @settings.server = settingsArgs[0].server
+        onload?()
+      )
     )
     @
 
   save: ->
-    chrome.storage.local.set(list: @toString())
+    chrome.storage.local.set(data: @toString())
     @
 
   notification: (url, type, code) ->
@@ -201,7 +357,16 @@ class Dashboard
           'getDates',
           'setDates',
           'getData',
-          'syncData'
+          'syncData',
+          'support',
+          'analytics',
+          'getHelp',
+          'getQuestions',
+          'getVersion',
+          'getConfig',
+          'setConfig',
+          'deleteMoodle',
+          'defaultConfig'
         ]
         if commands.indexOf(request.cmd) >= 0
           @[request.cmd](request)

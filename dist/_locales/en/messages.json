@@ -3,11 +3,11 @@
     "message": "en"
   },
 
-  "name": {
+  "app_name": {
     "message": "Moodle dashboard"
   },
 
-  "description": {
+  "app_description": {
     "message": "Learning analytics dashboard for moodle logs data"
   },
 

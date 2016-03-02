@@ -1,0 +1,16 @@
+{
+  "version": "0.1.2.2",
+  "server": "http://moodleanalytics.org/api/",
+  "filter_pages": [],
+  "filter_activities": [],
+  "search_moodle": true,
+  "sync_metadata": true,
+  "sync_metadata_interval": 5,
+  "sync_logs": true,
+  "sync_logs_interval": 1,
+  "message_error_sync_moodle": true,
+  "message_error_sync_dashboard": true,
+  "message_alert_users_not_found": true,
+  "analytics": true,
+  "message_update": true
+}
