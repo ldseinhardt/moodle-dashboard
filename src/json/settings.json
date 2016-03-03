@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2.3",
+  "version": "0.1.3",
   "server": "http://moodleanalytics.org/api/",
   "filter_pages": [],
   "filter_activities": [],

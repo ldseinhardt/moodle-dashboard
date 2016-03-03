@@ -440,158 +440,250 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active in" id="filters">
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_pages__"></div>
-              <div class="panel-body filter-pages"></div>
-              <div class="panel-footer __MSG_settings_filter_pages_description__"></div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_pages__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_pages_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body filter-pages"></div>
+                </div>
+              </div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_activities__"></div>
-              <div class="panel-body filter-activities"></div>
-              <div class="panel-footer __MSG_settings_filter_activities_description__"></div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_activities__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_activities_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body filter-activities"></div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="tab-pane" id="synchronization">
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_moodle_environments__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_search_moodle">
-                    <span class="__MSG_settings_search_moodle_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_moodle_environments__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_search_moodle_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_search_moodle">
+                        <span class="__MSG_settings_search_moodle_action__"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_search_moodle_description__"></div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_metadata_synchronization__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_sync_metadata">
-                    <span class="__MSG_settings_sync_metadata_action__"></span>
-                  </label>
-                </div>
-                <div class="number-field">
-                  <input type="number" id="input_sync_metadata_interval" min="1" max="60">
-                  <label for="input_sync_metadata_interval">
-                    <span class="__MSG_settings_sync_metadata_interval_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_metadata_synchronization__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_metadata_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_sync_metadata">
+                        <span class="__MSG_settings_sync_metadata_action__"></span>
+                      </label>
+                    </div>
+                    <div class="number-field">
+                      <input type="number" id="input_sync_metadata_interval" min="1" max="60">
+                      <label for="input_sync_metadata_interval">
+                        <span class="__MSG_settings_sync_metadata_interval_action__"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_sync_metadata_description__"></div>
+              <div class="col-md-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_logs_synchronization__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_logs_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_sync_logs">
+                        <span class="__MSG_settings_sync_logs_action__"></span>
+                      </label>
+                    </div>
+                    <div class="number-field">
+                      <input type="number" id="input_sync_logs_interval" min="1" max="24">
+                      <label for="input_sync_logs_interval">
+                        <span class="__MSG_settings_sync_logs_interval_action__"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_logs_synchronization__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_sync_logs">
-                    <span class="__MSG_settings_sync_logs_action__"></span>
-                  </label>
-                </div>
-                <div class="number-field">
-                  <input type="number" id="input_sync_logs_interval" min="1" max="24">
-                  <label for="input_sync_logs_interval">
-                    <span class="__MSG_settings_sync_logs_interval_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_messages__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_error_messages_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_message_error_sync_moodle">
+                        <span class="__MSG_settings_error_messages_moodle_action__"></span>
+                      </label>
+                    </div>
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_message_error_sync_dashboard">
+                          <span class="__MSG_settings_error_messages_dashboard_action__"></span>
+                      </label>
+                    </div>
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_message_alert_users_not_found">
+                        <span class="__MSG_settings_error_messages_users_not_found_action__"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_sync_logs_description__"></div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_messages__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_message_error_sync_moodle">
-                    <span class="__MSG_settings_error_messages_moodle_action__"></span>
-                  </label>
-                </div>
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_message_error_sync_dashboard">
-                      <span class="__MSG_settings_error_messages_dashboard_action__"></span>
-                  </label>
-                </div>
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_message_alert_users_not_found">
-                    <span class="__MSG_settings_error_messages_users_not_found_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_download_data_preprocessed__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_data_download_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body text-center">
+                    <button type="submit" class="btn btn-primary btn-data-download">Download</button>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_error_messages_description__"></div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_download_data_preprocessed__"></div>
-              <div class="panel-body">
-                <button type="submit" class="btn btn-primary btn-data-download">Download</button>
+              <div class="col-md-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_remove_data__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_remove_data_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body text-center">
+                    <button type="submit" class="btn btn-primary btn-delete __MSG_remove_data__"></button>
+                  </div>
+                </div>
               </div>
-              <div class="panel-footer __MSG_settings_data_download_description__"></div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_remove_data__"></div>
-              <div class="panel-body">
-                <button type="submit" class="btn btn-primary btn-delete __MSG_remove_data__"></button>
-              </div>
-              <div class="panel-footer __MSG_settings_remove_data_description__"></div>
             </div>
           </div>
           <div class="tab-pane" id="privacy">
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_usage_statistics__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_analytics">
-                    <span class="__MSG_settings_analytics_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_usage_statistics__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_analytics_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_analytics">
+                        <span class="__MSG_settings_analytics_action__"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_analytics_description__"></div>
             </div>
           </div>
           <div class="tab-pane" id="others">
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_interface_language__"></div>
-              <div class="panel-body">
-                <div class="form-group">
-                    <div class="radio">
-                      <label>
-                        <input type="radio" name="language" id="input_language_pt-br" value="pt-br">
-                        <div class="__MSG_portuguese_(Brazil)__"></div>
-                      </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_interface_language__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_language_description__">&#xE88E;</i>
                     </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" name="language" id="input_language_en" value="en">
-                        <div class="__MSG_english__"></div>
-                      </label>
+                  </div>
+                  <div class="panel-body">
+                    <div class="form-group">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="language" id="input_language_pt-br" value="pt-br">
+                            <div class="__MSG_portuguese_(Brazil)__"></div>
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="language" id="input_language_en" value="en">
+                            <div class="__MSG_english__"></div>
+                          </label>
+                        </div>
                     </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_language_description__"></div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_notice_update__"></div>
-              <div class="panel-body">
-                <div class="togglebutton">
-                  <label>
-                    <input type="checkbox" id="input_message_update">
-                    <span class="__MSG_settings_notice_update_action__"></span>
-                  </label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_notice_update__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_notice_update_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="togglebutton">
+                      <label>
+                        <input type="checkbox" id="input_message_update">
+                        <span class="__MSG_settings_notice_update_action__"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="panel-footer __MSG_settings_notice_update_description__"></div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading __MSG_default_setting__"></div>
-              <div class="panel-body">
-                <button type="submit" class="btn btn-primary btn-default-setting __MSG_settings_default_setting_action__"></button>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="__MSG_default_setting__"></span>
+                    <div class="to-right">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_default_setting_description__">&#xE88E;</i>
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <button type="submit" class="btn btn-primary btn-default-setting __MSG_settings_default_setting_action__"></button>
+                  </div>
+                </div>
               </div>
-              <div class="panel-footer __MSG_settings_default_setting_description__"></div>
             </div>
           </div>
         </div>
@@ -626,47 +718,63 @@
           <div class="tab-pane active in" id="help"></div>
           <div class="tab-pane" id="faq"></div>
           <div class="tab-pane" id="support">
-            <div class="message"></div>
-            <div class="form-horizontal">
-              <div class="form-group">
-                <label for="inputName" class="col-md-1 control-label">
-                  <span class="__MSG_name__"></span>
-                </label>
-                <div class="col-md-11">
-                  <input type="text" class="form-control" id="inputName" maxlength="64" required autofocus>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="inputEmail" class="col-md-1 control-label">
-                  <span class="__MSG_email__"></span>
-                </label>
-                <div class="col-md-11">
-                  <input type="email" class="form-control" id="inputEmail" maxlength="255" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="inputMessage" class="col-md-1 control-label">
-                  <span class="__MSG_message__"></span>
-                </label>
-                <div class="col-md-11">
-                  <textarea class="form-control" rows="7" id="inputMessage" maxlength="10000" required></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-md-11 col-md-offset-1">
-                  <button class="btn btn-primary btn-support __MSG_send__"></button>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-body">
+                    <div class="message"></div>
+                    <div class="form-horizontal">
+                      <div class="form-group">
+                        <label for="inputName" class="col-md-2 control-label">
+                          <span class="__MSG_name__"></span>
+                        </label>
+                        <div class="col-md-10">
+                          <input type="text" class="form-control" id="inputName" maxlength="64" required autofocus>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail" class="col-md-2 control-label">
+                          <span class="__MSG_email__"></span>
+                        </label>
+                        <div class="col-md-10">
+                          <input type="email" class="form-control" id="inputEmail" maxlength="255" required>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputMessage" class="col-md-2 control-label">
+                          <span class="__MSG_message__"></span>
+                        </label>
+                        <div class="col-md-10">
+                          <textarea class="form-control" rows="7" id="inputMessage" maxlength="10000" required></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-md-10 col-md-offset-2">
+                          <button class="btn btn-primary btn-support __MSG_send__"></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="tab-pane" id="about">
-            <strong class="__MSG_app_name__"></strong> - 2016<br>
-            <span class="__MSG_version__"></span>&nbsp;
-            <span class="data-version"></span>
-            <span class="data-update"></span><br>
-            <a href="#" class="btn-license">
-              <span class="__MSG_MIT_License__"></span>
-            </a>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-body text-center">
+                    <strong class="__MSG_app_name__"></strong> - 2016<br>
+                    <span class="__MSG_version__"></span>&nbsp;
+                    <span class="data-version"></span>
+                    <span class="data-update"></span><br>
+                    <a href="#" class="btn-license">
+                      <span class="__MSG_MIT_License__"></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

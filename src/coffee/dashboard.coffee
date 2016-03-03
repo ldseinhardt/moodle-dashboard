@@ -233,8 +233,9 @@ class Dashboard
       $.post(@settings.server, {
         request: JSON.stringify(
           command: 'analytics'
-          status: message.status
-          use: message.use
+          open: new Date(message.open).toISOString()[..18].replace(/T/, ' ')
+          close: new Date(message.close).toISOString()[..18].replace(/T/, ' ')
+          zone: new Date().getTimezoneOffset()
           moodle:
             title: moodle.getTitle()
             url: moodle.getURL()

@@ -361,10 +361,6 @@ body {
   }
 }
 
-#about {
-  text-align: center;
-}
-
 .number-field {
   input[type=number] {
     width: 35px;
@@ -374,6 +370,24 @@ body {
     color: @dark;
     margin-left: 15px;
   }
+}
+.row {
+  margin: 3px;
+
+  & > [class^=col-md] {
+    padding: 0 10px;
+  }
+}
+
+.to-right {
+  display: inline;
+  float: right;
+}
+
+.material-icons.info {
+  font-size: 15px;
+  color: #999;
+  cursor: pointer;
 }
 
 .form-group.is-focused .form-control {

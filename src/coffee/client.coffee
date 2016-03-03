@@ -28,17 +28,17 @@ class Client
     .onUnload()
     .onChangeConfig()
     $.material.init()
+    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="tooltip"]').tooltip()
 
-  analytics: (status = 'open') ->
-    use = 0
-    if status == 'open'
-      @started = Date.now()
+  analytics: ->
+    if @started
+      @sendMessage('analytics',
+        open: @started
+        close: Date.now()
+      )
     else
-      use = Date.now() - @started
-    @sendMessage('analytics',
-      status: status
-      use: use
-    )
+      @started = Date.now()
     @
 
   onChangeConfig: ->
@@ -175,7 +175,9 @@ class Client
     @
 
   responseHelp: (message) ->
-    html  = '<div class="panel-group" id="accordionHelp" role="tablist"'
+    html  = '<div class="row">'
+    html += '<div class="col-md-12">'
+    html += '<div class="panel-group" id="accordionHelp" role="tablist"'
     html += ' aria-multiselectable="true">'
     for item, i in message.help[langId]
       html += '<div class="panel">'
@@ -201,6 +203,8 @@ class Client
       html += '</div>'
       html += '</div>'
     html += '</div>'
+    html += '</div>'
+    html += '</div>'
     unless message.help[langId] && message.help[langId].length
       html  = '<div class="default">'
       html += '<i class="material-icons">&#xE80C;</i>'
@@ -211,7 +215,9 @@ class Client
 
 
   responseQuestions: (message) ->
-    html  = '<div class="panel-group" id="accordionQuestions" role="tablist"'
+    html  = '<div class="row">'
+    html += '<div class="col-md-12">'
+    html += '<div class="panel-group" id="accordionQuestions" role="tablist"'
     html += ' aria-multiselectable="true">'
     for item, i in message.questions[langId]
       html += '<div class="panel">'
@@ -238,6 +244,8 @@ class Client
       html += '</div>'
       html += '</div>'
       html += '</div>'
+    html += '</div>'
+    html += '</div>'
     html += '</div>'
     unless message.questions[langId] && message.questions[langId].length
       html  = '<div class="default">'
@@ -769,7 +777,7 @@ class Client
 
   onUnload: ->
     $(window).unload(=>
-      @analytics('close')
+      @analytics()
     )
     @
 
@@ -871,6 +879,28 @@ class Client
             key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
             key = key.charAt(0).toUpperCase() + key[1..]
             $(e).html(__(key))
+        @
+    )
+    $('[data-toggle="popover"]').each((i, e) ->
+      list = $(e).attr('data-content')?.trim().replace(/\s+/g,' ')
+      if list && list.length && list.split
+        for classname in list.split(/\s/)
+          msg = /^__MSG_([^$]*)/.exec(classname)
+          if msg && msg.length > 1 && msg[1]
+            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
+            key = key.charAt(0).toUpperCase() + key[1..]
+            $(e).attr('data-content', __(key))
+        @
+    )
+    $('[data-toggle="tooltip"]').each((i, e) ->
+      list = $(e).attr('data-original-title')?.trim().replace(/\s+/g,' ')
+      if list && list.length && list.split
+        for classname in list.split(/\s/)
+          msg = /^__MSG_([^$]*)/.exec(classname)
+          if msg && msg.length > 1 && msg[1]
+            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
+            key = key.charAt(0).toUpperCase() + key[1..]
+            $(e).attr('data-original-title', __(key))
         @
     )
     @
