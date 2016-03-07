@@ -2,10 +2,9 @@
 # activity: activity model
 ###
 
-class Activity
-  constructor: (@course, @role) ->
-    @session_timeout = 90 * 60 #90min
-    @d =
+class Activity extends ModelBase
+  init: (@course, @role) ->
+    @data =
       users: []
       pageViews:
         total: []
@@ -21,41 +20,43 @@ class Activity
         total: []
         parcial: []
       bounceRate: []
-    @s =
+    @_selected =
       users: {}
       tree: {}
+    @
 
-  selected: (d) ->
-    unless @s.users[d.user]
-      @s.users[d.user] = 1
-    unless @s.tree[d.day]
-      @s.tree[d.day] =
+  selected: (row) ->
+    unless @_selected.users[row.user]
+      @_selected.users[row.user] = 1
+    unless @_selected.tree[row.day]
+      @_selected.tree[row.day] =
         users: {}
         activities: {}
         pages: {}
-    unless @s.tree[d.day].users[d.user]
-      @s.tree[d.day].users[d.user] =
+    unless @_selected.tree[row.day].users[row.user]
+      @_selected.tree[row.day].users[row.user] =
         pageViews: 0
         sessions: []
-    @s.tree[d.day].users[d.user].sessions.push(d.time / 1000)
-    unless @s.tree[d.day].activities[d.event.fullname]
-      @s.tree[d.day].activities[d.event.fullname] = {}
-    unless @s.tree[d.day].activities[d.event.fullname][d.user]
-      @s.tree[d.day].activities[d.event.fullname][d.user] = 1
-    if /view/.test(d.event.name)
-      @s.tree[d.day].users[d.user].pageViews += d.size
-      unless @s.tree[d.day].pages[d.page]
-        @s.tree[d.day].pages[d.page] = {}
-      unless @s.tree[d.day].pages[d.page][d.user]
-        @s.tree[d.day].pages[d.page][d.user] = 1
+    @_selected.tree[row.day].users[row.user].sessions.push(row.time / 1000)
+    unless @_selected.tree[row.day].activities[row.event.fullname]
+      @_selected.tree[row.day].activities[row.event.fullname] = {}
+    unless @_selected.tree[row.day].activities[row.event.fullname][row.user]
+      @_selected.tree[row.day].activities[row.event.fullname][row.user] = 1
+    if /view/.test(row.event.name)
+      @_selected.tree[row.day].users[row.user].pageViews += row.size
+      unless @_selected.tree[row.day].pages[row.page]
+        @_selected.tree[row.day].pages[row.page] = {}
+      unless @_selected.tree[row.day].pages[row.page][row.user]
+        @_selected.tree[row.day].pages[row.page][row.user] = 1
+    @
 
-  data: ->
-    unless Object.keys(@s.users).length
+  getData: ->
+    unless Object.keys(@_selected.users).length
       return
-    for i of @s.users
+    for i of @_selected.users
       user = @course.users[@role].list[i]
-      @d.users.push(user.firstname + ' ' + user.lastname)
-    timelist = Object.keys(@s.tree)
+      @data.users.push(user.firstname + ' ' + user.lastname)
+    timelist = Object.keys(@_selected.tree)
     timelist.sort((a, b) ->
       if a < b
         return -1
@@ -64,7 +65,7 @@ class Activity
       return 0
     )
     for day in timelist
-      value = @s.tree[day]
+      value = @_selected.tree[day]
       pageViews = []
       activities = []
       pages = []
@@ -76,7 +77,7 @@ class Activity
       bounce =
         value: 0
         total: 0
-      for i of @s.users
+      for i of @_selected.users
         count = 0
         session = 0
         if value.users[i]
@@ -92,7 +93,7 @@ class Activity
           a = times[0]
           b = times[0]
           for t in times
-            if t - b > @session_timeout
+            if t - b > @sessiontime
               _sessions.push(b - a)
               a = t
             b = t
@@ -116,25 +117,25 @@ class Activity
             count++
         pages.push(count)
       date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
-      @d.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
-      @d.uniqueActivities.total
+      @data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
+      @data.uniqueActivities.total
         .push([date, Object.keys(value.activities).length])
-      @d.uniquePages.total.push([date, Object.keys(value.pages).length])
+      @data.uniquePages.total.push([date, Object.keys(value.pages).length])
       minutes = sessions.total.value / sessions.total.users
-      @d.meanSession.total.push([date, Math.round(minutes * 100) / 100])
+      @data.meanSession.total.push([date, Math.round(minutes * 100) / 100])
       pageViews.unshift(date)
       activities.unshift(date)
       pages.unshift(date)
       sessions.parcial.unshift(date)
-      @d.pageViews.parcial.push(pageViews)
-      @d.uniqueUsers.push([date, Object.keys(value.users).length])
-      @d.uniqueActivities.parcial.push(activities)
-      @d.uniquePages.parcial.push(pages)
-      @d.meanSession.parcial.push(sessions.parcial)
-      @d.bounceRate
+      @data.pageViews.parcial.push(pageViews)
+      @data.uniqueUsers.push([date, Object.keys(value.users).length])
+      @data.uniqueActivities.parcial.push(activities)
+      @data.uniquePages.parcial.push(pages)
+      @data.meanSession.parcial.push(sessions.parcial)
+      @data.bounceRate
         .push([date, Math.round((bounce.value / bounce.total) * 100) / 100])
-    unless @d.pageViews?.total[0]?.length > 1
+    unless @data.pageViews?.total[0]?.length > 1
       return
-    @d
+    @data
 
-model.register('activity', Activity)
+model.register(new Activity('activity', 'general'))

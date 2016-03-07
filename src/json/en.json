@@ -91,12 +91,8 @@
     "message": "There was an error sending your message."
   },
 
-  "settings_filter_pages_description": {
-    "message": "Will be filtered to display pages according to your preference."
-  },
-
-  "settings_filter_activities_description": {
-    "message": "Will be filtered to display the activities according to your preference."
+  "settings_filter_description": {
+    "message": "Will be filtered to display the activities and pages according to your preference."
   },
 
   "settings_search_moodle_action": {
@@ -181,5 +177,77 @@
 
   "settings_default_setting_description": {
     "message": "The default setting will be restored."
+  },
+
+  "data_total_page_views_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_activities_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_page_views_description": {
+    "message": "..."
+  },
+
+  "data_mean_session_length_description": {
+    "message": "..."
+  },
+
+  "data_total_page_views_per_day_description": {
+    "message": "..."
+  },
+
+  "data_total_page_views_per_day_participants_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_participants_per_day_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_activities_per_day_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_activities_per_day_participants_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_page_views_per_day_description": {
+    "message": "..."
+  },
+
+  "data_total_unique_page_views_per_day_participants_description": {
+    "message": "..."
+  },
+
+  "data_mean_session_length_per_day_description": {
+    "message": "..."
+  },
+
+  "data_mean_session_length_per_day_participants_description": {
+    "message": "..."
+  },
+
+  "data_bounce_rate_per_day_description": {
+    "message": "..."
+  },
+
+  "data_total_activities_per_hour_description": {
+    "message": "..."
+  },
+
+  "data_top_participants_description": {
+    "message": "..."
+  },
+
+  "data_top_pages_description": {
+    "message": "..."
+  },
+
+  "data_top_activities_description": {
+    "message": "..."
   }
 }

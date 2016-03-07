@@ -1,8 +1,7 @@
 {
-  "version": "0.1.3",
+  "version": "@@VERSION",
   "server": "http://moodleanalytics.org/api/",
-  "filter_pages": [],
-  "filter_activities": [],
+  "filters": [],
   "search_moodle": true,
   "sync_metadata": true,
   "sync_metadata_interval": 5,

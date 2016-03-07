@@ -2,29 +2,31 @@
 # daytime: daytime model
 ###
 
-class DayTime
-  constructor: (@course, @role) ->
-    @d = {}
+class DayTime extends ModelBase
+  init: (@course, @role) ->
+    @data = {}
     for i in [0..7]
-      @d[i] = []
+      @data[i] = []
       for n in [0..23]
-        @d[i].push(0)
+        @data[i].push(0)
+    @
 
-  selected: (d) ->
-    day = parseInt(d.day)
+  selected: (row) ->
+    day = parseInt(row.day)
     week = new Date(day).getDay() + 1
-    hour = new Date(day + parseInt(d.time)).getHours()
-    @d[week][hour] += d.size
-    @d[0][hour] += d.size
+    hour = new Date(day + parseInt(row.time)).getHours()
+    @data[week][hour] += row.size
+    @data[0][hour] += row.size
+    @
 
-  data: ->
+  getData: ->
     total = 0
-    for size in @d[0]
+    for size in @data[0]
       total += size
       if total > 0
         break
     unless total
       return
-    @d
+    @data
 
-model.register('daytime', DayTime)
+model.register(new DayTime('daytime', 'general'))

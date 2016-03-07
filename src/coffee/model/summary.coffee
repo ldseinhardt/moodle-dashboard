@@ -2,66 +2,51 @@
 # summary: summary model
 ###
 
-class Summary
-  constructor: (@course, @role) ->
-    day = 1000 * 60 * 60 * 24
-    min = @course.dates.min
-    max = @course.dates.max
-    @session_timeout = 90 * 60 #90min
-    role = @course.users[@role].role
-    users = @course.users[@role].list
-    @d =
-      date:
-        min: new Date(min.selected).toLocaleString().split(/\s/)[0]
-        max: new Date(max.selected).toLocaleString().split(/\s/)[0]
-        range: [
-          Math.floor((max.value - min.value) / day) + 1,
-          Math.floor((max.selected - min.selected) / day) + 1
-        ]
-      role: role
-      users: [
-        users.length,
-        users.filter((user) -> user.selected).length
-      ]
+class Summary extends ModelBase
+  init: (@course, @role) ->
+    @data =
       pageViews: [0, 0]
       meanSession: [0, 0]
-    @r =
+    @_recorded =
       activities: {}
       pages: {}
       sessions: {}
-    @s =
+    @_selected =
       activities: {}
       pages: {}
       sessions: {}
+    @
 
-  selected: (d) ->
-    unless @s.sessions[d.user]
-      @s.sessions[d.user] = {}
-    unless @s.sessions[d.user][d.day]
-      @s.sessions[d.user][d.day] = []
-    @s.sessions[d.user][d.day].push(d.time / 1000)
-    unless @s.activities[d.event.fullname]
-      @s.activities[d.event.fullname] = 1
-    if /view/.test(d.event.name)
-      @d.pageViews[1] += d.size
-      unless @s.pages[d.page]
-        @s.pages[d.page] = 1
+  selected: (row) ->
+    unless @_selected.sessions[row.user]
+      @_selected.sessions[row.user] = {}
+    unless @_selected.sessions[row.user][row.day]
+      @_selected.sessions[row.user][row.day] = []
+    @_selected.sessions[row.user][row.day].push(row.time / 1000)
+    unless @_selected.activities[row.event.fullname]
+      @_selected.activities[row.event.fullname] = 1
+    if /view/.test(row.event.name)
+      @data.pageViews[1] += row.size
+      unless @_selected.pages[row.page]
+        @_selected.pages[row.page] = 1
+    @
 
-  recorded: (d) ->
-    unless @r.sessions[d.user]
-      @r.sessions[d.user] = {}
-    unless @r.sessions[d.user][d.day]
-      @r.sessions[d.user][d.day] = []
-    @r.sessions[d.user][d.day].push(d.time / 1000)
-    unless @r.activities[d.event.fullname]
-      @r.activities[d.event.fullname] = 1
-    if /view/.test(d.event.name)
-      @d.pageViews[0] += d.size
-      unless @r.pages[d.page]
-        @r.pages[d.page] = 1
+  recorded: (row) ->
+    unless @_recorded.sessions[row.user]
+      @_recorded.sessions[row.user] = {}
+    unless @_recorded.sessions[row.user][row.day]
+      @_recorded.sessions[row.user][row.day] = []
+    @_recorded.sessions[row.user][row.day].push(row.time / 1000)
+    unless @_recorded.activities[row.event.fullname]
+      @_recorded.activities[row.event.fullname] = 1
+    if /view/.test(row.event.name)
+      @data.pageViews[0] += row.size
+      unless @_recorded.pages[row.page]
+        @_recorded.pages[row.page] = 1
+    @
 
-  data: ->
-    for type, i in ['r', 's']
+  getData: ->
+    for type, i in ['_recorded', '_selected']
       sessions = []
       for user, days of @[type].sessions
         for day, times of days
@@ -75,22 +60,22 @@ class Summary
           a = times[0]
           b = times[0]
           for t in times
-            if t - b > @session_timeout
+            if t - b > @sessiontime
               sessions.push(b - a)
               a = t
             b = t
           sessions.push(b - a)
       if sessions.length
         minutes = sessions.reduce((a, b) -> a + b) / (sessions.length * 60)
-        @d.meanSession[i] = Math.round(minutes * 100) / 100
-    @d.uniqueActivities = [
-      Object.keys(@r.activities).length,
-      Object.keys(@s.activities).length
+        @data.meanSession[i] = Math.round(minutes * 100) / 100
+    @data.uniqueActivities = [
+      Object.keys(@_recorded.activities).length,
+      Object.keys(@_selected.activities).length
     ]
-    @d.uniquePages = [
-      Object.keys(@r.pages).length,
-      Object.keys(@s.pages).length
+    @data.uniquePages = [
+      Object.keys(@_recorded.pages).length,
+      Object.keys(@_selected.pages).length
     ]
-    @d
+    @data
 
-model.register('summary', Summary)
+model.register(new Summary('summary', 'general'))

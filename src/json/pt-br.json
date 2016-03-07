@@ -156,7 +156,7 @@
   },
 
   "days": {
-    "message": "dias"
+    "message": "Dias"
   },
 
   "of": {
@@ -205,6 +205,18 @@
 
   "exit": {
     "message": "Sair"
+  },
+
+  "general": {
+    "message": "Geral"
+  },
+
+  "course": {
+    "message": "Curso"
+  },
+
+  "forum": {
+    "message": "Fórum"
   },
 
   "moodle_not_found": {
@@ -256,15 +268,11 @@
   },
 
   "page_views": {
-    "message": "visualizações de páginas"
+    "message": "Visualizações de páginas"
   },
 
-  "total_users": {
-    "message": "Total de usuários"
-  },
-
-  "users": {
-    "message": "usuários"
+  "total_participants": {
+    "message": "Total de participantes"
   },
 
   "total_unique_activities": {
@@ -288,7 +296,7 @@
   },
 
   "time_min": {
-    "message": "tempo (min)"
+    "message": "Tempo (min)"
   },
 
   "bounce_rate": {
@@ -307,52 +315,40 @@
     "message": "Selecionado"
   },
 
-  "sort_by": {
-    "message": "Ordenar por"
-  },
-
-  "sort_by_name": {
-    "message": "Ordenar por nome"
-  },
-
-  "sort_by_data": {
-    "message": "Ordenar por dados"
-  },
-
   "total_page_views_per_day": {
     "message": "Total de visualizações de páginas por dia"
   },
 
-  "total_page_views_per_day_users": {
-    "message": "Total de visualizações de páginas por dia (usuários)"
+  "total_page_views_per_day_participants": {
+    "message": "Total de visualizações de páginas por dia (participantes)"
   },
 
-  "total_unique_users_per_day": {
-    "message": "Total de usuários únicos por dia"
+  "total_unique_participants_per_day": {
+    "message": "Total de participantes únicos por dia"
   },
 
   "total_unique_activities_per_day": {
     "message": "Total de atividades únicas por dia"
   },
 
-  "total_unique_activities_per_day_users": {
-    "message": "Total de atividades únicas por dia (usuários)"
+  "total_unique_activities_per_day_participants": {
+    "message": "Total de atividades únicas por dia (participantes)"
   },
 
   "total_unique_page_views_per_day": {
     "message": "Total de páginas únicas visualizadas por dia"
   },
 
-  "total_unique_page_views_per_day_users": {
-    "message": "Total de páginas únicas visualizadas por dia (usuários)"
+  "total_unique_page_views_per_day_participants": {
+    "message": "Total de páginas únicas visualizadas por dia (participantes)"
   },
 
   "mean_session_length_per_day": {
     "message": "Tempo médio de sessão por dia"
   },
 
-  "mean_session_length_per_day_users": {
-    "message": "Tempo médio de sessão por dia (usuários)"
+  "mean_session_length_per_day_participants": {
+    "message": "Tempo médio de sessão por dia (participantes)"
   },
 
   "bounce_rate_per_day": {
@@ -364,7 +360,7 @@
   },
 
   "hour": {
-    "message": "horário"
+    "message": "Horário"
   },
 
   "all_days": {
@@ -403,60 +399,32 @@
     "message": "Total de dias"
   },
 
-  "top_users_page_views": {
-    "message": "Top usuários (visualizações de páginas)"
+  "top_participants": {
+    "message": "Top participantes"
   },
 
-  "top_users_unique_activities": {
-    "message": "Top usuários (atividades únicas)"
+  "unique_activities": {
+    "message": "Atividades únicas"
   },
 
-  "top_users_unique_page_views": {
-    "message": "Top usuários (páginas únicas visualizadas)"
+  "unique_page_views": {
+    "message": "Páginas únicas visualizadas"
   },
 
-  "top_users_days": {
-    "message": "Top usuários (dias)"
+  "top_pages": {
+    "message": "Top páginas"
   },
 
-  "top_users_bounce_rate": {
-    "message": "Top usuários (taxa de rejeição)"
+  "page": {
+    "message": "Página"
   },
 
-  "top_pages_page_views": {
-    "message": "Top páginas (visualizações de páginas)"
+  "top_activities": {
+    "message": "Top atividades"
   },
 
-  "top_pages_users": {
-    "message": "Top páginas (usuários)"
-  },
-
-  "top_pages_unique_activities": {
-    "message": "Top páginas (atividades únicas)"
-  },
-
-  "top_pages_days": {
-    "message": "Top páginas (dias)"
-  },
-
-  "top_pages_bounce_rate": {
-    "message": "Top páginas (taxa de rejeição)"
-  },
-
-  "top_activities_page_views": {
-    "message": "Top atividades (visualizações de páginas)"
-  },
-
-  "top_activities_users": {
-    "message": "Top atividades (usuários)"
-  },
-
-  "top_activities_days": {
-    "message": "Top atividades (dias)"
-  },
-
-  "top_activities_bounce_rate": {
-    "message": "Top atividades (taxa de rejeição)"
+  "activity": {
+    "message": "Atividade"
   },
 
   "date_range": {
@@ -551,12 +519,8 @@
     "message": "Inglês"
   },
 
-  "settings_filter_pages_description": {
-    "message": "Será filtrado as páginas para exibição de acordo com sua preferência."
-  },
-
-  "settings_filter_activities_description": {
-    "message": "Será filtrado as atividades para exibição de acordo com sua preferência."
+  "settings_filter_description": {
+    "message": "Será filtrado as atividades e páginas para exibição de acordo com sua preferência."
   },
 
   "settings_search_moodle_action": {
@@ -641,5 +605,605 @@
 
   "settings_default_setting_description": {
     "message": "Será restaurado a configuração padrão."
+  },
+
+  "assign_add": {
+    "message": "Tarefa (adicionada)"
+  },
+
+  "assign_download_all_submissions": {
+    "message": "Tarefa (Download de todas as submissões)"
+  },
+
+  "assign_grade_submission": {
+    "message": "Tarefa (Nota submetida)"
+  },
+
+  "assign_submit": {
+    "message": "Tarefa (submetida)"
+  },
+
+  "assign_update": {
+    "message": "Tarefa (atualizada)"
+  },
+
+  "assign_view": {
+    "message": "Tarefa (visualizada)"
+  },
+
+  "assign_view_all": {
+    "message": "Tarefa (lista visualizada)"
+  },
+
+  "assign_view_grading_form": {
+    "message": "Tarefa (formulário de notas visualizada)"
+  },
+
+  "assign_view_submission_grading_table": {
+    "message": "Tarefa (tabela de notas visualizada)"
+  },
+
+  "assign_view_submit_assignment_form": {
+    "message": "Tarefa (formulário de submissão visualizado)"
+  },
+
+  "blog_view": {
+    "message": "Blog (visualizado)"
+  },
+
+  "book_add": {
+    "message": "Livro (adicionado)"
+  },
+
+  "book_add_chapter": {
+    "message": "Livro (capítulo adicionado)"
+  },
+
+  "book_update": {
+    "message": "Livro (atualizado)"
+  },
+
+  "book_update_chapter": {
+    "message": "Livro (capítulo atualizado)"
+  },
+
+  "book_view": {
+    "message": "Livro (visualizado)"
+  },
+
+  "book_view_all": {
+    "message": "Livro (lista visualizada)"
+  },
+
+  "book_view_chapter": {
+    "message": "Livro (capítulo visualizado)"
+  },
+
+  "calendar_add": {
+    "message": "Calendário (adição)"
+  },
+
+  "calendar_edit": {
+    "message": "Calendário (edição)"
+  },
+
+  "chapter_viewed": {
+    "message": "Capítulo (visualizado)"
+  },
+
+  "choice_add": {
+    "message": "Enquete (adicionada)"
+  },
+
+  "choice_choose": {
+    "message": "Enquete (selecionada)"
+  },
+
+  "choice_made": {
+    "message": "Enquete (respondida)"
+  },
+
+  "choice_update": {
+    "message": "Enquete (atualizada)"
+  },
+
+  "choice_view": {
+    "message": "Enquete (visualizada)"
+  },
+
+  "completion_report_viewed": {
+    "message": "Relatório completo (visualizado)"
+  },
+
+  "content_page_viewed": {
+    "message": "Página (conteúdo visualizado)"
+  },
+
+  "course_add_mod": {
+    "message": "Curso (Módulo adicionado)"
+  },
+
+  "course_completion_updated": {
+    "message": "Curso (atualização completa)"
+  },
+
+  "course_delete_mod": {
+    "message": "Curso (Módulo removido)"
+  },
+
+  "course_editsection": {
+    "message": "Curso (sessão modificada)"
+  },
+
+  "course_enrol": {
+    "message": "Curso (inscrição)"
+  },
+
+  "course_module_completion_updated": {
+    "message": "Curso (atualização de módulo completa)"
+  },
+
+  "course_module_created": {
+    "message": "Curso (módulo criado)"
+  },
+
+  "course_module_deleted": {
+    "message": "Curso (módulo deletado)"
+  },
+
+  "course_module_updated": {
+    "message": "Curso (módulo atualizado)"
+  },
+
+  "course_module_viewed": {
+    "message": "Curso (módulo visualizado)"
+  },
+
+  "course_recent": {
+    "message": "Curso (novidades)"
+  },
+
+  "course_report_engagement": {
+    "message": "Relatórios do curso (engajamento)"
+  },
+
+  "course_report_live": {
+    "message": "Relatórios do curso (logs em tempo real)"
+  },
+
+  "course_report_log": {
+    "message": "Relatórios do curso (logs)"
+  },
+
+  "course_report_outline": {
+    "message": "Relatórios do curso (esboço)"
+  },
+
+  "course_report_participation": {
+    "message": "Relatórios do curso (participação)"
+  },
+
+  "course_unenrol": {
+    "message": "Curso (inscrição cancelada)"
+  },
+
+  "course_update": {
+    "message": "Curso (atualizado)"
+  },
+
+  "course_updated": {
+    "message": "Curso (atualizado)"
+  },
+
+  "course_update_mod": {
+    "message": "Curso (Módulo atualizado)"
+  },
+
+  "course_view": {
+    "message": "Curso (visualizado)"
+  },
+
+  "course_viewed": {
+    "message": "Curso (visualizado)"
+  },
+
+  "course_view_section": {
+    "message": "Curso (sessão visualizada)"
+  },
+
+  "discussion_created": {
+    "message": "Discussão (criada)"
+  },
+
+  "discussion_subscription_created": {
+    "message": "Discussão (inscrição realizada)"
+  },
+
+  "discussion_viewed": {
+    "message": "Discussão (visualizada)"
+  },
+
+  "folder_view": {
+    "message": "Pastas & Arquivos (visualizada)"
+  },
+
+  "folder_view_all": {
+    "message": "Pastas & Arquivos (lista visualizada)"
+  },
+
+  "forum_add": {
+    "message": "Fórum (adicionado)"
+  },
+
+  "forum_add_discussion": {
+    "message": "Fórum (discussão adicionada)"
+  },
+
+  "forum_add_post": {
+    "message": "Fórum (post adicionado)"
+  },
+
+  "forum_delete_discussion": {
+    "message": "Fórum (discussão deletada)"
+  },
+
+  "forum_delete_post": {
+    "message": "Fórum (post deletado)"
+  },
+
+  "forum_move_discussion": {
+    "message": "Fórum (discussão movida)"
+  },
+
+  "forum_subscribe": {
+    "message": "Fórum (inscrição)"
+  },
+
+  "forum_unsubscribe": {
+    "message": "Fórum (Inscrição cancelada)"
+  },
+
+  "forum_update": {
+    "message": "Fórum (atualizado)"
+  },
+
+  "forum_update_post": {
+    "message": "Fórum (post atualizado)"
+  },
+
+  "forum_search": {
+    "message": "Fórum (pesquisa)"
+  },
+
+  "forum_user_report": {
+    "message": "Fórum (participante reportado)"
+  },
+
+  "forum_view_discussion": {
+    "message": "Fórum (discussão visualizada)"
+  },
+
+  "forum_view_forum": {
+    "message": "Fórum (visualizado)"
+  },
+
+  "forum_view_forums": {
+    "message": "Fórum (fóruns Visualizados)"
+  },
+
+  "grader_report_viewed": {
+    "message": "Relatório de notas (visualizado)"
+  },
+
+  "grading_table_viewed": {
+    "message": "Tabela de notas (visualizada)"
+  },
+
+  "group_created": {
+    "message": "Grupo (criado)"
+  },
+
+  "group_member_added": {
+    "message": "Grupo (membro adicionado)"
+  },
+
+  "imscp_view_all": {
+    "message": "I.M.S. C.P. (lista visualizada)"
+  },
+
+  "label_add": {
+    "message": "Conteúdo multimídia (adicionado)"
+  },
+
+  "label_update": {
+    "message": "Conteúdo multimídia (atualizado)"
+  },
+
+  "label_view_all": {
+    "message": "Conteúdo multimídia (lista visualizada)"
+  },
+
+  "log_report_viewed": {
+    "message": "Relatório de logs (visualizado)"
+  },
+
+  "page_add": {
+    "message": "Página (adicionada)"
+  },
+
+  "page_update": {
+    "message": "Página (atualizada)"
+  },
+
+  "page_view": {
+    "message": "Página (visualizada)"
+  },
+
+  "page_view_all": {
+    "message": "Página (lista visualizada)"
+  },
+
+  "phase_switched": {
+    "message": "Estágio (trocado)"
+  },
+
+  "post_created": {
+    "message": "Post (adicionado)"
+  },
+
+  "quiz_add": {
+    "message": "Quiz (adicionado)"
+  },
+
+  "quiz_attempt_deleted": {
+    "message": "Quiz (preenchimento deletado)"
+  },
+
+  "quiz_attempt_preview_started": {
+    "message": "Quiz (pré-visualização do preenchimento iniciado)"
+  },
+
+  "quiz_attempt_reviewed": {
+    "message": "Quiz (revisão de preenchimento)"
+  },
+
+  "quiz_attempt_started": {
+    "message": "Quiz (preenchimento iniciado)"
+  },
+
+  "quiz_attempt_submitted": {
+    "message": "Quiz (preenchimento submetido)"
+  },
+
+  "quiz_attempt_summary_viewed": {
+    "message": "Quiz (resumo do preenchimento visualizado)"
+  },
+
+  "quiz_attempt_viewed": {
+    "message": "Quiz (preenchimento visualizado)"
+  },
+
+  "quiz_continue_attempt": {
+    "message": "Quiz (continuação)"
+  },
+
+  "quiz_editquestions": {
+    "message": "Quiz (questões editadas)"
+  },
+
+  "quiz_edit_page_viewed": {
+    "message": "Quiz (página de edição visualiza)"
+  },
+
+  "quiz_preview": {
+    "message": "Quiz (pré-visualização)"
+  },
+
+  "quiz_report_viewed": {
+    "message": "Quiz (relatório visualizado)"
+  },
+
+  "quiz_update": {
+    "message": "Quiz (atualizado)"
+  },
+
+  "quiz_view": {
+    "message": "Quiz (visualizado)"
+  },
+
+  "resource_add": {
+    "message": "Recurso (adicionado)"
+  },
+
+  "resource_update": {
+    "message": "Recurso (atualizado)"
+  },
+
+  "resource_view": {
+    "message": "Recurso (visualizado)"
+  },
+
+  "resource_view_all": {
+    "message": "Recurso (lista visualizada)"
+  },
+
+  "role_assign": {
+    "message": "Papel de participante (atribuído)"
+  },
+
+  "role_assigned": {
+    "message": "Papel de participante (atribuído)"
+  },
+
+  "role_unassign": {
+    "message": "Papel de participante (removido)"
+  },
+
+  "role_unassigned": {
+    "message": "Papel de participante (removido)"
+  },
+
+  "tag_added_to_an_item": {
+    "message": "Tag (adicionada a um item)"
+  },
+
+  "template_updated": {
+    "message": "Template (atualizado)"
+  },
+
+  "templates_viewed": {
+    "message": "Template (visualizado)"
+  },
+
+  "url_view": {
+    "message": "URL (visualizada)"
+  },
+
+  "url_add": {
+    "message": "URL (adicionada)"
+  },
+
+  "url_update": {
+    "message": "URL (atualizada)"
+  },
+
+  "url_view_all": {
+    "message": "URL (lista visualizada)"
+  },
+
+  "user_enrolled_in_course": {
+    "message": "Participante (inscrito no curso)"
+  },
+
+  "user_graded": {
+    "message": "Participante (aprovado)"
+  },
+
+  "user_view": {
+    "message": "Participante (perfil visualizado)"
+  },
+
+  "user_view_all": {
+    "message": "Participante (lista visualizada)"
+  },
+
+  "wiki_add": {
+    "message": "Wiki (adicionada)"
+  },
+
+  "wiki_add_page": {
+    "message": "Wiki (página adicionada)"
+  },
+
+  "wiki_admin": {
+    "message": "Wiki (administrada)"
+  },
+
+  "wiki_comments": {
+    "message": "Wiki (comentários)"
+  },
+
+  "wiki_edit": {
+    "message": "Wiki (edição)"
+  },
+
+  "wiki_history": {
+    "message": "Wiki (histórico)"
+  },
+
+  "wiki_map": {
+    "message": "Wiki (mapa)"
+  },
+
+  "wiki_view": {
+    "message": "Wiki (visualizada)"
+  },
+
+  "some_content_has_been_posted": {
+    "message": "Algum conteúdo foi postado"
+  },
+
+  "submission_form_viewed": {
+    "message": "Submissão de formulário visualizado"
+  },
+
+  "the_status_of_the_submission_has_been_viewed": {
+    "message": "O status da submissão foi visualizado"
+  },
+
+  "untitled": {
+    "message": "Sem título"
+  },
+
+  "data_total_page_views_description": {
+    "message": "Permite visualizar o total de visualizações de páginas no moodle."
+  },
+
+  "data_total_unique_activities_description": {
+    "message": "Permite visualizar o total de atividades únicas no moodle."
+  },
+
+  "data_total_unique_page_views_description": {
+    "message": "Permite visualizar o total de páginas únicas visualizadas no moodle."
+  },
+
+  "data_mean_session_length_description": {
+    "message": "Permite visualizar a média de tempo em que participantes navegam pelo moodle."
+  },
+
+  "data_total_page_views_per_day_description": {
+    "message": "Permite visualizar o total de visualizações de páginas por dia no moodle."
+  },
+
+  "data_total_page_views_per_day_participants_description": {
+    "message": "Permite visualizar o total de visualizações de páginas por dia de cada participante no moodle."
+  },
+
+  "data_total_unique_participants_per_day_description": {
+    "message": "Permite visualizar o total de participantes por dia no moodle."
+  },
+
+  "data_total_unique_activities_per_day_description": {
+    "message": "Permite visualizar o total de atividades únicas por dia no moodle."
+  },
+
+  "data_total_unique_activities_per_day_participants_description": {
+    "message": "Permite visualizar o total de atividades únicas por dia de cada participante no moodle."
+  },
+
+  "data_total_unique_page_views_per_day_description": {
+    "message": "Permite visualizar o total de páginas únicas visualizadas por dia no moodle."
+  },
+
+  "data_total_unique_page_views_per_day_participants_description": {
+    "message": "Permite visualizar o total de páginas únicas visualizadas por dia de cada participante no moodle."
+  },
+
+  "data_mean_session_length_per_day_description": {
+    "message": "Permite visualizar a média de tempo em que participantes navegam por dia no moodle."
+  },
+
+  "data_mean_session_length_per_day_participants_description": {
+    "message": "Permite visualizar a média de tempo em que participantes navegam por dia (individual) no moodle."
+  },
+
+  "data_bounce_rate_per_day_description": {
+    "message": "Permite visualizar a taxa de rejeição (porcentagem de sessões em que o participante acessa apenas uma página e sai do ambiente) por dia no moodle."
+  },
+
+  "data_total_activities_per_hour_description": {
+    "message": "Permite visualizar o total de atividades no moodle por hora e dia da semana."
+  },
+
+  "data_top_participants_description": {
+    "message": "Permite visualizar os participantes do moodle e suas respectivas métricas (número total de visualizações de páginas, número total de atividades únicas, número total de páginas únicas visualizadas, número de dias com acesso e por fim a taxa de rejeição sobre a porcentagem de sessões)."
+  },
+
+  "data_top_pages_description": {
+    "message": "Permite visualizar as páginas do moodle e suas respectivas métricas (número total de visualizações de páginas, número total de participantes que acessaram a página, número total de atividades únicas nesta página, número de dias que houveram acesso nesta página e a taxa de rejeição sobre a porcentagem de visualizações de páginas)."
+  },
+
+  "data_top_activities_description": {
+    "message": "Permite visualizar as atividades do moodle e suas respectivas métricas (página ou descrição da atividade, número total de visualizações de páginas, número total de participantes que realizaram esta atividade, número de dias que esta atividade ocorreu e a taxa de rejeição sobre a porcentagem de visualizações de páginas)."
   }
 }

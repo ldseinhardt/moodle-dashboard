@@ -2,82 +2,100 @@
 # summary: summary view
 ###
 
-class Summary
-  render: (data, @options, @ctx, download) ->
-    html  = '<strong>' + __('Date range') + ':</strong> ' + data.date.min
-    html += ' - ' + data.date.max + ' ' + '(' + data.date.range[1] + ' '
-    html += __('of') + ' ' + data.date.range[0] + ' ' + __('days') + '), '
-    html += '<strong>' + __('Category') + ':</strong> ' + data.role + ' ('
-    html += data.users[1] + ' ' + __('of') + ' ' + data.users[0] + ' '
-    html += __('users') + ')'
-    $('.text', @ctx).html(html)
+class Summary extends ViewBase
+  template: (title) ->
+    """
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title">
+              <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="#{__(title)}">#{__(title)}</div>
+            </div>
+            <div class="panel-options">
+              <div class="btn-group">
+                <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE2C4;</i>
+                </a>
+              </div>
+              <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="#{__('data_' + title + '_description')}">&#xE88E;</i>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="graph"></div>
+          </div>
+        </div>
+      </div>
+    """
+
+  render: (data) ->
     @views = [
       {
-        title: __('Total page views')
-        unity: __('page views')
+        title: 'Total page views'
+        unity: __('page views', true)
         data: data.pageViews
       },
       {
-        title: __('Total users')
-        unity: __('users')
-        data: data.users
-      },
-      {
-        title: __('Total unique activities')
-        unity: __('activities').toLowerCase()
+        title: 'Total unique activities'
+        unity: __('activities', true)
         data: data.uniqueActivities
       },
       {
-        title: __('Total unique page views')
-        unity: __('pages').toLowerCase()
+        title: 'Total unique page views'
+        unity: __('pages', true)
         data: data.uniquePages
       },
       {
-        title: __('Mean session length')
-        unity: __('Time (min)')
+        title: 'Mean session length'
+        unity: __('time (min)', true)
         data: data.meanSession
       }
     ]
     options =
-      height: 175
-      legend: 'bottom'
+      legend: 'top'
+      chartArea:
+        top: 30
       hAxis:
         textPosition: 'none'
       vAxis:
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
-    for key, val of options
-      @options[key] = val
+    @extendOptions(options)
+    template = ''
+    for view, i in @views
+      template += @template(view.title)
+    @ctx.html(template)
+    $('[data-toggle=tooltip]', @ctx).tooltip()
     graphics = $('.graph', @ctx)
     buttons = $('.btn-download', @ctx)
     for view, i in @views
-      @options.title = view.title
+      title = __(view.title)
       @options.vAxis.title = view.unity
       data = new google.visualization.DataTable()
       data.addColumn('string', 'id')
       data.addColumn('number', __('Saved'))
       data.addColumn('number', __('Selected'))
-      data.addRows([[view.title].concat(view.data)])
+      data.addRows([[title].concat(view.data)])
       @views[i] =
-        options: JSON.parse(JSON.stringify(@options))
+        options: @clone(@options)
         data: data
         chart: new google.visualization.ColumnChart(graphics[i])
       view = @views[i]
       view.chart.draw(view.data, view.options)
       $(buttons[i]).click(
-        ((chart) ->
-          -> download(chart.getImageURI())
-        )(view.chart)
+        ((chart, title) =>
+          => @download(chart.getImageURI(), title + '.png')
+        )(view.chart, title.replace(/\s/g, '_'))
       )
     @
 
-  resize: ->
-    if @views
+  resize: (isNotFullScreen) ->
+    super(isNotFullScreen)
+    if @views && @ctx.is(':visible')
       width = $('.graph', @ctx).innerWidth()
       for view in @views
         view.options.width = width
         view.chart.draw(view.data, view.options)
     @
 
-@view.register('summary', new Summary())
+@view.register(new Summary('summary', 'general'))

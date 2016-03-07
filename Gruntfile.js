@@ -22,8 +22,7 @@ module.exports = function(grunt) {
             cwd: 'src/json/',
             src: [
               'help.json',
-              'questions.json',
-              'settings.json'
+              'questions.json'
             ],
             dest: 'dist/'
           }
@@ -108,7 +107,6 @@ module.exports = function(grunt) {
             dest: 'dist/fonts/'
           }
         ]
-
       },
       bootstrap_datetimepicker: {
         files: [
@@ -137,6 +135,51 @@ module.exports = function(grunt) {
             dest: 'build/js/min/'
           }
         ]
+      },
+      bootstrap_table: {
+        files: [
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-table/dist/',
+            src: 'bootstrap-table.min.css',
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-table/dist/',
+            src: 'bootstrap-table.min.js',
+            dest: 'build/js/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-table/dist/locale/',
+            src: 'bootstrap-table-pt-BR.min.js',
+            dest: 'build/js/min/'
+          }
+        ]
+      }
+    },
+    replace: {
+      json: {
+        options: {
+          patterns: [
+            {
+              match: 'VERSION',
+              replacement: '<%= pkg.version %>'
+            }
+          ]
+        },
+        files: [
+          {
+            expand: true,
+            flatten: true,
+            src: [
+              'src/json/settings.json',
+              'src/json/manifest.json'
+            ],
+            dest: 'dist/'
+          }
+        ]
       }
     },
     coffee: {
@@ -144,6 +187,8 @@ module.exports = function(grunt) {
         files: {
           'build/js/main.js': [
             'src/coffee/view/view.coffee',
+            'src/coffee/view/base.coffee',
+            'src/coffee/view/header.coffee',
             'src/coffee/view/summary.coffee',
             'src/coffee/view/activity.coffee',
             'src/coffee/view/daytime.coffee',
@@ -157,6 +202,8 @@ module.exports = function(grunt) {
           ],
           'build/js/background.js': [
             'src/coffee/model/model.coffee',
+            'src/coffee/model/base.coffee',
+            'src/coffee/model/header.coffee',
             'src/coffee/model/summary.coffee',
             'src/coffee/model/activity.coffee',
             'src/coffee/model/daytime.coffee',
@@ -218,6 +265,7 @@ module.exports = function(grunt) {
       css_main: {
         src: [
           'build/css/min/bootstrap.min.css',
+          'build/css/min/bootstrap-table.min.css',
           'build/css/min/bootstrap-material-design.min.css',
           'build/css/min/ripples.min.css',
           'build/css/min/bootstrap-datetimepicker.min.css',
@@ -235,6 +283,8 @@ module.exports = function(grunt) {
       js_main: {
         src: [
           'build/js/min/bootstrap.min.js',
+          'build/js/min/bootstrap-table.min.js',
+          'build/js/min/bootstrap-table-pt-BR.min.js',
           'build/js/min/material.min.js',
           'build/js/min/ripples.min.js',
           'build/js/min/moment.min.js',
@@ -292,9 +342,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-replace');
 
   grunt.registerTask('default', [
     'copy',
+    'replace',
     'coffee',
     'less',
     'uglify',

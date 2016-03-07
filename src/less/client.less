@@ -1,6 +1,7 @@
 @white: #fff;
 @black: #111;
 @gray: #ccc;
+@gray-dark: #999;
 @dark: #273135;
 @orange: #ff8533;
 @orange-medium: #ff751a;
@@ -152,8 +153,7 @@ body {
           }
 
           &:hover {
-            color: @dark !important;
-            background-color: @white;
+            color: @orange !important;
           }
         }
 
@@ -162,7 +162,6 @@ body {
 
           &:hover {
             color: @orange !important;
-            background-color: @white;
           }
         }
       }
@@ -216,11 +215,11 @@ body {
       }
     }
 
-    *::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb {
       background-color: rgba(255, 255, 255, .3);
     }
 
-    *::-webkit-scrollbar-track {
+    ::-webkit-scrollbar-track {
       background: none;
     }
   }
@@ -262,6 +261,14 @@ body {
   }
 
   .dropdown-menu {
+    padding: 3px;
+    min-width: 175px;
+    border-radius: 5px;
+
+    .togglebutton {
+      margin-left: 10px;
+    }
+
     a {
       color: @dark;
 
@@ -298,45 +305,39 @@ body {
 #dashboard-content {
   .data {
     display: none;
+  }
+}
 
-    .data-col {
-      float: left;
+.filter-activities > .text {
+  text-align: center;
+  font-size: 14pt;
+  color: @gray;
+}
 
-      &:last-child {
-        float: right;
+.dropdown-menu > .active > a {
+  background-color: @orange;
+
+  &:focus, &:hover {
+    color: @white !important;
+    background-color: @orange;
+  }
+}
+
+.pagination {
+  & > li {
+    & > a, & > span {
+      &, &:focus, &:hover {
+        color: @orange;
       }
     }
 
-    .data-options {
-      float: right;
-      z-index: 1;
-    }
-  }
-
-  .data-view {
-    margin: 10px 5px;
-    padding: 5px;
-    border: 1px solid @gray;
-    text-align: center;
-    min-height: 55px;
-
-    .dropdown-menu-opened .togglebutton {
-      margin-left: 10px;
-    }
-
-    &:first-child {
-      margin-top: 5px;
-    }
-
-    &:last-child {
-      margin-bottom: 5px;
-    }
-
-    .graph > span {
-      position: relative;
-      top: 10px;
-      font-size: 14pt;
-      color: @gray;
+    &.active {
+      & > a, & > span {
+        &, &:focus, &:hover {
+          background-color: @orange;
+          border-color: @orange;
+        }
+      }
     }
   }
 }
@@ -379,15 +380,63 @@ body {
   }
 }
 
-.to-right {
-  display: inline;
-  float: right;
+.panel-heading {
+  & > .panel-title {
+    width: 100%;
+    margin-right: -60px;
+    padding-right: 60px;
+    display: -webkit-inline-box;
+
+    & > .title {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  & > .panel-options {
+    float: right;
+    text-align: right;
+    width: 60px;
+
+    .material-icons.info {
+      font-size: 15px;
+      color: @gray-dark;
+      cursor: pointer;
+      position: relative;
+      top: 4px;
+    }
+
+    .btn-group {
+      position: relative;
+      top: -10px;
+
+      & + .material-icons.info {
+        position: relative;
+        top: -7px;
+      }
+    }
+  }
 }
 
-.material-icons.info {
-  font-size: 15px;
-  color: #999;
-  cursor: pointer;
+.panel-controls {
+  display: none;
+
+  & > .btn-prev, & > .btn-next {
+    position: absolute;
+    top: 45%;
+    z-index: 1;
+    font-size: 24pt;
+  }
+
+  & > .btn-prev {
+    left: 15px;
+  }
+
+  & > .btn-next {
+    right: 15px;
+  }
 }
 
 .form-group.is-focused .form-control {
@@ -452,7 +501,7 @@ a {
   label {
     color: @dark;
 
-    input[type="checkbox"]:checked {
+    input[type=checkbox]:checked {
       & + .toggle {
         background-color: rgba(255, 85, 33, .5);
 
@@ -493,15 +542,16 @@ a {
   }
 }
 
-*::-webkit-scrollbar {
-  width: 7px !important;
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
 }
 
-*::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, .2);
 }
 
-*::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, .08);
 }
 

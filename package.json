@@ -1,34 +1,25 @@
 {
   "name": "moodle-dashboard",
-
   "description": "Learning analytics dashboard for moodle logs data",
-
-  "version": "0.1.3",
-
+  "version": "0.1.4",
   "author": "Luan Einhardt",
-
   "keywords": [
     "moodle",
     "dashboard",
     "learning-analytics",
     "visualization"
   ],
-
   "homepage": "https://github.com/ldseinhardt/moodle-dashboard#readme",
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ldseinhardt/moodle-dashboard.git"
   },
-
   "bugs": {
     "url": "https://github.com/ldseinhardt/moodle-dashboard/issues"
   },
-
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-coffee": "^0.13.0",
@@ -38,8 +29,8 @@
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-htmlmin": "^0.6.0",
     "grunt-contrib-less": "^1.1.0",
-    "grunt-contrib-uglify": "^0.5.0"
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-replace": "^0.11.0"
   },
-
   "license": "MIT"
 }

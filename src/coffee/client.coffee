@@ -19,7 +19,6 @@ class Client
     .onResize()
     .onScroll()
     .configDatepickers()
-    .dropdownOpened()
     .sendMessage('getHelp')
     .sendMessage('getQuestions')
     .sendMessage('getVersion')
@@ -28,8 +27,7 @@ class Client
     .onUnload()
     .onChangeConfig()
     $.material.init()
-    $('[data-toggle="popover"]').popover()
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle=tooltip]').tooltip()
 
   analytics: ->
     if @started
@@ -83,51 +81,131 @@ class Client
     )
     @
 
-  setFilters: (filters, lists) ->
-    filter_pages = $('.filter-pages')
-    filter_activities = $('.filter-activities')
-    filter_pages.html('')
-    filter_activities.html('')
-    toggle  = '<div class="togglebutton">'
-    toggle += '<label>'
-    toggle += '<input type="checkbox" checked="">'
-    toggle += '<span>__key__</span>'
-    toggle += '</label>'
-    toggle += '</div>'
-    if lists.pages && lists.pages.length
-      html = ''
-      for page in lists.pages
-        item = toggle.replace('__key__', page)
-        if filters.pages.indexOf(page) >= 0
-          item = item.replace(' checked=""', '')
-        html += item
-      filter_pages.html(html)
-      $.material.togglebutton()
-      $('.togglebutton', filter_pages).change((evt) =>
-        @sendMessage('setConfig',
-          settings:
-            filter_pages:
-              key: $(evt.target).siblings('span').text()
-              value: $(evt.target).prop('checked')
+  setFilters: (filters) ->
+    @filters = filters.filtrated
+    filter = $('.filter-activities')
+    filter.html('<div class="text">' + __('No data') + '</div>')
+    if Object.keys(filters.list).length
+      filter.html('<table class="table table-striped table-hover"></table>')
+      if langId == 'pt-br'
+        __activities = {}
+      data = []
+      for key, value of filters.list
+        event = value.event.replace(/\./g, '')
+        page = value.page || __('Untitled')
+        page = page[..0].toUpperCase() + page[1..]
+        activity = __(event)
+        activity = activity[..0].toUpperCase() + activity[1..]
+        data.push(
+          state: $.inArray(key, @filters) != -1
+          value: key
+          activity: __(event)
+          page: page
         )
+        if langId == 'pt-br' && event == __(event) && !__activities[event]
+          __activities[event.toLowerCase()] = 1
+      $('table', filter).bootstrapTable(
+        columns: [
+          {
+            field: 'state'
+            checkbox: true
+            halign: 'center'
+            valign: 'middle'
+            align: 'center'
+          },
+          {
+            field: 'value'
+            visible: false
+          },
+          {
+            field: 'activity'
+            title: __('Activity')
+            sortable: true
+            halign: 'center'
+            valign: 'middle'
+          },
+          {
+            field: 'page'
+            title: __('Page')
+            sortable: true
+            halign: 'center'
+            valign: 'middle'
+          },
+        ]
+        data: data
+        sortName: 'activity'
+        search: true
+        clickToSelect: true
+        pagination: true
+        pageList: [10, 25, 50, 100, 'ALL']
+        locale: langId
+        onAll: (name, args) =>
+          switch name
+            when 'check.bs.table'
+              if @filters.indexOf(args[0].value) == -1
+                @filters.push(args[0].value)
+                @sendMessage('setConfig',
+                  settings:
+                    filters:
+                      key: args[0].value
+                      value: false
+                )
+            when 'uncheck.bs.table'
+              index = @filters.indexOf(args[0].value)
+              if index != -1
+                @filters.splice(index, 1)
+                @sendMessage('setConfig',
+                  settings:
+                    filters:
+                      key: args[0].value
+                      value: true
+                )
+            when 'check-all.bs.table'
+              $.each(args[0], (i, row) =>
+                if @filters.indexOf(row.value) == -1
+                  @filters.push(row.value)
+                  @sendMessage('setConfig',
+                    settings:
+                      filters:
+                        key: row.value
+                        value: false
+                  )
+              )
+            when 'uncheck-all.bs.table'
+              $.each(args[0], (i, row) =>
+                index = @filters.indexOf(row.value)
+                if index != -1
+                  @filters.splice(index, 1)
+                  @sendMessage('setConfig',
+                    settings:
+                      filters:
+                        key: row.value
+                        value: true
+                  )
+              )
+            when 'pre-body.bs.table'
+              $.each(args[0], (i, row) =>
+                row.state = $.inArray(row.value, @filters) != -1
+                @
+              )
       )
-    if lists.activities && lists.activities.length
-      html = ''
-      for activity in lists.activities
-        item = toggle.replace('__key__', activity)
-        if filters.activities.indexOf(activity) >= 0
-          item = item.replace(' checked=""', '')
-        html += item
-      filter_activities.html(html)
-      $.material.togglebutton()
-      $('.togglebutton', filter_activities).change((evt) =>
-        @sendMessage('setConfig',
-          settings:
-            filter_activities:
-              key: $(evt.target).siblings('span').text()
-              value: $(evt.target).prop('checked')
+      if langId == 'pt-br'
+        values = Object.keys(__activities).sort((a, b) ->
+          x = a.toLowerCase()
+          y = b.toLowerCase()
+          if x < y
+            return -1
+          if x > y
+            return 1
+          return 0
         )
-      )
+        if values.length
+          text = ''
+          for value in values
+            text += '"' + value.replace(/\s/g, '_') + '": {\n'
+            text += '  "message": "' + value + '"\n'
+            text += '},\n\n'
+          console.log(text)
     @
 
   responseConfig: (message) ->
@@ -161,12 +239,12 @@ class Client
 
   responseUpdate: (message) ->
     link  = '&nbsp;(<a href="' + message.url + '" target="_blank">'
-    link += message.version + ' ' + __('available').toLowerCase()
+    link += message.version + ' ' + __('available', true)
     link += '</a>)'
     $('#about .data-update').html(link)
     if message.show
       title  = __('Update') + ' - ' + __('Version') + ' '
-      title += message.version + ' ' + __('available').toLowerCase()
+      title += message.version + ' ' + __('available', true)
       buttons  = '<a href="' + message.url
       buttons += '" target="_blank" class="btn btn-primary">'
       buttons += '<i class="material-icons">&#xE2C4;</i> DOWNLOAD'
@@ -212,7 +290,6 @@ class Client
       html += '</div>'
     $('#help').html(html)
     @
-
 
   responseQuestions: (message) ->
     html  = '<div class="row">'
@@ -311,10 +388,11 @@ class Client
     @course = parseInt(course.attr('index'))
     @role = 0
     if !content.is(':visible') || $('.title', content).text() != course.text()
-      $('.title', content).text(course.text())
+      $('#dashboard-content > .title').text(course.text())
+      $('#dashboard-content > .data-header').text('')
       $('.main').hide()
       content.show()
-      view.resize()
+      view.resize(@isNotFullScreen())
       $('.contents > .more-options').show()
       content.scrollTop(0)
     @sendMessage('getUsers')
@@ -450,7 +528,7 @@ class Client
     total = Math.floor((@dates.max.value - @dates.min.value) / day) + 1
     selected = Math.floor((@dates.max.selected - @dates.min.selected) / day) + 1
     $('#submenu-daterange .message').html(
-      selected + ' ' + __('of') + ' ' + total + ' ' + __('days')
+      selected + ' ' + __('of') + ' ' + total + ' ' + __('days', true)
     )
     @
 
@@ -458,26 +536,18 @@ class Client
     unless message.course == @getCourse() && message.role == @getRole()
       return
     content = $('#dashboard-content')
-    if !message.data || message.error
-      unless $('.default', content).is(':visible')
-        $('.data', content).hide()
-        $('.default', content).show()
-    else
-      unless $('.data', content).is(':visible')
-        $('.default', content).hide()
-        $('.data', content).show()
-      view.render(message.data, @download)
+    $('.data', content).hide()
+    $('.default', content).show()
+    if message.data && !message.error
+      for group in Object.keys(message.data)
+        unless $('#' + group + ' > .data').is(':visible')
+          $('#' + group + ' > .default').hide()
+          $('#' + group + ' > .data').show()
+      view.render(message.data)
       @navActive()
-      if message.filters && message.lists
-        @setFilters(message.filters, message.lists)
+      if message.filters
+        @setFilters(message.filters)
     @
-
-  download: (url, filename = 'chart.png') =>
-    chrome.downloads.download(
-      url: url
-      saveAs: @isNotFullScreen()
-      filename: filename
-    )
 
   responseSync: (message) ->
     unless message.course == @getCourse()
@@ -580,12 +650,6 @@ class Client
   navActive: ->
     $('ul li a').unbind('click', @navActiveFn)
     $('ul li a').on('click', @navActiveFn)
-    @
-
-  dropdownOpened: ->
-    $('.dropdown-menu-opened li').click(->
-      $(@).parent().parent().toggleClass('open')
-    )
     @
 
   refreshURL: (moodle = '') ->
@@ -753,10 +817,10 @@ class Client
     @
 
   onResize: ->
-    $(window).resize(->
-      view.resize()
+    $(window).resize(=>
+      view.resize(@isNotFullScreen())
       fullscreen = '<i class="material-icons">'
-      if (!window.screenTop && !window.screenY)
+      if (!screenTop && !screenY)
         fullscreen += '&#xE5D1;</i> ' + __('Fullscreen (exit)') + '</a>'
       else
         fullscreen += '&#xE5D0;</i> ' + __('Fullscreen') + '</a>'
@@ -776,9 +840,7 @@ class Client
     @
 
   onUnload: ->
-    $(window).unload(=>
-      @analytics()
-    )
+    $(window).unload(=> @analytics())
     @
 
   isNotFullScreen: ->
@@ -881,18 +943,7 @@ class Client
             $(e).html(__(key))
         @
     )
-    $('[data-toggle="popover"]').each((i, e) ->
-      list = $(e).attr('data-content')?.trim().replace(/\s+/g,' ')
-      if list && list.length && list.split
-        for classname in list.split(/\s/)
-          msg = /^__MSG_([^$]*)/.exec(classname)
-          if msg && msg.length > 1 && msg[1]
-            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
-            key = key.charAt(0).toUpperCase() + key[1..]
-            $(e).attr('data-content', __(key))
-        @
-    )
-    $('[data-toggle="tooltip"]').each((i, e) ->
+    $('[data-toggle=tooltip]').each((i, e) ->
       list = $(e).attr('data-original-title')?.trim().replace(/\s+/g,' ')
       if list && list.length && list.split
         for classname in list.split(/\s/)
@@ -912,7 +963,6 @@ class Client
     msg.course = @getCourse()
     msg.role = @getRole()
     chrome.runtime.sendMessage(msg)
-    # console.log('sendMessage:', msg)
     @
 
   onMessage: ->

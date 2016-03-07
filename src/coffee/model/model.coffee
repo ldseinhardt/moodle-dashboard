@@ -6,13 +6,17 @@ class Model
   constructor: ->
     @models = {}
 
-  register: (name, model) ->
-    @models[name] = model
+  register: ->
+    for model in arguments
+      unless @models[model.getGroup()]
+        @models[model.getGroup()] = {}
+      @models[model.getGroup()][model.getName()] = model
+    @
 
   list: (course, role) ->
-    list = {}
-    for name, data of @models
-      list[name] = new data(course, role)
-    list
+    for group, models of @models
+      for name, model of models
+        model.init(course, role)
+    @models
 
 @model = new Model()

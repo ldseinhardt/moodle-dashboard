@@ -140,13 +140,10 @@ class Dashboard
     unless message.error
       role = message.role
       message.data = moodle
-        .getData(role, @settings.filter_pages, @settings.filter_activities)
+        .getData(role, @settings.filters)
       message.filters =
-        pages: @settings.filter_pages
-        activities: @settings.filter_activities
-      message.lists =
-        pages: moodle.getPages(role)
-        activities: moodle.getActivities(role)
+        list: moodle.getActivities(role)
+        filtrated: @settings.filters
     @sendMessage(message)
     @
 
@@ -250,17 +247,12 @@ class Dashboard
     @
 
   setConfig: (message) ->
-    filters = [
-      'filter_pages',
-      'filter_activities'
-    ]
-    for filter in filters
-      if message.settings.hasOwnProperty(filter)
-        index = @settings[filter].indexOf(message.settings[filter].key)
-        if message.settings[filter].value && index >= 0
-          @settings[filter].splice(index, 1)
-        else if index < 0
-          @settings[filter].push(message.settings[filter].key)
+    if message.settings.filters
+      index = @settings.filters.indexOf(message.settings.filters.key)
+      if message.settings.filters.value && index >= 0
+        @settings.filters.splice(index, 1)
+      else if index < 0
+        @settings.filters.push(message.settings.filters.key)
     settings = [
       'search_moodle',
       'sync_metadata',
@@ -275,7 +267,7 @@ class Dashboard
     ]
     for setting in settings
       if message.settings.hasOwnProperty(setting)
-        @settings[setting] = message.settings[setting]
+        @settings[setting] = set[setting]
     if message.settings.language
       chrome.storage.local.set(language: message.settings.language)
     @

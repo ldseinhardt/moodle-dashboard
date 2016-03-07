@@ -97,318 +97,63 @@
   <div class="contents">
     <div class="main" id="dashboard-content">
       <div class="title"></div>
+      <div class="data-header text-center"></div>
       <div class="content">
-        <div class="default">
-          <i class="material-icons">&#xE80C;</i>
-          <div class="message __MSG_no_data__"></div>
-        </div>
-        <div class="data">
-          <div class="text-center data-summary">
-            <span class="text"></span>
-          </div>
-          <div class="data-row">
-            <div class="data-col" style="width: 20%">
-              <div class="data-view data-summary">
-                <div class="btn-group data-options">
-                  <a href="#" class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="graph"></div>
-              </div>
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a href="#general" data-toggle="tab">
+              <span class="__MSG_general__"></span>
+            </a>
+          </li>
+          <li>
+            <a href="#course" data-toggle="tab">
+              <span class="__MSG_course__"></span>
+            </a>
+          </li>
+          <li>
+            <a href="#forum" data-toggle="tab">
+              <span class="__MSG_forum__"></span>
+            </a>
+          </li>
+          <li>
+            <a href="#wiki" data-toggle="tab">
+              <span class="__MSG_wiki__"></span>
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active in" id="general">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_no_data__"></div>
             </div>
-            <div class="data-col" style="width: 20%">
-              <div class="data-view data-summary">
-                <div class="btn-group data-options">
-                  <a class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="graph"></div>
-              </div>
-            </div>
-            <div class="data-col" style="width: 20%">
-              <div class="data-view data-summary">
-                <div class="btn-group data-options">
-                  <a href="#" class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="graph"></div>
-              </div>
-            </div>
-            <div class="data-col" style="width: 20%">
-              <div class="data-view data-summary">
-                <div class="btn-group data-options">
-                  <a href="#" class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="graph"></div>
-              </div>
-            </div>
-            <div class="data-col" style="width: 20%">
-              <div class="data-view data-summary">
-                <div class="btn-group data-options">
-                  <a href="#" class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="graph"></div>
-              </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-ranking"></div>
             </div>
           </div>
-          <div class="data-row">
-            <div class="data-col" style="width: 100%">
-              <div class="data-view data-activity">
-                <div class="btn-group data-options">
-                  <a class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="btn-group data-options">
-                  <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
-                    <i class="material-icons">&#xE8F4;</i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                      <a href="#" class="btn-view active">
-                        <span class="__MSG_total_page_views_per_day__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_page_views_per_day_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_unique_users_per_day__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_unique_activities_per_day__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_unique_activities_per_day_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_unique_page_views_per_day__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_total_unique_page_views_per_day_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_mean_session_length_per_day__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_mean_session_length_per_day_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_bounce_rate_per_day__"></span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="graph"></div>
-              </div>
-              <div class="data-view data-daytime">
-                <div class="btn-group data-options">
-                  <a class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="btn-group data-options">
-                  <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
-                    <i class="material-icons">&#xE8F4;</i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right dropdown-menu-opened">
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox" checked="">
-                          <span class="__MSG_all_days__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_sunday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_monday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_tuesday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_wednesday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_thursday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_friday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="togglebutton">
-                        <label>
-                          <input type="checkbox">
-                          <span class="__MSG_saturday__"></span>
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <div class="graph"></div>
-              </div>
-              <div class="data-view data-ranking">
-                <div class="btn-group data-options">
-                  <a class="btn-download">
-                    <i class="material-icons">&#xE2C4;</i>
-                  </a>
-                </div>
-                <div class="btn-group data-options">
-                  <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
-                    <i class="material-icons">&#xE164;</i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                      <a href="#" class="btn-sort active">
-                        <span class="__MSG_sort_by_name__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-sort">
-                        <span class="__MSG_sort_by_data__"></span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="btn-group data-options">
-                  <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
-                    <i class="material-icons">&#xE8F4;</i>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                      <a href="#" class="btn-view active">
-                        <span class="__MSG_top_users_(page_views)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_users_(unique_activities)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_users_(unique_page_views)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_users_(days)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_users_(bounce_rate)__"></span>
-                      </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_pages_(page_views)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_pages_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_pages_(unique_activities)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_pages_(days)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_pages_(bounce_rate)__"></span>
-                      </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_activities_(page_views)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_activities_(users)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_activities_(days)__"></span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" class="btn-view">
-                        <span class="__MSG_top_activities_(bounce_rate)__"></span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="graph"></div>
-              </div>
+          <div class="tab-pane" id="course">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_no_data__"></div>
             </div>
+            <div class="data"></div>
+          </div>
+          <div class="tab-pane" id="forum">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_no_data__"></div>
+            </div>
+            <div class="data"></div>
+          </div>
+          <div class="tab-pane" id="wiki">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_no_data__"></div>
+            </div>
+            <div class="data"></div>
           </div>
         </div>
       </div>
@@ -444,22 +189,11 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_pages__"></span>
-                    <div class="to-right">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_pages_description__">&#xE88E;</i>
+                    <div class="panel-title">
+                      <div class="title __MSG_filters__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_filters__"></div>
                     </div>
-                  </div>
-                  <div class="panel-body filter-pages"></div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <span class="__MSG_activities__"></span>
-                    <div class="to-right">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_activities_description__">&#xE88E;</i>
+                    <div class="panel-options">
+                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_description__">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body filter-activities"></div>
@@ -472,8 +206,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_moodle_environments__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_moodle_environments__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_moodle_environments__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_search_moodle_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -492,8 +228,10 @@
               <div class="col-md-6">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_metadata_synchronization__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_metadata_synchronization__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_metadata_synchronization__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_metadata_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -516,8 +254,10 @@
               <div class="col-md-6">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_logs_synchronization__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_logs_synchronization__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_logs_synchronization__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_logs_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -542,8 +282,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_messages__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_messages__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_messages__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_error_messages_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -574,8 +316,10 @@
               <div class="col-md-6">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_download_data_preprocessed__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_download_data_preprocessed__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_download_data_preprocessed__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_data_download_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -587,8 +331,10 @@
               <div class="col-md-6">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_remove_data__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_remove_data__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_remove_data__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_remove_data_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -604,8 +350,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_usage_statistics__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_usage_statistics__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_usage_statistics__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_analytics_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -626,8 +374,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_interface_language__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_interface_language__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_interface_language__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_language_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -654,8 +404,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_notice_update__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_notice_update__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_notice_update__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_notice_update_description__">&#xE88E;</i>
                     </div>
                   </div>
@@ -674,8 +426,10 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <span class="__MSG_default_setting__"></span>
-                    <div class="to-right">
+                    <div class="panel-title">
+                      <div class="title __MSG_default_setting__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_default_setting__"></div>
+                    </div>
+                    <div class="panel-options">
                       <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_default_setting_description__">&#xE88E;</i>
                     </div>
                   </div>

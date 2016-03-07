@@ -2,70 +2,57 @@
 # ranking: ranking model
 ###
 
-class Ranking
-  constructor: (@course, @role) ->
-    @session_timeout = 90 * 60 #90min
-    @d =
-      users:
-        totalViews: []
-        activities: []
-        pages: []
-        dates: []
-        bounceRate: []
-      pages:
-        totalViews: []
-        users: []
-        activities: []
-        dates: []
-        bounceRate: []
-      activities:
-        totalViews: []
-        users: []
-        dates: []
-        bounceRate: []
-    @s =
+class Ranking extends ModelBase
+  init: (@course, @role) ->
+    @data =
+      users: []
+      pages: []
+      activities: []
+    @_selected =
       users: {}
       pages: {}
       activities: {}
 
-  selected: (d) ->
-    unless @s.users[d.user]
-      @s.users[d.user] =
+  selected: (row) ->
+    unless @_selected.users[row.user]
+      @_selected.users[row.user] =
         totalViews: 0
         activities: {}
         pages: {}
         dates: {}
-    unless @s.users[d.user].dates[d.day]
-      @s.users[d.user].dates[d.day] = []
-    @s.users[d.user].dates[d.day].push(d.time / 1000)
-    unless @s.users[d.user].activities[d.event.fullname]
-      @s.users[d.user].activities[d.event.fullname] = 1
-    unless @s.activities[d.event.fullname]
-      @s.activities[d.event.fullname] =
+    unless @_selected.users[row.user].dates[row.day]
+      @_selected.users[row.user].dates[row.day] = []
+    @_selected.users[row.user].dates[row.day].push(row.time / 1000)
+    unless @_selected.users[row.user].activities[row.event.fullname]
+      @_selected.users[row.user].activities[row.event.fullname] = 1
+    unless @_selected.activities[row.event.fullname]
+      @_selected.activities[row.event.fullname] =
+        page : row.page
+        activity : row.event.name
         totalViews: 0
         sessions:
           count: 0
           users: {}
         users: {}
         dates: {}
-    @s.activities[d.event.fullname].sessions.count++
-    unless @s.activities[d.event.fullname].sessions.users[d.user]
-      @s.activities[d.event.fullname].sessions.users[d.user] = {}
-    unless @s.activities[d.event.fullname].sessions.users[d.user][d.day]
-      @s.activities[d.event.fullname].sessions.users[d.user][d.day] = []
-    @s.activities[d.event.fullname].sessions.users[d.user][d.day]
-      .push(d.time / 1000)
-    unless @s.activities[d.event.fullname].users[d.user]
-      @s.activities[d.event.fullname].users[d.user] = 1
-    unless @s.activities[d.event.fullname].dates[d.day]
-      @s.activities[d.event.fullname].dates[d.day] = 1
-    if /view/.test(d.event.name)
-      @s.users[d.user].totalViews += d.size
-      unless @s.users[d.user].pages[d.page]
-        @s.users[d.user].pages[d.page] = 1
-      @s.activities[d.event.fullname].totalViews += d.size
-      unless @s.pages[d.page]
-        @s.pages[d.page] =
+    @_selected.activities[row.event.fullname].sessions.count++
+    unless @_selected.activities[row.event.fullname].sessions.users[row.user]
+      @_selected.activities[row.event.fullname].sessions.users[row.user] = {}
+    unless @_selected.activities[row.event.fullname].sessions.users[row.user][row.day]
+      @_selected.activities[row.event.fullname].sessions.users[row.user][row.day] = []
+    @_selected.activities[row.event.fullname].sessions.users[row.user][row.day]
+      .push(row.time / 1000)
+    unless @_selected.activities[row.event.fullname].users[row.user]
+      @_selected.activities[row.event.fullname].users[row.user] = 1
+    unless @_selected.activities[row.event.fullname].dates[row.day]
+      @_selected.activities[row.event.fullname].dates[row.day] = 1
+    if /view/.test(row.event.name)
+      @_selected.users[row.user].totalViews += row.size
+      unless @_selected.users[row.user].pages[row.page]
+        @_selected.users[row.user].pages[row.page] = 1
+      @_selected.activities[row.event.fullname].totalViews += row.size
+      unless @_selected.pages[row.page]
+        @_selected.pages[row.page] =
           totalViews: 0
           sessions:
             count: 0
@@ -73,24 +60,26 @@ class Ranking
           users: {}
           activities: {}
           dates: {}
-      @s.pages[d.page].totalViews += d.size
-      @s.pages[d.page].sessions.count++
-      unless @s.pages[d.page].sessions.users[d.user]
-        @s.pages[d.page].sessions.users[d.user] = {}
-      unless @s.pages[d.page].sessions.users[d.user][d.day]
-        @s.pages[d.page].sessions.users[d.user][d.day] = []
-      @s.pages[d.page].sessions.users[d.user][d.day].push(d.time / 1000)
-      unless @s.pages[d.page].users[d.user]
-        @s.pages[d.page].users[d.user] = 1
-      unless @s.pages[d.page].activities[d.event.fullname]
-        @s.pages[d.page].activities[d.event.fullname] = 1
-      unless @s.pages[d.page].dates[d.day]
-        @s.pages[d.page].dates[d.day] = 1
+      @_selected.pages[row.page].totalViews += row.size
+      @_selected.pages[row.page].sessions.count++
+      unless @_selected.pages[row.page].sessions.users[row.user]
+        @_selected.pages[row.page].sessions.users[row.user] = {}
+      unless @_selected.pages[row.page].sessions.users[row.user][row.day]
+        @_selected.pages[row.page].sessions.users[row.user][row.day] = []
+      @_selected.pages[row.page].sessions.users[row.user][row.day]
+        .push(row.time / 1000)
+      unless @_selected.pages[row.page].users[row.user]
+        @_selected.pages[row.page].users[row.user] = 1
+      unless @_selected.pages[row.page].activities[row.event.fullname]
+        @_selected.pages[row.page].activities[row.event.fullname] = 1
+      unless @_selected.pages[row.page].dates[row.day]
+        @_selected.pages[row.page].dates[row.day] = 1
+    @
 
-  data: ->
-    unless Object.keys(@s.users).length
+  getData: ->
+    unless Object.keys(@_selected.users).length
       return
-    for i, values of @s.users
+    for i, values of @_selected.users
       user = @course.users[@role].list[i]
       name = user.firstname + ' ' + user.lastname
       counts =
@@ -111,17 +100,21 @@ class Ranking
         a = times[0]
         b = times[0]
         for t in times
-          if t - a > @session_timeout
+          if t - a > @sessiontime
             _sessions.push(b - a)
             a = t
           b = t
         _sessions.push(b - a)
       bounce = _sessions.filter((e) -> e == 0).length
-      counts.bounceRate = Math.round((bounce / _sessions.length) * 100) / 100
-      for key, val of counts
-        if val > 0
-          @d.users[key].push([name, val])
-    for page, values of @s.pages
+      counts.bounceRate = Math.round((bounce / _sessions.length) * 100)
+      line =
+        user:
+          value: name
+      for key, value of counts
+        line[key] =
+          value: value
+      @data.users.push(line)
+    for page, values of @_selected.pages
       if page.length > 0
         counts =
           totalViews: values.totalViews
@@ -142,17 +135,21 @@ class Ranking
             a = times[0]
             b = times[0]
             for t in times
-              if t - a > @session_timeout
+              if t - a > @sessiontime
                 _sessions.push(b - a)
                 a = t
               b = t
             _sessions.push(b - a)
         bounce = _sessions.filter((e) -> e == 0).length / values.sessions.count
-        counts.bounceRate = Math.round(bounce * 100) / 100
-        for key, val of counts
-          if val > 0
-            @d.pages[key].push([page, val])
-    for activity, values of @s.activities
+        counts.bounceRate = Math.round(bounce * 100)
+        line =
+          page:
+            value: page
+        for key, value of counts
+          line[key] =
+            value: value
+        @data.pages.push(line)
+    for _, values of @_selected.activities
       counts =
         totalViews: values.totalViews
         users: Object.keys(values.users).length
@@ -171,16 +168,22 @@ class Ranking
           a = times[0]
           b = times[0]
           for t in times
-            if t - a > @session_timeout
+            if t - a > @sessiontime
               _sessions.push(b - a)
               a = t
             b = t
           _sessions.push(b - a)
       bounce = _sessions.filter((e) -> e == 0).length / values.sessions.count
-      counts.bounceRate = Math.round(bounce * 100) / 100
-      for key, val of counts
-        if val > 0
-          @d.activities[key].push([activity, val])
-    @d
+      counts.bounceRate = Math.round(bounce * 100)
+      line =
+        activity:
+          value: values.activity
+        page:
+          value: values.page
+      for key, value of counts
+        line[key] =
+          value: value
+      @data.activities.push(line)
+    @data
 
-model.register('ranking', Ranking)
+model.register(new Ranking('ranking', 'general'))

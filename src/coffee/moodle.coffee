@@ -199,19 +199,25 @@ class Moodle
         timelist = []
         list.each((i, e) =>
           if $(e).val()
-            timelist.unshift(parseInt($(e).val()))
+            timelist.push(parseInt($(e).val()))
         )
         unless timelist.length
           return response(
             Moodle.response().sync_no_dates,
             Moodle.response().sync_dates
           )
+        timelist.sort((a, b) ->
+          if a < b
+            return -1
+          if a > b
+            return 1
+          return 0
+        )
         first = timelist[0] * 1000
         last = timelist[timelist.length - 1] * 1000
         if course.dates
           old = @clone(course.dates)
           timelist = timelist[timelist.indexOf(old.max.value / 1000)..]
-          course.dates.min.value = first
           course.dates.max.value = last
           if old.max.selected == old.max.value
             course.dates.max.selected = last
@@ -219,6 +225,8 @@ class Moodle
               dif = last - old.max.value
               if dif > 0
                 course.dates.min.selected += dif
+          if course.dates.min.selected < course.dates.min.value
+            course.dates.min.selected = course.dates.min.value
         else
           course.dates =
             min:
@@ -378,7 +386,7 @@ class Moodle
     @selected = @equals(url) && @hasUsers()
     @
 
-  getPages: (role) ->
+  getActivities: (role) ->
     unless @hasData()
       return
     course = @getCourse()
@@ -393,43 +401,14 @@ class Moodle
                   page = eventcontext
                   if /^http/.test(page)
                     page = description
-                  unless data[page]
-                    data[page] = 1
-    Object.keys(data).sort((a, b) ->
-      x = a.toLowerCase()
-      y = b.toLowerCase()
-      if x < y
-        return -1
-      if x > y
-        return 1
-      return 0
-    )
+                  event = eventname + ' (' + eventcontext + ')'
+                  unless data[event]
+                    data[event] =
+                      page: page
+                      event: eventname
+    data
 
-  getActivities: (role) ->
-    unless @hasData()
-      return
-    course = @getCourse()
-    data = {}
-    for user, userid in course.users[role].list
-      if user.data
-        for day, components of user.data
-          for component, eventnames of components
-            for eventname, eventcontexts of eventnames
-              for eventcontext, descriptions of eventcontexts
-                event = eventname + ' (' + eventcontext + ')'
-                unless data[event]
-                  data[event] = 1
-    Object.keys(data).sort((a, b) ->
-      x = a.toLowerCase()
-      y = b.toLowerCase()
-      if x < y
-        return -1
-      if x > y
-        return 1
-      return 0
-    )
-
-  getData: (role, pages, activities) ->
+  getData: (role, filters) ->
     unless @hasData()
       return
     course = @getCourse()
@@ -457,16 +436,19 @@ class Moodle
                       time: time
                       size: size
                     row.page = description if /^http/.test(eventcontext)
-                    for _, method of list
-                      method.recorded?(row)
-                      if (user.selected && min <= day <= max &&
-                        pages.indexOf(row.page) < 0 &&
-                        activities.indexOf(row.event.fullname) < 0
-                      )
-                        method.selected?(row)
+                    for _, models of list
+                      for _, method of models
+                        method.recorded(row)
+                        if (user.selected && min <= day <= max &&
+                          filters.indexOf(row.event.fullname) < 0
+                        )
+                          method.selected(row)
     data = {}
-    for name, method of list
-      data[name] = method.data()
+    for group, models of list
+      unless data[group]
+        data[group] = {}
+      for name, method of models
+        data[group][name] = method.getData()
     data
 
   getTitle: ->

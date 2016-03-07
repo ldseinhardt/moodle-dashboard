@@ -5,39 +5,33 @@
 class View
   constructor: ->
     @views = {}
-    @options =
-      colors: [
-        '#0074d9', '#ff4136', '#ffdc00', '#3d9970',
-        '#85144b', '#39cccc', '#b10dc9', '#01ff70',
-        '#111111', '#ff851b', '#001f3f', '#f012be',
-        '#dddddd', '#7fdbff', '#2ecc40', '#aaaaaa'
-      ]
-      tooltip:
-        isHtml: true
+    $('#dashboard-content .nav-tabs').on('shown.bs.tab', (evt) =>
+      @resizeGroup($(evt.target).attr('href')[1..])
+    )
 
-  register: (name, view) ->
-    @views[name] = view
+  register: ->
+    for view in arguments
+      unless @views[view.getGroup()]
+        @views[view.getGroup()] = {}
+      @views[view.getGroup()][view.getName()] = view
+    @
 
-  render: (data, download) ->
-    content = $('#dashboard-content')
-    $('.data-options a', content).unbind('click')
-    $('.data-options .togglebutton', content).unbind('change')
-    for name, view of @views
-      ctx = $('.data-' + name, content)
-      if data[name]
-        @options.width = $('.graph', ctx).innerWidth()
-        view.render(
-          data[name],
-          JSON.parse(JSON.stringify(@options)),
-          ctx,
-          download
-        )
-      else
-        $('.graph', ctx).html('<span>' + __('No data') + '</span>')
-    @resize()
+  render: (data) ->
+    for group, views of @views
+      for name, view of views
+        view.clear()
+        if data[group][name]
+          view.render(data[group][name])
+    @
 
-  resize: ->
-    for _, view of @views
+  resize: (isNotFullScreen) ->
+    for _, views of @views
+      for _, view of views
+        view.resize(isNotFullScreen)
+    @
+
+  resizeGroup: (group) ->
+    for _, view of @views[group]
       view.resize()
     @
 
