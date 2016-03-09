@@ -487,8 +487,64 @@
     "message": "Mensagens"
   },
 
+  "back": {
+    "message": "Voltar"
+  },
+
+  "time": {
+    "message": "Momento"
+  },
+
+  "user_full_name": {
+    "message": "Nome completo de usuário"
+  },
+
+  "affected_user": {
+    "message": "Usuário afetado"
+  },
+
+  "event_context": {
+    "message": "Contexto do evento"
+  },
+
+  "component": {
+    "message": "Componente"
+  },
+
+  "event_name": {
+    "message": "Nome do evento"
+  },
+
+  "description": {
+    "message": "Descrição"
+  },
+
+  "origin": {
+    "message": "Origem"
+  },
+
+  "ip_address": {
+    "message": "Endereço IP"
+  },
+
+  "action": {
+    "message": "Ação"
+  },
+
+  "information": {
+    "message": "Informação"
+  },
+
+  "remove": {
+    "message": "Remover"
+  },
+
   "remove_data": {
     "message": "Remover dados"
+  },
+
+  "remove_data_confirm": {
+    "message": "Todos os dados sincronizados deste moodle serão deletados."
   },
 
   "download_data_preprocessed": {
@@ -1205,5 +1261,9 @@
 
   "data_top_activities_description": {
     "message": "Permite visualizar as atividades do moodle e suas respectivas métricas (página ou descrição da atividade, número total de visualizações de páginas, número total de participantes que realizaram esta atividade, número de dias que esta atividade ocorreu e a taxa de rejeição sobre a porcentagem de visualizações de páginas)."
+  },
+
+  "data_logs_description": {
+    "message": "Permite visualizar os logs obtidos do moodle."
   }
 }

@@ -128,10 +128,13 @@ class DayTime extends ViewBase
       temp.push(row)
     @data = new google.visualization.DataTable()
     @data.addColumn('number', 'id')
+    colors = []
     for i, selected of @view
       if selected
         @data.addColumn('number', __(@labels[i]))
+        colors.push(@getColors()[parseInt(i)])
     @data.addRows(temp)
+    @options.colors = colors
     if @view[0]
       @options.series = {0: {lineDashStyle: [2, 2]}}
     else

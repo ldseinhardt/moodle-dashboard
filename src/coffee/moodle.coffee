@@ -27,6 +27,8 @@ class Moodle
   sync: (response) ->
     $.ajax(
       url: @url + '/my'
+      data:
+        mynumber: -2
       success: (data) =>
         parser = new DOMParser()
         doc = parser.parseFromString(data, 'text/html')
@@ -51,11 +53,19 @@ class Moodle
             @courses.push(
               id: id
               name: name
-              selected: (i == 0)
+              selected: false
               users: []
               errors: []
             )
         )
+        @courses.sort((a, b) ->
+          if a.id > b.id
+            return -1
+          if a.id < b.id
+            return 1
+          return 0
+        )
+        @courses[0].selected = true;
         for course in @courses
           @syncUsers(course, response)
         response(
@@ -292,20 +302,21 @@ class Moodle
     @
 
   processRaw: (course, time, data) ->
+    realtime = time * 1000
     logs = data.replace(/\"Saved\sat\:(.+)\s/, '')
+    unless course.logs
+      course.logs = {}
+    course.logs[realtime] = d3.tsv.parse(logs)
     users = {}
-    d3.tsv.parse(logs).forEach(
-      (row) ->
-        username = row['User full name'].trim()
-        unless users[username]
-          users[username] = []
-        users[username].push(row)
-    )
+    for row in course.logs[realtime]
+      username = row['User full name'].trim()
+      unless users[username]
+        users[username] = []
+      users[username].push(row)
     for user, rows of users
       es = @getUser(course, user)
       if es.length
         for e in es
-          realtime = time * 1000
           unless e.data
             e.data = {}
           e.data[realtime] = @processRow(rows, realtime)
@@ -407,6 +418,24 @@ class Moodle
                       page: page
                       event: eventname
     data
+
+  getLogs: ->
+    course = @getCourse()
+    unless course.logs && Object.keys(course.logs).length
+      return
+    days = Object.keys(course.logs).sort((a, b) ->
+      a = parseInt(a)
+      b = parseInt(b)
+      if a > b
+        return -1
+      if a < b
+        return 1
+      return 0
+    )
+    logs = []
+    for day in days
+      logs = logs.concat(course.logs[day])
+    logs
 
   getData: (role, filters) ->
     unless @hasData()

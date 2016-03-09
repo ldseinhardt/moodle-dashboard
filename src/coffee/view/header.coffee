@@ -1,5 +1,5 @@
 ###
-# subtitle: subtitle view
+# header: header view
 ###
 
 class Header extends ViewBase

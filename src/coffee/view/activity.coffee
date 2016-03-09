@@ -128,6 +128,7 @@ class Activity extends ViewBase
       }
     ]
     options =
+      height: 350
       legend: 'top'
       chartArea:
         top: 30
@@ -162,11 +163,11 @@ class Activity extends ViewBase
       )
     if @max > 7
       unless $('.panel-controls', @ctx).is(':visible')
-        $('.panel-controls', @ctx).fadeIn()
+        $('.panel-controls', @ctx).show()
       google.visualization.events.addListener(@chart, 'select', =>
         if @options.hAxis.viewWindow.min == 0 && @options.hAxis.viewWindow.max == @max
           $('.btn-zoom > i', @ctx).html('zoom_out')
-          $('.panel-controls', @ctx).fadeIn()
+          $('.panel-controls', @ctx).show()
           row = @chart.getSelection()[0].row + 1
           @zoom.min = row - 4
           @zoom.max = row + 3
@@ -181,7 +182,7 @@ class Activity extends ViewBase
         if @chart
           if @options.hAxis.viewWindow.min == 0 && @options.hAxis.viewWindow.max == @max
             $(evt.target).html('zoom_out')
-            $('.panel-controls', @ctx).fadeIn()
+            $('.panel-controls', @ctx).show()
             @options.hAxis.viewWindow = @zoom
           else
             $(evt.target).html('zoom_in')

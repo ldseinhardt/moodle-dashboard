@@ -96,31 +96,40 @@
   </div>
   <div class="contents">
     <div class="main" id="dashboard-content">
-      <div class="title"></div>
-      <div class="data-header text-center"></div>
+      <div class="header">
+        <div class="box">
+          <div class="title"></div>
+          <div class="subtitle data-header"></div>
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#general" data-toggle="tab">
+                <span class="__MSG_general__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#course" data-toggle="tab">
+                <span class="__MSG_course__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#forum" data-toggle="tab">
+                <span class="__MSG_forum__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#wiki" data-toggle="tab">
+                <span class="__MSG_wiki__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#logs" data-toggle="tab">
+                <span>Logs</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="content">
-        <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#general" data-toggle="tab">
-              <span class="__MSG_general__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#course" data-toggle="tab">
-              <span class="__MSG_course__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#forum" data-toggle="tab">
-              <span class="__MSG_forum__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#wiki" data-toggle="tab">
-              <span class="__MSG_wiki__"></span>
-            </a>
-          </li>
-        </ul>
         <div class="tab-content">
           <div class="tab-pane active in" id="general">
             <div class="default">
@@ -155,34 +164,48 @@
             </div>
             <div class="data"></div>
           </div>
+          <div class="tab-pane" id="logs">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_no_data__"></div>
+            </div>
+            <div class="data"></div>
+          </div>
         </div>
       </div>
     </div>
     <div class="main" id="dashboard-settings">
-      <div class="title __MSG_settings__"></div>
+      <div class="header">
+        <div class="box">
+          <a class="btn-back" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_back__">
+            <i class="material-icons">&#xE5C4;</i>
+          </a>
+          <div class="title __MSG_settings__"></div>
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#filters" data-toggle="tab">
+                <span class="__MSG_filters__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#synchronization" data-toggle="tab">
+                <span class="__MSG_synchronization__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#privacy" data-toggle="tab">
+                <span class="__MSG_privacy__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#others" data-toggle="tab">
+                <span class="__MSG_other_options__"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="content">
-        <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#filters" data-toggle="tab">
-              <span class="__MSG_filters__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#synchronization" data-toggle="tab">
-              <span class="__MSG_synchronization__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#privacy" data-toggle="tab">
-              <span class="__MSG_privacy__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#others" data-toggle="tab">
-              <span class="__MSG_other_options__"></span>
-            </a>
-          </li>
-        </ul>
         <div class="tab-content">
           <div class="tab-pane active in" id="filters">
             <div class="row">
@@ -444,30 +467,37 @@
       </div>
     </div>
     <div class="main" id="dashboard-help">
-      <div class="title __MSG_help__"></div>
+      <div class="header">
+        <div class="box">
+          <a class="btn-back" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_back__">
+            <i class="material-icons">&#xE5C4;</i>
+          </a>
+          <div class="title __MSG_help__"></div>
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#help" data-toggle="tab">
+                <span class="__MSG_help__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#faq" data-toggle="tab">
+                <span>FAQ</span>
+              </a>
+            </li>
+            <li>
+              <a href="#support" data-toggle="tab">
+                <span class="__MSG_support__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#about" data-toggle="tab">
+                <span class="__MSG_about__"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="content">
-        <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#help" data-toggle="tab">
-              <span class="__MSG_help__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#faq" data-toggle="tab">
-              <span>FAQ</span>
-            </a>
-          </li>
-          <li>
-            <a href="#support" data-toggle="tab">
-              <span class="__MSG_support__"></span>
-            </a>
-          </li>
-          <li>
-            <a href="#about" data-toggle="tab">
-              <span class="__MSG_about__"></span>
-            </a>
-          </li>
-        </ul>
         <div class="tab-content">
           <div class="tab-pane active in" id="help"></div>
           <div class="tab-pane" id="faq"></div>

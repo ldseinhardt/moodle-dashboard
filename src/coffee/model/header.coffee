@@ -1,5 +1,5 @@
 ###
-# subtitle: subtitle model
+# header: header model
 ###
 
 class Header extends ModelBase

@@ -218,6 +218,7 @@ class Ranking extends ViewBase
         search: true
         pagination: true
         pageList: [10, 25, 50, 100, 'ALL']
+        showToggle: true
         showColumns: true
         locale: langId
         onPreBody: (data) =>

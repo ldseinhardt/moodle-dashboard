@@ -20,8 +20,12 @@ class View
     for group, views of @views
       for name, view of views
         view.clear()
-        if data[group][name]
-          view.render(data[group][name])
+        if data[group]
+          if data[group][name]
+            view.render(data[group][name])
+        else if !$('#' + group + ' > .default').is(':visible')
+          $('#' + group + ' > .default').hide()
+          $('#' + group + ' > .data').show()
     @
 
   resize: (isNotFullScreen) ->

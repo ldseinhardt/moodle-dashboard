@@ -132,6 +132,14 @@ class Dashboard
       moodle.setDates(message.dates)
     @
 
+  getLogs: (message) ->
+    moodle = @getMoodle(message.moodle)
+    moodle.setCourse(message.course)
+    message.cmd = 'responseLogs'
+    message.logs = moodle.getLogs()
+    @sendMessage(message)
+    @
+
   getData: (message) ->
     moodle = @getMoodle(message.moodle)
     moodle.setCourse(message.course)
@@ -367,6 +375,7 @@ class Dashboard
           'setUser',
           'getDates',
           'setDates',
+          'getLogs',
           'getData',
           'syncData',
           'support',

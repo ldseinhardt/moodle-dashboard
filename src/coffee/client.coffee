@@ -17,7 +17,6 @@ class Client
     .onMenuClick()
     .onKeydown()
     .onResize()
-    .onScroll()
     .configDatepickers()
     .sendMessage('getHelp')
     .sendMessage('getQuestions')
@@ -388,15 +387,15 @@ class Client
     @course = parseInt(course.attr('index'))
     @role = 0
     if !content.is(':visible') || $('.title', content).text() != course.text()
-      $('#dashboard-content > .title').text(course.text())
-      $('#dashboard-content > .data-header').text('')
+      $('.header > .box > .title', content).text(course.text())
+      $('.header > .box > .subtitle', content).text('')
       $('.main').hide()
       content.show()
-      view.resize(@isNotFullScreen())
+      #view.resize(@isNotFullScreen())
       $('.contents > .more-options').show()
-      content.scrollTop(0)
     @sendMessage('getUsers')
     .sendMessage('getDates')
+    .sendMessage('getLogs')
     @
 
   responseUsers: (message) ->
@@ -532,13 +531,91 @@ class Client
     )
     @
 
+  responseLogs: (message) ->
+    unless message.course == @getCourse()
+      return
+    logs = $('#logs')
+    $('.data', logs).hide()
+    $('.default', logs).show()
+    $('.data', logs).html('')
+    if message.logs && message.logs.length
+      template = """
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="Logs">Logs</div>
+              </div>
+              <div class="panel-options">
+                <div class="btn-group">
+                  <a class="btn-download">
+                    <i class="material-icons">&#xE2C4;</i>
+                  </a>
+                </div>
+                <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="#{__('data_logs_description')}">&#xE88E;</i>
+              </div>
+            </div>
+            <div class="panel-body">
+              <table class="table table-striped table-hover"></table>
+            </div>
+          </div>
+        </div>
+      """
+      csv = ''
+      $('.data', logs).html(template)
+      $('[data-toggle=tooltip]', logs).tooltip()
+      columns = []
+      for column, i in Object.keys(message.logs[0])
+        columns.push(
+          field: column
+          title: __(column)
+          sortable: true
+          halign: 'center'
+          valign: 'middle'
+        )
+        if i
+          csv += ', '
+        csv += '"' + column + '"'
+      csv += '\r\n'
+      $('table', logs).bootstrapTable(
+        columns: columns
+        data: message.logs
+        search: true
+        pagination: true
+        pageList: [10, 25, 50, 100, 'ALL']
+        showToggle: true
+        showColumns: true
+        locale: langId
+      )
+      $('.default', logs).hide()
+      $('.data', logs).show()
+      $('.btn-download', logs).click(=>
+        for row in message.logs
+          i = 0
+          for column, value of row
+            if i
+              csv += ', '
+            csv += '"' + value + '"'
+            i++
+          csv += '\r\n'
+        course = $('.course-list li .active').text().replace(/\s/g, '_')
+        date = new Date().toISOString().split(/T/)[0]
+        chrome.downloads.download(
+          url: 'data:text/plain;charset=UTF-8,' + encodeURIComponent(csv)
+          saveAs: @isNotFullScreen()
+          filename: course + '_(' + date + ').csv'
+        )
+      )
+    @
+
   responseData: (message) ->
     unless message.course == @getCourse() && message.role == @getRole()
       return
-    content = $('#dashboard-content')
-    $('.data', content).hide()
-    $('.default', content).show()
-    if message.data && !message.error
+    if !message.data || message.error
+      content = $('#dashboard-content')
+      $('.data', content).hide()
+      $('.default', content).show()
+    else
       for group in Object.keys(message.data)
         unless $('#' + group + ' > .data').is(':visible')
           $('#' + group + ' > .default').hide()
@@ -578,6 +655,7 @@ class Client
       if total == progress.total
         @sendMessage('getDates')
         .sendMessage('getData')
+        .sendMessage('getLogs')
         setTimeout(
           =>
             $(sync).modal('hide')
@@ -716,16 +794,19 @@ class Client
       unless settings.is(':visible')
         $('.main').hide()
         settings.show()
-        $('.contents > .more-options').show()
-        settings.scrollTop(0)
     )
     $('.btn-help', nav).click(->
       help = $('#dashboard-help')
       unless help.is(':visible')
         $('.main').hide()
         help.show()
-        $('.contents > .more-options').show()
-        help.scrollTop(0)
+    )
+    $('.btn-back').click(=>
+      $('.main').hide()
+      $('#dashboard-content').show()
+      @sendMessage('getData')
+      $('.sidebar nav li .active').removeClass('active')
+      $('.sidebar nav li .btn-courses').addClass('active')
     )
     $('.btn-fullscreen').click(=>
       if @isNotFullScreen()
@@ -768,12 +849,18 @@ class Client
           message: message.val()
         )
     )
-    $('.btn-data-download').click(->
+    $('.btn-data-download').click(=>
       alert('Não implementado...')
     )
     $('.btn-delete').click(=>
-      @sendMessage('deleteMoodle')
-      location.href = location.href.split('?')[0]
+      buttons  = '<a href="#" class="btn btn-primary btn-delete-confirm">'
+      buttons += '<i class="material-icons">&#xE872;</i> ' + __('Remove')
+      buttons += '</a>'
+      @showMessage(__('Remove data'), __('remove_data_confirm'), buttons)
+      $('.btn-delete-confirm').click((evt) =>
+        @sendMessage('deleteMoodle')
+        location.href = location.href.split('?')[0]
+      )
     )
     $('.btn-default-setting').click(=>
       @sendMessage('defaultConfig')
@@ -825,17 +912,6 @@ class Client
       else
         fullscreen += '&#xE5D0;</i> ' + __('Fullscreen') + '</a>'
       $('.btn-fullscreen').html(fullscreen)
-    )
-    @
-
-  onScroll: ->
-    $('.main').scroll(->
-      options = $('.contents > .more-options')
-      if $(@).scrollTop() > 20
-        if options.is(':visible')
-          options.hide()
-      else if !options.is(':visible')
-        options.show()
     )
     @
 
@@ -973,6 +1049,7 @@ class Client
           'responseCourses',
           'responseUsers',
           'responseDates',
+          'responseLogs',
           'responseData',
           'responseSync'
         ]

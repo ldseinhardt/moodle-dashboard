@@ -91,6 +91,10 @@
     "message": "There was an error sending your message."
   },
 
+  "remove_data_confirm": {
+    "message": "..."
+  },
+
   "settings_filter_description": {
     "message": "Will be filtered to display the activities and pages according to your preference."
   },
@@ -248,6 +252,10 @@
   },
 
   "data_top_activities_description": {
+    "message": "..."
+  },
+
+  "data_logs_description": {
     "message": "..."
   }
 }

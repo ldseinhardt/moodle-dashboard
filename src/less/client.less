@@ -226,6 +226,7 @@ body {
 
   .contents {
     height: 100%;
+    margin: 0;
     overflow: hidden;
 
     .main {
@@ -238,20 +239,78 @@ body {
         display: none;
       }
 
-      & > .title {
-        padding: 10px 5px;
-        font-size: 18pt;
-        text-align: center;
+      & > .header {
+        position: fixed;
+        width: 100%;
+        padding-right: @sidebar-width+7;
+        z-index: 1000;
+
+        & > .box {
+          background-color: @white;
+          height: 110px;
+
+          & > .nav.nav-tabs {
+            margin: 5px;
+          }
+
+          & > .title, & > .subtitle {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+          }
+
+          & > .title {
+            padding: 5px 45px;
+            font-size: 18pt;
+          }
+
+          & > .subtitle {
+            padding: 0 45px;
+            font-size: 11pt;
+            height: 20px;
+          }
+
+          & > .btn-back {
+            float: left;
+            margin: 12px 5px;
+          }
+        }
       }
 
-      .content {
+      & > .content {
+        margin-top: 110px;
         padding: 5px;
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .data {
+          display: none;
+        }
+
+        .default {
+          color: @gray;
+          padding: 10px;
+          text-align: center;
+
+          .message {
+            font-size: 14pt;
+          }
+
+          .material-icons {
+            font-size: 250pt;
+            font-weight: normal;
+          }
+        }
       }
     }
 
     .more-options {
-      top: 5px;
-      right: 10px;
+      top: 3px;
+      right: 15px;
     }
   }
 
@@ -288,6 +347,17 @@ body {
   }
 }
 
+#dashboard-settings,
+#dashboard-help {
+  & > .header > .box {
+    height: 90px !important;
+  }
+
+  & > .content {
+    margin-top: 90px !important;
+  }
+}
+
 #submenu-daterange .box {
   margin: 13px 30px;
 
@@ -299,12 +369,6 @@ body {
     padding: 10px;
     text-align: center;
     color: @gray;
-  }
-}
-
-#dashboard-content {
-  .data {
-    display: none;
   }
 }
 
@@ -338,26 +402,6 @@ body {
           border-color: @orange;
         }
       }
-    }
-  }
-}
-
-#dashboard-content,
-#help,
-#faq,
- {
-  .default {
-    color: @gray;
-    padding: 10px;
-    text-align: center;
-
-    .message {
-      font-size: 14pt;
-    }
-
-    .material-icons {
-      font-size: 250pt;
-      font-weight: normal;
     }
   }
 }
