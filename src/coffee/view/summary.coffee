@@ -136,15 +136,25 @@ class Summary extends ViewBase
       }
     ]
     options =
-      legend: 'top'
+      legend:
+        position: 'top'
+        textStyle:
+          fontSize: 11
+          color: '#111'
       chartArea:
         top: 30
       hAxis:
         textPosition: 'none'
+        textStyle :
+          fontSize: 11
+          color: '#111'
       vAxis:
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
+        textStyle :
+          fontSize: 11
+          color: '#111'
     @extendOptions(options)
     template = ''
     for view, i in @views

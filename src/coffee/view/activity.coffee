@@ -270,16 +270,26 @@ class Activity extends ViewBase
     ]
     options =
       height: 350
-      legend: 'top'
+      legend:
+        position: 'top'
+        textStyle:
+          fontSize: 11
+          color: '#111'
       chartArea:
         top: 30
         left: 100
       hAxis:
         title: __('days', true)
+        textStyle :
+          fontSize: 11
+          color: '#111'
       vAxis:
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
+        textStyle :
+          fontSize: 11
+          color: '#111'
       explorer:
         maxZoomOut: 1
         keepInBounds: true

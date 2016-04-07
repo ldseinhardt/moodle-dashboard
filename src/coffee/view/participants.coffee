@@ -157,11 +157,22 @@ class Participants extends ViewBase
     @ctx.html(@template(title, views))
     $('[data-toggle=tooltip]', @ctx).tooltip()
     options =
-      legend: 'top'
+      legend:
+        position: 'top'
+        textStyle:
+          fontSize: 11
+          color: '#111'
       vAxis:
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
+        textStyle :
+          fontSize: 11
+          color: '#111'
+      hAxis:
+        textStyle :
+          fontSize: 11
+          color: '#111'
       explorer:
         maxZoomOut: 1
         keepInBounds: true
@@ -232,7 +243,7 @@ class Participants extends ViewBase
     super(isNotFullScreen)
     if @chart && @ctx.is(':visible')
       @options.width = $('.graph', @ctx).innerWidth()
-      @options.chartArea.width = @options.width - 230
+      @options.chartArea.width = @options.width - 180
       @show()
     @
 
@@ -300,9 +311,9 @@ class Participants extends ViewBase
       chartAreaHeight = @data.getNumberOfRows() * 25
       @options.height = chartAreaHeight + 80
       @options.chartArea =
-        left: 200
+        left: 150
         height: chartAreaHeight
-        width: $('.graph', @ctx).innerWidth() - 230
+        width: $('.graph', @ctx).innerWidth() - 180
       @sort()
       if @ctx.is(':visible')
         @chart.draw(@getDataView(@data), @options)

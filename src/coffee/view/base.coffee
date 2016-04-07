@@ -26,8 +26,6 @@ class ViewBase
   extendOptions: (options) ->
     _options =
       colors: @getColors()
-      legendTextStyle:
-        fontSize: 10
       tooltip:
         isHtml: true
     @options = @clone(_options)

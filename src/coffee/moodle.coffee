@@ -124,7 +124,7 @@ class Moodle
               id: 0
               role: 'Participant'
             )
-          for role, rid in roles
+          for role in roles
             ur = course.users.filter((user) => user.id == role.id)
             if ur.length
               user = ur[0]
@@ -133,7 +133,7 @@ class Moodle
                 id: role.id
                 role: role.role
                 list: []
-                selected: rid == 0
+                selected: false
               ) - 1
               user = course.users[p]
             usr =
@@ -173,6 +173,14 @@ class Moodle
               )
             return
         )
+        course.users.sort((a, b) ->
+          if a.id > b.id
+            return -1
+          if a.id < b.id
+            return 1
+          return 0
+        )
+        course.users[0].selected = true
         @upLastAccess()
         response(
           Moodle.response().success,

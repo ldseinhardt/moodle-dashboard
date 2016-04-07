@@ -113,7 +113,11 @@ class DayTime extends ViewBase
       @ctx.html('')
       return
     options =
-      legend: 'top'
+      legend:
+        position: 'top'
+        textStyle:
+          fontSize: 11
+          color: '#111'
       chartArea:
         top: 30
         left: 70
@@ -121,11 +125,17 @@ class DayTime extends ViewBase
         title: __('hour', true)
         ticks: [0..23]
         format: '#h'
+        textStyle :
+          fontSize: 11
+          color: '#111'
       vAxis:
         title: __('activities', true)
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
+        textStyle :
+          fontSize: 11
+          color: '#111'
       explorer:
         maxZoomOut: 1
         keepInBounds: true

@@ -165,11 +165,22 @@ class Pages extends ViewBase
     @ctx.html(@template(title, views))
     $('[data-toggle=tooltip]', @ctx).tooltip()
     options =
-      legend: 'top'
+      legend:
+        position: 'top'
+        textStyle:
+          fontSize: 11
+          color: '#111'
       vAxis:
         minValue: 0
         format: 'decimal'
         viewWindowMode: 'maximized'
+        textStyle :
+          fontSize: 11
+          color: '#111'
+      hAxis:
+        textStyle :
+          fontSize: 11
+          color: '#111'
       explorer:
         maxZoomOut: 1
         keepInBounds: true
