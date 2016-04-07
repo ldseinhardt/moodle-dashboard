@@ -7,6 +7,8 @@
 @orange-medium: #ff751a;
 @orange-dark: #f60;
 @max-index: 16777271;
+@sidebar-width: 330px;
+@header-height: 200px;
 
 html,
 body {
@@ -82,9 +84,6 @@ body {
 }
 
 #moodle-dashboard {
-  @sidebar-width: 360px;
-  @header-height: 200px;
-
   color: @dark;
   background-color: @white;
 
@@ -110,6 +109,11 @@ body {
           font-size: 12pt;
           display: table-cell;
           vertical-align: middle;
+
+          & > .title a {
+            color: @white;
+            text-decoration: none;
+          }
         }
       }
 
@@ -185,6 +189,21 @@ body {
         &:not(:first-child) {
           display: none;
         }
+
+        .default {
+          color: @gray;
+          padding: 10px;
+          text-align: center;
+
+          .message {
+            font-size: 14pt;
+          }
+
+          .material-icons {
+            font-size: 150pt;
+            font-weight: normal;
+          }
+        }
       }
     }
 
@@ -198,8 +217,8 @@ body {
     }
 
     .more-options {
-      top: 205px;
-      left: 315px;
+      top: @header-height + 5;
+      left: @sidebar-width - 45;
     }
 
     a {
@@ -226,11 +245,10 @@ body {
 
   .contents {
     height: 100%;
-    margin: 0;
+    margin-left: @sidebar-width;
     overflow: hidden;
 
     .main {
-      margin-left: @sidebar-width;
       height: 100%;
       overflow: scroll;
       overflow-x: hidden;
@@ -242,7 +260,7 @@ body {
       & > .header {
         position: fixed;
         width: 100%;
-        padding-right: @sidebar-width+7;
+        padding-right: @sidebar-width + 7;
         z-index: 1000;
 
         & > .box {
@@ -616,8 +634,4 @@ a {
   .prev:hover {
     color: @dark !important;
   }
-}
-
-.google-visualization-tooltip {
-  z-index: @max-index !important;
 }

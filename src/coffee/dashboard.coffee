@@ -27,6 +27,11 @@ class Dashboard
           @notification(url, 'error', status)
           console.log('[' + url + ']', scope + ':', status)
       )
+    if @settings.message_update
+      @checkUpdate((data) =>
+        if data.client
+          @notification(url, 'update', data.client)
+      )
     @
 
   syncData: (message) ->
@@ -58,11 +63,11 @@ class Dashboard
             if !message.error && !progress.error
               moodle.upLastSync()
             moodle.setDefaultLang()
+            @save()
             if @settings.message_alert_users_not_found
               message.users = moodle.getUsersNotFound()
         message.progress = progress
         @sendMessage(message)
-        @save()
         unless status == Moodle.response().success
           console.log('[' + message.moodle + ']', scope + ': ', status)
       )
@@ -140,6 +145,32 @@ class Dashboard
     @sendMessage(message)
     @
 
+  downloadLogs: (message) ->
+    moodle = @getMoodle(message.moodle)
+    moodle.setCourse(message.course)
+    course = moodle.getCourse().name.replace(/\s/g, '_')
+    logs = moodle.getLogs()
+    csv = ''
+    columns = Object.keys(logs[0])
+    for column, i in columns
+      if i
+        csv += ', '
+      csv += '"' + column + '"'
+    csv += '\r\n'
+    for row, i in logs
+      for column, value of row
+        if column != columns[0]
+          csv += ', '
+        csv += '"' + value + '"'
+      csv += '\r\n'
+    date = new Date().toISOString().split(/T/)[0]
+    chrome.downloads.download(
+      url: 'data:text/plain;charset=UTF-8,' + encodeURIComponent(csv)
+      saveAs: message.saveAs
+      filename: course + '_(' + date + ').csv'
+    )
+    @
+
   getData: (message) ->
     moodle = @getMoodle(message.moodle)
     moodle.setCourse(message.course)
@@ -147,8 +178,12 @@ class Dashboard
     message.error = !moodle.hasData()
     unless message.error
       role = message.role
-      message.data = moodle
-        .getData(role, @settings.filters)
+      data = moodle.getData(role)
+      # console.log(moodle.getAssignments())
+      if data
+        message.users = data.users
+        message.dates = data.dates
+      message.rolename = moodle.getRoleLabel(role)
       message.filters =
         list: moodle.getActivities(role)
         filtrated: @settings.filters
@@ -244,6 +279,7 @@ class Dashboard
           moodle:
             title: moodle.getTitle()
             url: moodle.getURL()
+          client: @settings.version
         )
       })
     @
@@ -346,7 +382,7 @@ class Dashboard
     chrome.storage.local.set(data: @toString())
     @
 
-  notification: (url, type, code) ->
+  notification: (url, type, data) ->
     chrome.tabs.query(
       url: url + '/*'
       (tabs) ->
@@ -354,7 +390,7 @@ class Dashboard
           chrome.tabs.sendMessage(tabs[0].id,
             cmd: 'notification'
             type: type
-            code: code
+            data: data
           )
     )
     @
@@ -376,6 +412,7 @@ class Dashboard
           'getDates',
           'setDates',
           'getLogs',
+          'downloadLogs',
           'getData',
           'syncData',
           'support',

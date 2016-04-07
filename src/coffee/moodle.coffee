@@ -419,6 +419,41 @@ class Moodle
                       event: eventname
     data
 
+  getAssignments: () ->
+    unless @hasData()
+      return
+    course = @getCourse()
+    data = {}
+    assings = {}
+    for role, roleid in course.users
+      for user, userid in role.list
+        if user.data
+          for day, components of user.data
+            for component, eventnames of components
+              for eventname, eventcontexts of eventnames
+                for eventcontext, descriptions of eventcontexts
+                  for description, hours of descriptions
+                    page = eventcontext
+                    if /^http/.test(page)
+                      page = description
+                    if /^assign/.test(eventname) || /^assign/.test(page.toLowerCase())
+                      unless data[roleid]
+                        data[roleid] =
+                          data: []
+                          events: {}
+                      unless data[roleid].events[eventname]
+                        data[roleid].events[eventname] = 0
+                      data[roleid].events[eventname]++
+                      data[roleid].data.push(
+                        user: user.name
+                        page: page
+                        event: eventname
+                        context: eventcontext
+                        description: description
+                        component: component
+                      )
+    data
+
   getLogs: ->
     course = @getCourse()
     unless course.logs && Object.keys(course.logs).length
@@ -437,48 +472,12 @@ class Moodle
       logs = logs.concat(course.logs[day])
     logs
 
-  getData: (role, filters) ->
+  getData: (role) ->
     unless @hasData()
       return
     course = @getCourse()
-    min = course.dates.min.selected
-    max = course.dates.max.selected
-    list = model.list(course, role)
-    for user, userid in course.users[role].list
-      if user.data
-        for day, components of user.data
-          for component, eventnames of components
-            for eventname, eventcontexts of eventnames
-              for eventcontext, descriptions of eventcontexts
-                for description, hours of descriptions
-                  for time, size of hours
-                    row =
-                      user: userid
-                      day: day
-                      component: component
-                      event:
-                        name: eventname
-                        context: eventcontext
-                        fullname: eventname + ' (' + eventcontext + ')'
-                      description: description
-                      page: eventcontext
-                      time: time
-                      size: size
-                    row.page = description if /^http/.test(eventcontext)
-                    for _, models of list
-                      for _, method of models
-                        method.recorded(row)
-                        if (user.selected && min <= day <= max &&
-                          filters.indexOf(row.event.fullname) < 0
-                        )
-                          method.selected(row)
-    data = {}
-    for group, models of list
-      unless data[group]
-        data[group] = {}
-      for name, method of models
-        data[group][name] = method.getData()
-    data
+    users: course.users[role].list
+    dates: course.dates
 
   getTitle: ->
     @title
@@ -499,6 +498,9 @@ class Moodle
   getRoles: ->
     for role in @getCourse().users
       name: role.role
+
+  getRoleLabel: (role) ->
+    @getCourse().users[role].role
 
   getUser: (course, username) ->
     list = []

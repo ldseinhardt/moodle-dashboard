@@ -155,6 +155,10 @@
     "message": "Selecionar todos os dias"
   },
 
+  "days_of_week": {
+    "message": "Dias da semana"
+  },
+
   "days": {
     "message": "Dias"
   },
@@ -207,6 +211,10 @@
     "message": "Sair"
   },
 
+  "sort_by": {
+    "message": "Ordenar por"
+  },
+
   "general": {
     "message": "Geral"
   },
@@ -215,8 +223,24 @@
     "message": "Curso"
   },
 
+  "content": {
+    "message": "Conteúdo"
+  },
+
+  "assignment": {
+    "message": "Tarefas"
+  },
+
   "forum": {
     "message": "Fórum"
+  },
+
+  "choice": {
+    "message": "Enquente"
+  },
+
+  "quiz": {
+    "message": "Questionário"
   },
 
   "moodle_not_found": {
@@ -259,8 +283,28 @@
     "message": "Os participantes do Moodle listados abaixo foram encontrados nos logs, mas não estão configurados como participantes do curso. Caso queira que estes possam ser visualizados por aqui, configure estes como participantes do curso no Moodle."
   },
 
+  "select_course": {
+    "message": "Selecione o curso"
+  },
+
+  "loading": {
+    "message": "Carregando"
+  },
+
   "no_data": {
     "message": "Sem dados"
+  },
+
+  "course_title": {
+    "message": "Título do curso"
+  },
+
+  "average": {
+    "message": "Média"
+  },
+
+  "standard_deviation": {
+    "message": "Desvio padrão"
   },
 
   "total_page_views": {
@@ -361,6 +405,22 @@
 
   "hour": {
     "message": "Horário"
+  },
+
+  "hours": {
+    "message": "Horários"
+  },
+
+  "hours_x_days_of_the_week": {
+    "message": "Horários x dias da semana"
+  },
+
+  "days_of_the_week_x_hours": {
+    "message": "Dias da semana x horários"
+  },
+
+  "all_day": {
+    "message": "Todo o dia"
   },
 
   "all_days": {
@@ -663,6 +723,10 @@
     "message": "Será restaurado a configuração padrão."
   },
 
+  "activity_report_viewed": {
+    "message": "Atividade (relatório visualizado)"
+  },
+
   "assign_add": {
     "message": "Tarefa (adicionada)"
   },
@@ -743,6 +807,18 @@
     "message": "Calendário (edição)"
   },
 
+  "calendar_event_created": {
+    "message": "Calendário (evento criado)"
+  },
+
+  "calendar_event_deleted": {
+    "message": "Calendário (evento deletado)"
+  },
+
+  "calendar_event_updated": {
+    "message": "Calendário (evento atualizado)"
+  },
+
   "chapter_viewed": {
     "message": "Capítulo (visualizado)"
   },
@@ -759,6 +835,10 @@
     "message": "Enquete (respondida)"
   },
 
+  "choice_report_viewed": {
+    "message": "Enquete (relatório visualizado)"
+  },
+
   "choice_update": {
     "message": "Enquete (atualizada)"
   },
@@ -772,7 +852,7 @@
   },
 
   "content_page_viewed": {
-    "message": "Página (conteúdo visualizado)"
+    "message": "Página de conteúdo (visualizada)"
   },
 
   "course_add_mod": {
@@ -820,23 +900,31 @@
   },
 
   "course_report_engagement": {
-    "message": "Relatórios do curso (engajamento)"
+    "message": "Relatório de curso (engajamento)"
   },
 
   "course_report_live": {
-    "message": "Relatórios do curso (logs em tempo real)"
+    "message": "Relatório de curso (logs em tempo real)"
   },
 
   "course_report_log": {
-    "message": "Relatórios do curso (logs)"
+    "message": "Relatório de curso (logs)"
   },
 
   "course_report_outline": {
-    "message": "Relatórios do curso (esboço)"
+    "message": "Relatório de curso (ativiades)"
   },
 
   "course_report_participation": {
-    "message": "Relatórios do curso (participação)"
+    "message": "Relatório de curso (participação)"
+  },
+
+  "course_section_updated": {
+    "message": "Curso (bloco atualizada)"
+  },
+
+  "course_user_report_viewed": {
+    "message": "Curso (relatório de participante visualizado)"
   },
 
   "course_unenrol": {
@@ -875,16 +963,36 @@
     "message": "Discussão (inscrição realizada)"
   },
 
+  "discussion_deleted": {
+    "message": "Discussão (deletada)"
+  },
+
+  "discussion_moved": {
+    "message": "Discussão (movida)"
+  },
+
   "discussion_viewed": {
     "message": "Discussão (visualizada)"
   },
 
+  "entry_has_been_created": {
+    "message": "Entrada (criada)"
+  },
+
+  "entry_has_been_deleted": {
+    "message": "Entrada (deletada)"
+  },
+
+  "entry_has_been_updated": {
+    "message": "Entrada (atualizada)"
+  },
+
   "folder_view": {
-    "message": "Pastas & Arquivos (visualizada)"
+    "message": "Pasta (visualizada)"
   },
 
   "folder_view_all": {
-    "message": "Pastas & Arquivos (lista visualizada)"
+    "message": "Pasta (lista visualizada)"
   },
 
   "forum_add": {
@@ -955,6 +1063,14 @@
     "message": "Tabela de notas (visualizada)"
   },
 
+  "grade_deleted": {
+    "message": "Relatório (deletado)"
+  },
+
+  "grade_user_report_viewed": {
+    "message": "Relatório de notas de participante (visualizada)"
+  },
+
   "group_created": {
     "message": "Grupo (criado)"
   },
@@ -963,24 +1079,52 @@
     "message": "Grupo (membro adicionado)"
   },
 
+  "group_member_removed": {
+    "message": "Grupo (membro removido)"
+  },
+
   "imscp_view_all": {
-    "message": "I.M.S. C.P. (lista visualizada)"
+    "message": "Conteúdo do pacote IMS(lista visualizada)"
   },
 
   "label_add": {
-    "message": "Conteúdo multimídia (adicionado)"
+    "message": "Rótulo (adicionado)"
   },
 
   "label_update": {
-    "message": "Conteúdo multimídia (atualizado)"
+    "message": "Rótulo (atualizado)"
   },
 
   "label_view_all": {
-    "message": "Conteúdo multimídia (lista visualizada)"
+    "message": "Rótulo (lista visualizada)"
+  },
+
+  "live_log_report_viewed": {
+    "message": "Relatório de logs em tempo real (visualizado)"
   },
 
   "log_report_viewed": {
     "message": "Relatório de logs (visualizado)"
+  },
+
+  "message_sent": {
+    "message": "Mensagem (enviada)"
+  },
+
+  "note_created": {
+    "message": "Nota (criada)"
+  },
+
+  "note_deleted": {
+    "message": "Nota (deletada)"
+  },
+
+  "note_updated": {
+    "message": "Nota (atualizada)"
+  },
+
+  "notes_viewed": {
+    "message": "Notas (visualizadas)"
   },
 
   "page_add": {
@@ -1007,64 +1151,76 @@
     "message": "Post (adicionado)"
   },
 
+  "post_deleted": {
+    "message": "Post (deletado)"
+  },
+
+  "post_updated": {
+    "message": "Post (atualizado)"
+  },
+
   "quiz_add": {
-    "message": "Quiz (adicionado)"
+    "message": "Questionário (adicionado)"
   },
 
   "quiz_attempt_deleted": {
-    "message": "Quiz (preenchimento deletado)"
+    "message": "Questionário (preenchimento deletado)"
   },
 
   "quiz_attempt_preview_started": {
-    "message": "Quiz (pré-visualização do preenchimento iniciado)"
+    "message": "Questionário (pré-visualização do preenchimento iniciado)"
   },
 
   "quiz_attempt_reviewed": {
-    "message": "Quiz (revisão de preenchimento)"
+    "message": "Questionário (revisão de preenchimento)"
   },
 
   "quiz_attempt_started": {
-    "message": "Quiz (preenchimento iniciado)"
+    "message": "Questionário (preenchimento iniciado)"
   },
 
   "quiz_attempt_submitted": {
-    "message": "Quiz (preenchimento submetido)"
+    "message": "Questionário (preenchimento submetido)"
   },
 
   "quiz_attempt_summary_viewed": {
-    "message": "Quiz (resumo do preenchimento visualizado)"
+    "message": "Questionário (resumo do preenchimento visualizado)"
   },
 
   "quiz_attempt_viewed": {
-    "message": "Quiz (preenchimento visualizado)"
+    "message": "Questionário (preenchimento visualizado)"
   },
 
   "quiz_continue_attempt": {
-    "message": "Quiz (continuação)"
+    "message": "Questionário (continuação)"
   },
 
   "quiz_editquestions": {
-    "message": "Quiz (questões editadas)"
+    "message": "Questionário (questões editadas)"
   },
 
   "quiz_edit_page_viewed": {
-    "message": "Quiz (página de edição visualiza)"
+    "message": "Questionário (página de edição visualiza)"
   },
 
   "quiz_preview": {
-    "message": "Quiz (pré-visualização)"
+    "message": "Questionário (pré-visualização)"
   },
 
   "quiz_report_viewed": {
-    "message": "Quiz (relatório visualizado)"
+    "message": "Questionário (relatório visualizado)"
   },
 
   "quiz_update": {
-    "message": "Quiz (atualizado)"
+    "message": "Questionário (atualizado)"
   },
 
   "quiz_view": {
-    "message": "Quiz (visualizado)"
+    "message": "Questionário (visualizado)"
+  },
+
+  "record_created": {
+    "message": "Registro (criado)"
   },
 
   "resource_add": {
@@ -1072,31 +1228,43 @@
   },
 
   "resource_update": {
-    "message": "Recurso (atualizado)"
+    "message": "Arquivo (atualizado)"
   },
 
   "resource_view": {
-    "message": "Recurso (visualizado)"
+    "message": "Arquivo (visualizado)"
   },
 
   "resource_view_all": {
-    "message": "Recurso (lista visualizada)"
+    "message": "Arquivo (lista visualizada)"
   },
 
   "role_assign": {
-    "message": "Papel de participante (atribuído)"
+    "message": "Papel (atribuído)"
   },
 
   "role_assigned": {
-    "message": "Papel de participante (atribuído)"
+    "message": "Papel (atribuído)"
   },
 
   "role_unassign": {
-    "message": "Papel de participante (removido)"
+    "message": "Papel (removido)"
   },
 
   "role_unassigned": {
-    "message": "Papel de participante (removido)"
+    "message": "Papel (removido)"
+  },
+
+  "rule_created": {
+    "message": "Regra (criada)"
+  },
+
+  "sessions_viewed": {
+    "message": "Sessões (visualizadas)"
+  },
+
+  "statistics_report_viewed": {
+    "message": "Relatório de estatísticas (visualizado)"
   },
 
   "tag_added_to_an_item": {
@@ -1133,6 +1301,14 @@
 
   "user_graded": {
     "message": "Participante (aprovado)"
+  },
+
+  "user_list_viewed": {
+    "message": "Participante (lista visualizada)"
+  },
+
+  "user_profile_viewed": {
+    "message": "Participante (perfil visualizado)"
   },
 
   "user_view": {
@@ -1180,7 +1356,11 @@
   },
 
   "submission_form_viewed": {
-    "message": "Submissão de formulário visualizado"
+    "message": "Formulário de submissão visualizado"
+  },
+
+  "the_submission_has_been_graded": {
+    "message": "A submissão foi avaliada"
   },
 
   "the_status_of_the_submission_has_been_viewed": {

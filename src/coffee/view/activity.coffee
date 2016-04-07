@@ -3,9 +3,146 @@
 ###
 
 class Activity extends ViewBase
-  constructor: (@name, @group) ->
+  constructor: (@name, @group, @view) ->
     super(@name, @group)
-    @view_index = 0
+
+  init: (@users, @dates, @role) ->
+    super(@users, @dates, @role)
+    @_data =
+      users: []
+      pageViews:
+        total: []
+        parcial: []
+      uniqueUsers: []
+      uniqueActivities:
+        total: []
+        parcial: []
+      uniquePages:
+        total: []
+        parcial: []
+      meanSession:
+        total: []
+        parcial: []
+      bounceRate: []
+    @_selected =
+      users: {}
+      tree: {}
+    @
+
+  selected: (row) ->
+    if @filter(row.event, row.page)
+      return @
+    unless @_selected.users[row.user]
+      @_selected.users[row.user] = 1
+    unless @_selected.tree[row.day]
+      @_selected.tree[row.day] =
+        users: {}
+        activities: {}
+        pages: {}
+    unless @_selected.tree[row.day].users[row.user]
+      @_selected.tree[row.day].users[row.user] =
+        pageViews: 0
+        sessions: []
+    @_selected.tree[row.day].users[row.user].sessions.push(row.time / 1000)
+    unless @_selected.tree[row.day].activities[row.event.fullname]
+      @_selected.tree[row.day].activities[row.event.fullname] = {}
+    unless @_selected.tree[row.day].activities[row.event.fullname][row.user]
+      @_selected.tree[row.day].activities[row.event.fullname][row.user] = 1
+    if /view/.test(row.event.name)
+      @_selected.tree[row.day].users[row.user].pageViews += row.size
+      unless @_selected.tree[row.day].pages[row.page]
+        @_selected.tree[row.day].pages[row.page] = {}
+      unless @_selected.tree[row.day].pages[row.page][row.user]
+        @_selected.tree[row.day].pages[row.page][row.user] = 1
+    @
+
+  getData: ->
+    unless Object.keys(@_selected.users).length
+      return
+    for i of @_selected.users
+      user = @users[i]
+      @_data.users.push(user.firstname + ' ' + user.lastname)
+    timelist = Object.keys(@_selected.tree)
+    timelist.sort((a, b) ->
+      if a < b
+        return -1
+      if a > b
+        return 1
+      return 0
+    )
+    for day in timelist
+      value = @_selected.tree[day]
+      pageViews = []
+      activities = []
+      pages = []
+      sessions =
+        total:
+          value: 0
+          users: 0
+        parcial: []
+      bounce =
+        value: 0
+        total: 0
+      for i of @_selected.users
+        count = 0
+        session = 0
+        if value.users[i]
+          count = value.users[i].pageViews
+          times = value.users[i].sessions.sort((a, b) ->
+            if a < b
+              return -1
+            if a > b
+              return 1
+            return 0
+          )
+          _sessions = []
+          a = times[0]
+          b = times[0]
+          for t in times
+            if t - b > @sessiontime
+              _sessions.push(b - a)
+              a = t
+            b = t
+          _sessions.push(b - a)
+          bounce.total += _sessions.length
+          bounce.value += _sessions.filter((e) -> e == 0).length
+          minutes = _sessions.reduce((a, b) -> a + b) / (_sessions.length * 60)
+          session = Math.round(minutes * 100) / 100
+          sessions.total.value += minutes
+          sessions.total.users++
+        pageViews.push(count)
+        sessions.parcial.push(session)
+        count = 0
+        for activitie, users of value.activities
+          if users[i]
+            count++
+        activities.push(count)
+        count = 0
+        for page, users of value.pages
+          if users[i]
+            count++
+        pages.push(count)
+      date = new Date(parseInt(day)).toLocaleString().split(/\s/)[0]
+      @_data.pageViews.total.push([date, pageViews.reduce((a, b) -> a + b)])
+      @_data.uniqueActivities.total
+        .push([date, Object.keys(value.activities).length])
+      @_data.uniquePages.total.push([date, Object.keys(value.pages).length])
+      minutes = sessions.total.value / sessions.total.users
+      @_data.meanSession.total.push([date, Math.round(minutes * 100) / 100])
+      pageViews.unshift(date)
+      activities.unshift(date)
+      pages.unshift(date)
+      sessions.parcial.unshift(date)
+      @_data.pageViews.parcial.push(pageViews)
+      @_data.uniqueUsers.push([date, Object.keys(value.users).length])
+      @_data.uniqueActivities.parcial.push(activities)
+      @_data.uniquePages.parcial.push(pages)
+      @_data.meanSession.parcial.push(sessions.parcial)
+      @_data.bounceRate
+        .push([date, Math.round((bounce.value / bounce.total) * 100) / 100])
+    unless @_data.pageViews?.total[0]?.length > 1
+      return
+    @_data
 
   template: (title, views) ->
     html = """
@@ -23,7 +160,7 @@ class Activity extends ViewBase
                 <ul class="dropdown-menu dropdown-menu-right">
     """
     for view, i in views
-      actived = if @view_index == i then ' active' else ''
+      actived = if @view.index == i then ' active' else ''
       html += """
                   <li>
                     <a href="#" class="btn-view#{actived}">#{__(view)}</a>
@@ -60,7 +197,11 @@ class Activity extends ViewBase
       </div>
     """
 
-  render: (data) ->
+  render: ->
+    data = @getData()
+    unless data
+      @ctx.html('')
+      return
     @views = [
       {
         title: 'Total page views per day'
@@ -132,6 +273,7 @@ class Activity extends ViewBase
       legend: 'top'
       chartArea:
         top: 30
+        left: 100
       hAxis:
         title: __('days', true)
       vAxis:
@@ -142,7 +284,7 @@ class Activity extends ViewBase
         maxZoomOut: 1
         keepInBounds: true
     @extendOptions(options)
-    title = @views[@view_index].title
+    title = @views[@view.index].title
     views = []
     for view in @views
       views.push(view.title)
@@ -152,7 +294,7 @@ class Activity extends ViewBase
     @show()
     $('.btn-download', @ctx).click(=> @download(
       @chart.getImageURI(),
-      __(@views[@view_index].title).replace(/\s/g, '_') + '.png'
+      __(@views[@view.index].title).replace(/\s/g, '_') + '.png'
     ))
     buttons = $('.btn-view', @ctx)
     for button, i in buttons
@@ -175,17 +317,21 @@ class Activity extends ViewBase
           if dif > 0
             @zoom.min -= dif
             @zoom.max -= dif
+          dif = @zoom.min
+          if dif < 0
+            @zoom.min += dif * -1
+            @zoom.max += dif * -1
           @options.hAxis.viewWindow = @zoom
           @chart.draw(@data, @options)
       )
-      $('.btn-zoom', @ctx).click((evt) =>
+      $('.btn-zoom', @ctx).click(=>
         if @chart
           if @options.hAxis.viewWindow.min == 0 && @options.hAxis.viewWindow.max == @max
-            $(evt.target).html('zoom_out')
+            $('.btn-zoom > i', @ctx).html('zoom_out')
             $('.panel-controls', @ctx).show()
             @options.hAxis.viewWindow = @zoom
           else
-            $(evt.target).html('zoom_in')
+            $('.btn-zoom > i', @ctx).html('zoom_in')
             $('.panel-controls', @ctx).hide()
             @zoom = @options.hAxis.viewWindow
             @options.hAxis.viewWindow =
@@ -213,12 +359,13 @@ class Activity extends ViewBase
     super(isNotFullScreen)
     if @chart && @ctx.is(':visible')
       @options.width = $('.graph', @ctx).innerWidth()
-      @chart.draw(@data, @options)
+      @options.chartArea.width = @options.width - @options.chartArea.left - 30
+      @show()
     @
 
   show: (index) ->
-    @view_index = index if index?
-    view = @views[@view_index]
+    @view.index = index if index?
+    view = @views[@view.index]
     @data = new google.visualization.DataTable()
     @data.addColumn('string', 'id')
     for label in view.labels
@@ -234,14 +381,33 @@ class Activity extends ViewBase
     title.attr('data-original-title', __(view.title))
     description = __('data_' + view.title.toLowerCase() + '_description')
     $('.panel-options > .info', @ctx).attr('data-original-title', description)
-    @max = view.data.length
-    @zoom =
-      min: if @max - 7 < 0 then 0 else @max - 7
-      max: @max
+    unless @max && @max == view.data.length
+      @max = view.data.length
+      @zoom =
+        min: if @max - 7 < 0 then 0 else @max - 7
+        max: @max
     @options.hAxis.viewWindow = @zoom
     @options.vAxis.title = view.unity
-    @options.vAxis.minValue = if @view_index == 2 then 1 else 0
-    @chart.draw(@data, @options)
+    @options.vAxis.minValue = if @view.index == 2 then 1 else 0
+    @options.chartArea.width = $('.graph', @ctx).innerWidth() - @options.chartArea.left - 30
+    if @ctx.is(':visible')
+      @chart.draw(@data, @options)
+    $('.btn-view.active', @ctx).removeClass('active')
+    $($('.btn-view', @ctx)[@view.index]).addClass('active')
     @
 
-@view.register(new Activity('activity', 'general'))
+view =
+  index: 0
+
+@view.register(
+  new Activity('activity', 'general', view),
+  new Activity('activity', 'course', view),
+  new Activity('activity', 'content', view),
+  new Activity('activity', 'assign', view),
+  new Activity('activity', 'forum', view),
+  new Activity('activity', 'chat', view),
+  new Activity('activity', 'choice', view),
+  new Activity('activity', 'quiz', view),
+  new Activity('activity', 'blog', view),
+  new Activity('activity', 'wiki', view)
+)

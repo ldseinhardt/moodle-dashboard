@@ -1,4 +1,4 @@
-.moodle-dashboard {  
+.moodle-dashboard {
   @white: #fff;
   @orange: #ff8533;
   @max-index: 16777271;
@@ -9,7 +9,6 @@
   top: 0;
   right: 0;
   z-index: @max-index;
-  opacity: 0.8;
   cursor: pointer;
 
     .button {
@@ -18,6 +17,11 @@
       right: 5px;
       width: @button-size;
       height: @button-size;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
     }
 
     img {
@@ -31,11 +35,21 @@
       right: @button-size + 7;
       max-width: @message-width;
       color: @white;
-      background-color: @orange;
-      padding: 5px;
-      border-radius: 10px 0 10px 10px;
-      text-align: center;
-      display: none;
+      text-align: right;
+
+      .error,
+      .update {
+        background-color: @orange;
+        margin-top: 5px;
+        padding: 5px;
+        text-align: center;
+        display: none;
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
 
     .tada {

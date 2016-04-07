@@ -44,7 +44,12 @@
     </header>
     <div class="content">
       <div class="submenu-item" id="submenu-courses"></div>
-      <div class="submenu-item" id="submenu-users"></div>
+      <div class="submenu-item" id="submenu-users">
+        <div class="default">
+          <i class="material-icons">&#xE80C;</i>
+          <div class="message __MSG_select_course__"></div>
+        </div>
+      </div>
       <div class="submenu-item" id="submenu-daterange">
         <div class="btn-group more-options users-options">
           <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
@@ -98,7 +103,7 @@
     <div class="main" id="dashboard-content">
       <div class="header">
         <div class="box">
-          <div class="title"></div>
+          <div class="title __MSG_course_title__"></div>
           <div class="subtitle data-header"></div>
           <ul class="nav nav-tabs">
             <li class="active">
@@ -112,8 +117,38 @@
               </a>
             </li>
             <li>
+              <a href="#content" data-toggle="tab">
+                <span class="__MSG_content__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#assign" data-toggle="tab">
+                <span class="__MSG_assignment__"></span>
+              </a>
+            </li>
+            <li>
               <a href="#forum" data-toggle="tab">
                 <span class="__MSG_forum__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#chat" data-toggle="tab">
+                <span class="__MSG_chat__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#choice" data-toggle="tab">
+                <span class="__MSG_choice__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#quiz" data-toggle="tab">
+                <span class="__MSG_quiz__"></span>
+              </a>
+            </li>
+            <li>
+              <a href="#blog" data-toggle="tab">
+                <span class="__MSG_blog__"></span>
               </a>
             </li>
             <li>
@@ -134,40 +169,147 @@
           <div class="tab-pane active in" id="general">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_no_data__"></div>
+              <div class="message __MSG_select_course__"></div>
             </div>
             <div class="data">
               <div class="row data-summary"></div>
               <div class="row data-activity"></div>
               <div class="row data-daytime"></div>
-              <div class="row data-ranking"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
             </div>
           </div>
           <div class="tab-pane" id="course">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_no_data__"></div>
+              <div class="message __MSG_select_course__"></div>
             </div>
-            <div class="data"></div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="content">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="assign">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
           </div>
           <div class="tab-pane" id="forum">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_no_data__"></div>
+              <div class="message __MSG_select_course__"></div>
             </div>
-            <div class="data"></div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="chat">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="choice">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="quiz">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
+          </div>
+          <div class="tab-pane" id="blog">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
           </div>
           <div class="tab-pane" id="wiki">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_no_data__"></div>
+              <div class="message __MSG_select_course__"></div>
             </div>
-            <div class="data"></div>
+            <div class="data">
+              <div class="row data-summary"></div>
+              <div class="row data-activity"></div>
+              <div class="row data-daytime"></div>
+              <div class="row data-participants"></div>
+              <div class="row data-activities"></div>
+              <div class="row data-pages"></div>
+            </div>
           </div>
           <div class="tab-pane" id="logs">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_no_data__"></div>
+              <div class="message __MSG_select_course__"></div>
             </div>
             <div class="data"></div>
           </div>
@@ -551,7 +693,7 @@
                     <strong class="__MSG_app_name__"></strong> - 2016<br>
                     <span class="__MSG_version__"></span>&nbsp;
                     <span class="data-version"></span>
-                    <span class="data-update"></span><br>
+                    <span class="data-update"></span>(BETA)<br>
                     <a href="#" class="btn-license">
                       <span class="__MSG_MIT_License__"></span>
                     </a>

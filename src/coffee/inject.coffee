@@ -31,24 +31,30 @@ class Inject
     html += '<img src="' + chrome.extension.getURL('icon.png') + '">'
     html += '</a>'
     html += '</div>'
-    html += '<span class="message"></span>'
+    html += '<span class="message">'
+    html += '<span class="update"></span>'
+    html += '<div class="error"></div>'
+    html += '</span>'
     html += '</span>'
     $('body').append(html)
-    $('.moodle-dashboard')
-      .on('mouseover', -> $(@).animate(opacity: 1.0, 1))
-      .on('mouseout', -> $(@).animate(opacity: 0.7, 1))
-    $('.moodle-dashboard .message')
-      .on('click', -> $(@).fadeOut().html(''))
+    $('.moodle-dashboard .message > *').click(-> $(@).fadeOut())
     @
 
   onMessage: ->
     chrome.runtime.onMessage.addListener((request) ->
       if request.cmd == 'notification'
         $('.moodle-dashboard img').addClass('tada')
-        setTimeout(
-          -> $('.moodle-dashboard .message').fadeIn().html(__(request.code)),
-          500
-        )
+        message = $('.moodle-dashboard .message')
+        switch request.type
+          when 'error'
+            func = -> $('.error', message).fadeIn().html(__(request.data))
+          when 'update'
+            func = ->
+              update = $('.update', message)
+              data = request.data
+              update.fadeIn().html(__('Version') + ' ' + data.version + ' ' + __('available', true) + '.')
+              update.click(-> open(data.url))
+        setTimeout(func, 500)
     )
     @
 

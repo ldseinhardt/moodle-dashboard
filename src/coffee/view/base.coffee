@@ -5,7 +5,9 @@
 class ViewBase
   constructor: (@name, @group = 'dashboard-content') ->
     @ctx = $('#' + @group + ' .data-' + @name)
-    @isNotFullScreen = false
+    @isNotFullScreen = true
+    @daytime = 1000 * 60 * 60 * 24
+    @sessiontime = 60 * 90 # * 1000 -> 90min
 
   getName: ->
     @name
@@ -24,6 +26,8 @@ class ViewBase
   extendOptions: (options) ->
     _options =
       colors: @getColors()
+      legendTextStyle:
+        fontSize: 10
       tooltip:
         isHtml: true
     @options = @clone(_options)
@@ -42,7 +46,38 @@ class ViewBase
     )
     @
 
-  render: (data) ->
+  init: (@users, @dates, @role) ->
+    @min = @dates.min
+    @max = @dates.max
+    @
+
+  selected: (row) ->
+    @
+
+  recorded: (row) ->
+    @
+
+  filter: (event, page) ->
+    page = page.toLowerCase()
+    groups =
+      content: /^(content|book|chapter|imscp|page|url|label|folder|resource|lesson)/
+      assign: /^assign/
+      forum: /^(forum|post|discussion)/
+      chat: /^(chat|message)/
+      choice: /^choice/
+      quiz: /^quiz/
+      blog: /^blog/
+      wiki: /^wiki/
+    if @group == 'course'
+      for group, e of groups
+        if e.test(event.name) || e.test(page)
+          return true
+    else if groups[@group]
+      if !groups[@group].test(event.name) && !groups[@group].test(page)
+        return true
+    false
+
+  render: ->
     @
 
   resize: (isNotFullScreen) ->

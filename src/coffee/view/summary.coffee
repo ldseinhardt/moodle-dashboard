@@ -3,6 +3,86 @@
 ###
 
 class Summary extends ViewBase
+  init: (@users, @dates, @role) ->
+    super(@users, @dates, @role)
+    @_data =
+      pageViews: [0, 0]
+      meanSession: [0, 0]
+    @_recorded =
+      activities: {}
+      pages: {}
+      sessions: {}
+    @_selected =
+      activities: {}
+      pages: {}
+      sessions: {}
+    @
+
+  selected: (row) ->
+    if @filter(row.event, row.page)
+      return @
+    unless @_selected.sessions[row.user]
+      @_selected.sessions[row.user] = {}
+    unless @_selected.sessions[row.user][row.day]
+      @_selected.sessions[row.user][row.day] = []
+    @_selected.sessions[row.user][row.day].push(row.time / 1000)
+    unless @_selected.activities[row.event.fullname]
+      @_selected.activities[row.event.fullname] = 1
+    if /view/.test(row.event.name)
+      @_data.pageViews[1] += row.size
+      unless @_selected.pages[row.page]
+        @_selected.pages[row.page] = 1
+    @
+
+  recorded: (row) ->
+    if @filter(row.event, row.page)
+      return @
+    unless @_recorded.sessions[row.user]
+      @_recorded.sessions[row.user] = {}
+    unless @_recorded.sessions[row.user][row.day]
+      @_recorded.sessions[row.user][row.day] = []
+    @_recorded.sessions[row.user][row.day].push(row.time / 1000)
+    unless @_recorded.activities[row.event.fullname]
+      @_recorded.activities[row.event.fullname] = 1
+    if /view/.test(row.event.name)
+      @_data.pageViews[0] += row.size
+      unless @_recorded.pages[row.page]
+        @_recorded.pages[row.page] = 1
+    @
+
+  getData: ->
+    for type, i in ['_recorded', '_selected']
+      sessions = []
+      for user, days of @[type].sessions
+        for day, times of days
+          times.sort((a, b) ->
+            if a < b
+              return -1
+            if a > b
+              return 1
+            return 0
+          )
+          a = times[0]
+          b = times[0]
+          for t in times
+            if t - b > @sessiontime
+              sessions.push(b - a)
+              a = t
+            b = t
+          sessions.push(b - a)
+      if sessions.length
+        minutes = sessions.reduce((a, b) -> a + b) / (sessions.length * 60)
+        @_data.meanSession[i] = Math.round(minutes * 100) / 100
+    @_data.uniqueActivities = [
+      Object.keys(@_recorded.activities).length,
+      Object.keys(@_selected.activities).length
+    ]
+    @_data.uniquePages = [
+      Object.keys(@_recorded.pages).length,
+      Object.keys(@_selected.pages).length
+    ]
+    @_data
+
   template: (title) ->
     """
       <div class="col-md-3">
@@ -27,7 +107,12 @@ class Summary extends ViewBase
       </div>
     """
 
-  render: (data) ->
+  render: ->
+    data = @getData()
+    unless data.pageViews[0]
+      $('#' + @group + ' > .data').hide()
+      $('#' + @group + ' > .default').show()
+      return
     @views = [
       {
         title: 'Total page views'
@@ -81,7 +166,8 @@ class Summary extends ViewBase
         data: data
         chart: new google.visualization.ColumnChart(graphics[i])
       view = @views[i]
-      view.chart.draw(view.data, view.options)
+      if @ctx.is(':visible')
+        view.chart.draw(view.data, view.options)
       $(buttons[i]).click(
         ((chart, title) =>
           => @download(chart.getImageURI(), title + '.png')
@@ -98,4 +184,15 @@ class Summary extends ViewBase
         view.chart.draw(view.data, view.options)
     @
 
-@view.register(new Summary('summary', 'general'))
+@view.register(
+  new Summary('summary', 'general'),
+  new Summary('summary', 'course'),
+  new Summary('summary', 'content'),
+  new Summary('summary', 'assign'),
+  new Summary('summary', 'forum'),
+  new Summary('summary', 'chat'),
+  new Summary('summary', 'choice'),
+  new Summary('summary', 'quiz'),
+  new Summary('summary', 'blog'),
+  new Summary('summary', 'wiki')
+)

@@ -343,7 +343,7 @@ class Client
       if moodle.selected
         @index = i
       url = moodle.url.split(/:\/\//)[1]
-      title = moodle.title?.replace(/\s-\s|-/, '<br>') || url
+      title = moodle.title?.replace(/\s\-\s|\-|\s\_\s|\_/, '<br>') || url
       html += '<div class="moodle-item" moodle="' + moodle.url + '">'
       html += '<div class="title">' + title + '</div>'
       html += '<div class="url">' + url + '</div>'
@@ -356,8 +356,10 @@ class Client
       unless $('#moodle-dashboard').is(':visible')
         sidebar = $('#moodle-dashboard .sidebar')
         url = selected[0].url.split(/:\/\//)[1]
-        title = selected[0].title?.replace(/\s-\s|-/, '<br>') || url
-        $('header .title').html(title)
+        title = selected[0].title?.replace(/\s\-\s|\-|\s\_\s|\_/, '<br>') || url
+        $('header .title').html(
+          '<a href="' + selected[0].url + '" target="_blank">' + title + '</a>'
+        )
         @sendMessage('getCourses')
         $('.interface').hide()
         $('#moodle-dashboard').show()
@@ -370,122 +372,136 @@ class Client
     html = '<ul class="nav course-list">'
     for course, i in message.courses
       html += '<li><a href="#" index="' + i + '" class="withripple'
-      html += ' active' if course.selected
       html += '">' + course.name + '</a></li>'
     html += '</ul>'
     $('#submenu-courses').html(html)
     @navActive()
-    .onCourseSelect()
     $('.course-list li a').on('click', (evt) =>
-      @onCourseSelect(evt.currentTarget)
+      @onCourseSelect($(evt.currentTarget))
     )
     @
 
-  onCourseSelect: (selector) ->
+  onCourseSelect: (course) ->
     content  = $('#dashboard-content')
-    course = if selector then $(selector) else $('.course-list li .active')
-    @course = parseInt(course.attr('index'))
-    @role = 0
-    if !content.is(':visible') || $('.title', content).text() != course.text()
-      $('.header > .box > .title', content).text(course.text())
-      $('.header > .box > .subtitle', content).text('')
-      $('.main').hide()
-      content.show()
-      #view.resize(@isNotFullScreen())
-      $('.contents > .more-options').show()
-    @sendMessage('getUsers')
-    .sendMessage('getDates')
-    .sendMessage('getLogs')
+    title = $('.header > .box > .title', content)
+    subtitle = $('.header > .box > .subtitle', content)
+    if title.html() == course.html()
+      unless content.is(':visible')
+        $('.main').hide()
+        content.show()
+    else
+      @course = parseInt(course.attr('index'))
+      @role = 0
+      title.html(course.html())
+      subtitle.html('')
+      if content.is(':visible')
+        $('.data', content).hide()
+        $('.default', content).show()
+      else
+        $('.main').hide()
+        content.show()
+      @sendMessage('getUsers')
+      .sendMessage('getDates')
+      .sendMessage('getData')
+      .sendMessage('getLogs')
+    @sendMessage('syncData')
+    $('.default .message', content).html(__('Loading') + ' ...')
     @
 
   responseUsers: (message) ->
-    html  = '<div class="btn-group more-options users-options">'
-    html += '<a class="dropdown-toggle" data-target="#" data-toggle="dropdown">'
-    html += '<i class="material-icons">&#xE5D4;</i>'
-    html += '</a>'
-    html += '<ul class="dropdown-menu dropdown-menu-right">'
-    husr  = ''
-    for role, i in message.roles
-      husr += '<div class="list-group role-users-list"'
-      husr += 'style="display: block"' unless i
-      husr += '>'
-      for user, u  in role.users
-        husr += '<div class="list-group-separator"></div>' if u
-        husr += '<div class="list-group-item">'
-        husr += '<div class="row-picture">'
-        husr += '<img class="circle" src="' + user.picture + '" alt="icon" '
-        husr += 'title="' + user.name + '">'
+    if message.roles && message.roles.length
+      html  = '<div class="btn-group more-options users-options">'
+      html += '<a class="dropdown-toggle" data-target="#" data-toggle="dropdown">'
+      html += '<i class="material-icons">&#xE5D4;</i>'
+      html += '</a>'
+      html += '<ul class="dropdown-menu dropdown-menu-right">'
+      husr  = ''
+      for role, i in message.roles
+        husr += '<div class="list-group role-users-list"'
+        husr += 'style="display: block"' unless i
+        husr += '>'
+        for user, u  in role.users
+          husr += '<div class="list-group-separator"></div>' if u
+          husr += '<div class="list-group-item">'
+          husr += '<div class="row-picture">'
+          husr += '<img class="circle" src="' + user.picture + '" alt="icon" '
+          husr += 'title="' + user.name + '">'
+          husr += '</div>'
+          husr += '<div class="row-content">'
+          husr += '<h4 class="list-group-item-heading">'
+          husr += user.firstname + ' ' + user.lastname
+          husr += '</h4>'
+          husr += '<p class="list-group-item-text">'
+          husr += '<div class="togglebutton user-selector">'
+          husr += '<label><input type="checkbox" value="' + u + '"'
+          husr += ' checked' if user.selected
+          husr += '></label>'
+          husr += '</div>'
+          husr += '</p>'
+          husr += '</div>'
+          husr += '</div>'
         husr += '</div>'
-        husr += '<div class="row-content">'
-        husr += '<h4 class="list-group-item-heading">'
-        husr += user.firstname + ' ' + user.lastname
-        husr += '</h4>'
-        husr += '<p class="list-group-item-text">'
-        husr += '<div class="togglebutton user-selector">'
-        husr += '<label><input type="checkbox" value="' + u + '"'
-        husr += ' checked' if user.selected
-        husr += '></label>'
-        husr += '</div>'
-        husr += '</p>'
-        husr += '</div>'
-        husr += '</div>'
-      husr += '</div>'
-      html += '<li><a href="#" class="role-list'
-      html += ' active' unless i
-      html += '" index="' + i + '">'
-      html += '<i class="material-icons">&#xE7FB;</i> ' + __(role.name)
-      html += '</a></li>'
-    html += '<li class="divider"></li>'
-    html += '<li><a href="#" class="btn-users-select-all not-actived">'
-    html += __('Select all') + '</a></li>'
-    html += '<li><a href="#" class="btn-users-select-invert not-actived">'
-    html += __('Invert selection') + '</a></li>'
-    html += '</ul>'
-    html += '</div>'
-    $('#submenu-users').html(html + husr)
-    $.material.togglebutton()
-    @navActive()
-    $('.role-list').on('click', (evt) =>
-      @role = parseInt($(evt.currentTarget).attr('index'))
-      unless $($('.role-users-list')[@role]).is(':visible')
-        @sendMessage('getData')
-        $('.role-users-list').hide()
-        $($('.role-users-list')[@role]).show()
-    )
-    $('.btn-users-select-all').on('click', =>
-      index = @getRole()
-      $('.user-selector', $('.role-users-list')[index]).each((i, e) ->
-        $('input[type="checkbox"]', e).prop('checked', true)
+        html += '<li><a href="#" class="role-list'
+        html += ' active' unless i
+        html += '" index="' + i + '">'
+        html += '<i class="material-icons">&#xE7FB;</i> ' + __(role.name)
+        html += '</a></li>'
+      html += '<li class="divider"></li>'
+      html += '<li><a href="#" class="btn-users-select-all not-actived">'
+      html += __('Select all') + '</a></li>'
+      html += '<li><a href="#" class="btn-users-select-invert not-actived">'
+      html += __('Invert selection') + '</a></li>'
+      html += '</ul>'
+      html += '</div>'
+      $('#submenu-users').html(html + husr)
+      $.material.togglebutton()
+      @navActive()
+      $('.role-list').on('click', (evt) =>
+        @role = parseInt($(evt.currentTarget).attr('index'))
+        unless $($('.role-users-list')[@role]).is(':visible')
+          @sendMessage('getData')
+          $('.role-users-list').hide()
+          $($('.role-users-list')[@role]).show()
       )
-      @sendMessage('setUser',
-        action: 'select-all'
+      $('.btn-users-select-all').on('click', =>
+        index = @getRole()
+        $('.user-selector', $('.role-users-list')[index]).each((i, e) ->
+          $('input[type="checkbox"]', e).prop('checked', true)
+        )
+        @sendMessage('setUser',
+          action: 'select-all'
+        )
+        .sendMessage('getData')
       )
-      .sendMessage('getData')
-    )
-    $('.btn-users-select-invert').on('click', =>
-      index = @getRole()
-      $('.user-selector', $('.role-users-list')[index]).each((i, e) ->
-        checkbox = $('input[type="checkbox"]', e)
-        checkbox.prop('checked', !checkbox.is(':checked'))
+      $('.btn-users-select-invert').on('click', =>
+        index = @getRole()
+        $('.user-selector', $('.role-users-list')[index]).each((i, e) ->
+          checkbox = $('input[type="checkbox"]', e)
+          checkbox.prop('checked', !checkbox.is(':checked'))
+        )
+        @sendMessage('setUser',
+          action: 'select-invert'
+        )
+        .sendMessage('getData')
       )
-      @sendMessage('setUser',
-        action: 'select-invert'
+      $('.user-selector').on('change', (evt) =>
+        checkbox = $('input[type="checkbox"]', evt.currentTarget)
+        @sendMessage('setUser',
+          user: parseInt(checkbox.attr('value'))
+          selected: checkbox.is(':checked')
+        )
+        setTimeout(
+          => @sendMessage('getData'),
+          500
+        )
       )
-      .sendMessage('getData')
-    )
-    $('.user-selector').on('change', (evt) =>
-      checkbox = $('input[type="checkbox"]', evt.currentTarget)
-      @sendMessage('setUser',
-        user: parseInt(checkbox.attr('value'))
-        selected: checkbox.is(':checked')
-      )
-      setTimeout(
-        => @sendMessage('getData'),
-        500
-      )
-    )
-    @sendMessage('getData')
-    .sendMessage('syncData')
+    else
+      $('#submenu-users').html("""
+        <div class="default">
+          <i class="material-icons">&#xE80C;</i>
+          <div class="message">#{__('No data')}</div>
+        </div>
+      """)
     @
 
   responseDates: (message) ->
@@ -561,7 +577,6 @@ class Client
           </div>
         </div>
       """
-      csv = ''
       $('.data', logs).html(template)
       $('[data-toggle=tooltip]', logs).tooltip()
       columns = []
@@ -573,16 +588,12 @@ class Client
           halign: 'center'
           valign: 'middle'
         )
-        if i
-          csv += ', '
-        csv += '"' + column + '"'
-      csv += '\r\n'
       $('table', logs).bootstrapTable(
         columns: columns
         data: message.logs
         search: true
         pagination: true
-        pageList: [10, 25, 50, 100, 'ALL']
+        pageList: [10, 25, 50, 100]
         showToggle: true
         showColumns: true
         locale: langId
@@ -590,40 +601,31 @@ class Client
       $('.default', logs).hide()
       $('.data', logs).show()
       $('.btn-download', logs).click(=>
-        for row in message.logs
-          i = 0
-          for column, value of row
-            if i
-              csv += ', '
-            csv += '"' + value + '"'
-            i++
-          csv += '\r\n'
-        course = $('.course-list li .active').text().replace(/\s/g, '_')
-        date = new Date().toISOString().split(/T/)[0]
-        chrome.downloads.download(
-          url: 'data:text/plain;charset=UTF-8,' + encodeURIComponent(csv)
-          saveAs: @isNotFullScreen()
-          filename: course + '_(' + date + ').csv'
-        )
+        @sendMessage('downloadLogs', saveAs: @isNotFullScreen())
       )
     @
 
   responseData: (message) ->
     unless message.course == @getCourse() && message.role == @getRole()
       return
-    if !message.data || message.error
-      content = $('#dashboard-content')
+    if message.filters
+      @setFilters(message.filters)
+    content = $('#dashboard-content')
+    if !message.users || !message.dates || message.error
       $('.data', content).hide()
       $('.default', content).show()
     else
-      for group in Object.keys(message.data)
-        unless $('#' + group + ' > .data').is(':visible')
-          $('#' + group + ' > .default').hide()
-          $('#' + group + ' > .data').show()
-      view.render(message.data)
+      unless $('.data', content).is(':visible')
+        $('.default', content).hide()
+        $('.data', content).show()
+      view.render(
+        message.users,
+        message.dates,
+        message.rolename,
+        message.filters.filtrated
+      )
       @navActive()
-      if message.filters
-        @setFilters(message.filters)
+    $('.default .message', content).html(__('No data'))
     @
 
   responseSync: (message) ->
@@ -655,11 +657,11 @@ class Client
       if total == progress.total
         @sendMessage('getDates')
         .sendMessage('getData')
-        .sendMessage('getLogs')
         setTimeout(
           =>
             $(sync).modal('hide')
             unless message.silent
+              @sendMessage('getLogs')
               if error && message.showError
                 @showMessage(
                   __('Error synchronizing'),
@@ -691,11 +693,30 @@ class Client
     unless $('#moodle-dashboard').is(':visible')
       $('.sidebar nav li .active').removeClass('active')
       $('.sidebar nav li .btn-courses').addClass('active')
-      $('header .title').html($('.title', moodle_list[@index]).html())
+      title = $('.title', moodle_list[@index]).html()
+      url = $('.url', moodle_list[@index]).html()
+      @sendMessage('getCourses')
+      if $('header .title').html().indexOf(title) == -1
+        $('#dashboard-content > .header > .box > .title').html(__('Course title'))
+        $('#dashboard-content > .header > .box > .subtitle').html('')
+        $('#submenu-users').html("""
+          <div class="default">
+            <i class="material-icons">&#xE80C;</i>
+            <div class="message">#{__('Select course')}</div>
+          </div>
+        """)
+        $('#submenu-daterange .message').html('')
+        $('#filters .filter-activities').html('')
+        $('#dashboard-content .data > .row').html('')
+        $('#dashboard-content .data').hide()
+        $('#dashboard-content .default .message').html(__('Select course'))
+        $('#dashboard-content .default').show()
+      $('header .title').html(
+        '<a href="http://' + url + '" target="_blank">' + title + '</a>'
+      )
       unless $('#submenu-courses').is(':visible')
         $('.submenu-item').hide()
         $('#submenu-courses').show()
-      @sendMessage('getCourses')
       $('.interface').hide()
       $('#moodle-dashboard').show()
     @
@@ -804,9 +825,10 @@ class Client
     $('.btn-back').click(=>
       $('.main').hide()
       $('#dashboard-content').show()
-      @sendMessage('getData')
       $('.sidebar nav li .active').removeClass('active')
       $('.sidebar nav li .btn-courses').addClass('active')
+      if $('.sidebar .course-list li .active').length
+        @sendMessage('getData')
     )
     $('.btn-fullscreen').click(=>
       if @isNotFullScreen()

@@ -192,7 +192,9 @@ module.exports = function(grunt) {
             'src/coffee/view/summary.coffee',
             'src/coffee/view/activity.coffee',
             'src/coffee/view/daytime.coffee',
-            'src/coffee/view/ranking.coffee',
+            'src/coffee/view/participants.coffee',
+            'src/coffee/view/activities.coffee',
+            'src/coffee/view/pages.coffee',
             'src/coffee/client.coffee',
             'src/coffee/i18n.coffee'
           ],
@@ -201,13 +203,6 @@ module.exports = function(grunt) {
             'src/coffee/i18n.coffee'
           ],
           'build/js/background.js': [
-            'src/coffee/model/model.coffee',
-            'src/coffee/model/base.coffee',
-            'src/coffee/model/header.coffee',
-            'src/coffee/model/summary.coffee',
-            'src/coffee/model/activity.coffee',
-            'src/coffee/model/daytime.coffee',
-            'src/coffee/model/ranking.coffee',
             'src/coffee/moodle.coffee',
             'src/coffee/dashboard.coffee'
           ]
