@@ -255,6 +255,10 @@
     "message": "..."
   },
 
+  "data_metrics_comparation_description": {
+    "message": "..."
+  },
+
   "data_logs_description": {
     "message": "It allows you to view the logs obtained moodle."
   }

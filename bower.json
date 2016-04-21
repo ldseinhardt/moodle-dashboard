@@ -1,7 +1,7 @@
 {
   "name": "moodle-dashboard",
   "description": "Learning analytics dashboard for moodle logs data",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "authors": [
     "Luan Einhardt"
   ],
@@ -15,6 +15,7 @@
   "private": true,
   "dependencies": {
     "bootstrap-material-design": "^0.5.7",
+    "bootstrap-select": "^1.10.0",
     "bootstrap-table": "^1.10.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
     "jquery": "^2.1.4",

@@ -25,14 +25,26 @@ class Moodle
     @
 
   sync: (response) ->
+    # default = /my, fael moodle = /disciplinas
     $.ajax(
-      url: @url + '/my'
+      url: @url + '/disciplinas'
+      type: 'HEAD'
+      success: =>
+        @syncCourses(response, 'disciplinas')
+      error: =>
+        @syncCourses(response)
+    )
+    @
+
+  syncCourses: (response, path = 'my') ->
+    $.ajax(
+      url: @url + '/' + path
       data:
         mynumber: -2
       success: (data) =>
         parser = new DOMParser()
         doc = parser.parseFromString(data, 'text/html')
-        courses = $('.course_list a[href*="course/view.php"]', doc)
+        courses = $('h2 > a[href*="course/view.php"]', doc)
         unless courses.length
           return response(
             Moodle.response().sync_no_courses,
@@ -480,12 +492,10 @@ class Moodle
       logs = logs.concat(course.logs[day])
     logs
 
-  getData: (role) ->
+  getCourseData: ->
     unless @hasData()
       return
-    course = @getCourse()
-    users: course.users[role].list
-    dates: course.dates
+    @getCourse()
 
   getTitle: ->
     @title
@@ -506,9 +516,6 @@ class Moodle
   getRoles: ->
     for role in @getCourse().users
       name: role.role
-
-  getRoleLabel: (role) ->
-    @getCourse().users[role].role
 
   getUser: (course, username) ->
     list = []

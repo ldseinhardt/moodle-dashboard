@@ -136,6 +136,28 @@ module.exports = function(grunt) {
           }
         ]
       },
+      bootstrap_select: {
+        files: [
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-select/dist/css',
+            src: 'bootstrap-select.min.css',
+            dest: 'build/css/min/'
+          },
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-select/dist/js',
+            src: 'bootstrap-select.min.js',
+            dest: 'build/js/min/'
+          }/*,
+          {
+            expand: true,
+            cwd: 'bower_components/bootstrap-select/dist/js/i18n',
+            src: 'defaults-pt_BR.min.js',
+            dest: 'build/js/min/'
+          }*/
+        ]
+      },
       bootstrap_table: {
         files: [
           {
@@ -195,6 +217,7 @@ module.exports = function(grunt) {
             'src/coffee/view/participants.coffee',
             'src/coffee/view/activities.coffee',
             'src/coffee/view/pages.coffee',
+            'src/coffee/view/metrics_comparation.coffee',
             'src/coffee/client.coffee',
             'src/coffee/i18n.coffee'
           ],
@@ -260,6 +283,7 @@ module.exports = function(grunt) {
       css_main: {
         src: [
           'build/css/min/bootstrap.min.css',
+          'build/css/min/bootstrap-select.min.css',
           'build/css/min/bootstrap-table.min.css',
           'build/css/min/bootstrap-material-design.min.css',
           'build/css/min/ripples.min.css',
@@ -278,6 +302,8 @@ module.exports = function(grunt) {
       js_main: {
         src: [
           'build/js/min/bootstrap.min.js',
+          'build/js/min/bootstrap-select.min.js',
+          //'build/js/min/defaults-pt_BR.min.js',
           'build/js/min/bootstrap-table.min.js',
           'build/js/min/bootstrap-table-pt-BR.min.js',
           'build/js/min/material.min.js',

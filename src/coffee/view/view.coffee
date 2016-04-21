@@ -16,11 +16,12 @@ class View
       @views[view.getGroup()][view.getName()] = view
     @
 
-  render: (users, dates, role, filters) ->
+  render: (course, role, filters) ->
     for group, views of @views
       for name, view of views
-        view.init(users, dates, role)
-    for user, userid in users
+        view.init(course, role, filters)
+    dates = course.dates
+    for user, userid in course.users[role].list
       if user.data
         for day, components of user.data
           for component, eventnames of components

@@ -84,7 +84,7 @@ class Dashboard
     message.cmd = 'responseMoodles'
     message.list = []
     for moodle in @list
-      if moodle.hasUsers()
+      if moodle.hasCourses()
         message.list.push(
           title: moodle.getTitle()
           url: moodle.getURL()
@@ -177,15 +177,11 @@ class Dashboard
     message.cmd = 'responseData'
     message.error = !moodle.hasData()
     unless message.error
-      role = message.role
-      data = moodle.getData(role)
-      # console.log(moodle.getAssignments())
+      data = moodle.getCourseData()
       if data
-        message.users = data.users
-        message.dates = data.dates
-      message.rolename = moodle.getRoleLabel(role)
+        message.data = data
       message.filters =
-        list: moodle.getActivities(role)
+        list: moodle.getActivities(message.role)
         filtrated: @settings.filters
     @sendMessage(message)
     @

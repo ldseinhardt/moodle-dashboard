@@ -6,8 +6,8 @@ class Activity extends ViewBase
   constructor: (@name, @group, @view) ->
     super(@name, @group)
 
-  init: (@users, @dates, @role) ->
-    super(@users, @dates, @role)
+  init: (@course, @role, @filters) ->
+    super(@course, @role, @filters)
     @_data =
       users: []
       pageViews:
@@ -60,7 +60,7 @@ class Activity extends ViewBase
     unless Object.keys(@_selected.users).length
       return
     for i of @_selected.users
-      user = @users[i]
+      user = @course.users[@role].list[i]
       @_data.users.push(user.firstname + ' ' + user.lastname)
     timelist = Object.keys(@_selected.tree)
     timelist.sort((a, b) ->

@@ -4,6 +4,20 @@
 
 class ViewBase
   constructor: (@name, @group = 'dashboard-content') ->
+    unless @group == 'dashboard-content'
+      unless $('#' + @group).length
+        selected = if @group == 'general' then ' active in' else ''
+        $('#dashboard-content .tab-content').append("""
+          <div class="tab-pane#{selected}" id="#{@group}">
+            <div class="default">
+              <i class="material-icons">&#xE80C;</i>
+              <div class="message __MSG_select_course__"></div>
+            </div>
+            <div class="data"></div>
+          </div>
+        """)
+      $('#' + @group + ' .data')
+        .append('<div class="row data-' + @name + '"></div>')
     @ctx = $('#' + @group + ' .data-' + @name)
     @isNotFullScreen = true
     @daytime = 1000 * 60 * 60 * 24
@@ -44,7 +58,8 @@ class ViewBase
     )
     @
 
-  init: (@users, @dates, @role) ->
+  init: (@course, @role, @filters) ->
+    @dates = @course.dates
     @min = @dates.min
     @max = @dates.max
     @

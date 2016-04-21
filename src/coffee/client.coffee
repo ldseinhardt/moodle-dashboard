@@ -611,7 +611,7 @@ class Client
     if message.filters
       @setFilters(message.filters)
     content = $('#dashboard-content')
-    if !message.users || !message.dates || message.error
+    if !message.data || message.error
       $('.data', content).hide()
       $('.default', content).show()
     else
@@ -619,9 +619,8 @@ class Client
         $('.default', content).hide()
         $('.data', content).show()
       view.render(
-        message.users,
-        message.dates,
-        message.rolename,
+        message.data,
+        message.role,
         message.filters.filtrated
       )
       @navActive()
@@ -748,7 +747,7 @@ class Client
 
   navActive: ->
     $('ul li a').unbind('click', @navActiveFn)
-    $('ul li a').on('click', @navActiveFn)
+    $('ul:not([role=menu]) li a').on('click', @navActiveFn)
     @
 
   refreshURL: (moodle = '') ->

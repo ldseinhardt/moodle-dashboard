@@ -16,8 +16,8 @@ class DayTime extends ViewBase
       'Saturday'
     ]
 
-  init: (@users, @dates, @role) ->
-    super(@users, @dates, @role)
+  init: (@course, @role, @filters) ->
+    super(@course, @role, @filters)
     @_data = {}
     for i in [0..7]
       @_data[i] = []

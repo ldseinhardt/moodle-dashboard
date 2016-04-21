@@ -6,8 +6,8 @@ class Pages extends ViewBase
   constructor: (@name, @group, @view) ->
     super(@name, @group)
 
-  init: (@users, @dates, @role) ->
-    super(@users, @dates, @role)
+  init: (@course, @role, @filters) ->
+    super(@course, @role, @filters)
     @_data =
       totalViews: []
       users: []
@@ -150,7 +150,7 @@ class Pages extends ViewBase
         data: data.activities
       },
       {
-        title: __('Days')
+        title: __('Accessed days')
         data: data.dates
       },
       {
@@ -187,9 +187,11 @@ class Pages extends ViewBase
       seriesType: 'bars'
       series:
         1:
-          type: "line",
+          type: 'line'
         2:
-          type: "line",
+          type: 'line'
+        3:
+          type: 'line'
     @extendOptions(options)
     @chart = new google.visualization.BarChart($('.graph', @ctx)[0])
     @show()
@@ -270,6 +272,11 @@ class Pages extends ViewBase
         type: 'string'
         label: ''
         calc: (d, r) -> ''
+      },
+      {
+        type: 'string'
+        label: ''
+        calc: (d, r) -> ''
       }
     ])
     groupAVG = google.visualization.data.group(viewWithKey, [2], [{
@@ -287,6 +294,25 @@ class Pages extends ViewBase
         Math.sqrt(values.map((v) -> Math.pow(v - values.reduce((a, b) -> a + b) / values.length, 2)).reduce((a, b) -> a + b) / (values.length - 1))
       type: 'number'
     }])
+    groupMEDIAN = google.visualization.data.group(viewWithKey, [4], [{
+      column: 1
+      id: 'md'
+      label: __('Median')
+      aggregation: (values) ->
+        values.sort((a, b) ->
+          if a < b
+            return -1
+          if a > b
+            return 1
+          return 0
+        )
+        if values.length % 2 == 0
+          md = (values.length) / 2
+          values.slice(md - 1, md + 1).reduce((a, b) -> (a + b) / 2)
+        else
+          values[(values.length - 1) / 2]
+      type: 'number'
+    }])
     dv = new google.visualization.DataView(data)
     dv.setColumns([
       0,
@@ -300,6 +326,11 @@ class Pages extends ViewBase
         type: 'number'
         label: __('Standard deviation')
         calc: (dt, row) -> Math.round(groupSD.getValue(0, 1) * 100) / 100
+      },
+      {
+        type: 'number'
+        label: __('Median')
+        calc: (dt, row) -> Math.round(groupMEDIAN.getValue(0, 1) * 100) / 100
       }
     ])
     dv

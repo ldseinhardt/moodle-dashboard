@@ -3,8 +3,8 @@
 ###
 
 class Summary extends ViewBase
-  init: (@users, @dates, @role) ->
-    super(@users, @dates, @role)
+  init: (@course, @role, @filters) ->
+    super(@course, @role, @filters)
     @_data =
       pageViews: [0, 0]
       meanSession: [0, 0]
