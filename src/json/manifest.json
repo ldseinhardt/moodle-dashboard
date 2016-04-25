@@ -12,6 +12,7 @@
   "background": {
     "scripts": [
       "js/jquery.min.js",
+      "js/d3.min.js",
       "js/background.min.js"
     ],
     "persistent": true

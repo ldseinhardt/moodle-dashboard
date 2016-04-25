@@ -1,5 +1,5 @@
 ###
-# pages: pages view
+# pages
 ###
 
 class Pages extends ViewBase

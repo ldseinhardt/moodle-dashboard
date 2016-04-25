@@ -1,5 +1,5 @@
 ###
-# daytime: daytime view
+# daytime
 ###
 
 class DayTime extends ViewBase
@@ -141,7 +141,7 @@ class DayTime extends ViewBase
         keepInBounds: true
       curveType: 'function'
     @extendOptions(options)
-    title = 'Total activities per hour'
+    title = 'Activities per hour'
     @ctx.html(@template(title))
     $('[data-toggle=tooltip]', @ctx).tooltip()
     $.material.togglebutton()

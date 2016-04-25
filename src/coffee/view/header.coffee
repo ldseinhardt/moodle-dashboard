@@ -1,5 +1,5 @@
 ###
-# header: header view
+# header
 ###
 
 class Header extends ViewBase

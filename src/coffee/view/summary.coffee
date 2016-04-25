@@ -1,5 +1,5 @@
 ###
-# summary: summary view
+# summary
 ###
 
 class Summary extends ViewBase

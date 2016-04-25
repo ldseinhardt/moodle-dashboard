@@ -36,9 +36,9 @@ module.exports = function(grunt) {
       },
       d3: {
         expand: true,
-        cwd: 'vendor/d3/',
-        src: 'd3-tsv-parse.min.js',
-        dest: 'build/js/min/'
+        cwd: 'bower_components/d3/',
+        src: 'd3.min.js',
+        dest: 'dist/js/'
       },
       google: {
         files: [
@@ -211,13 +211,16 @@ module.exports = function(grunt) {
             'src/coffee/view/view.coffee',
             'src/coffee/view/base.coffee',
             'src/coffee/view/header.coffee',
-            'src/coffee/view/summary.coffee',
+            'src/coffee/view/metrics_comparation.coffee',
+            'src/coffee/view/checkasdata.coffee',
+            //'src/coffee/view/summary.coffee',
             'src/coffee/view/activity.coffee',
             'src/coffee/view/daytime.coffee',
+            'src/coffee/view/daytime_heatmap.coffee',
             'src/coffee/view/participants.coffee',
             'src/coffee/view/activities.coffee',
             'src/coffee/view/pages.coffee',
-            'src/coffee/view/metrics_comparation.coffee',
+            'src/coffee/view/categories.coffee',
             'src/coffee/client.coffee',
             'src/coffee/i18n.coffee'
           ],
@@ -318,7 +321,6 @@ module.exports = function(grunt) {
       },
       js_background: {
         src: [
-          'build/js/min/d3-tsv-parse.min.js',
           'build/js/min/background.min.js'
         ],
         dest: 'dist/js/background.min.js',

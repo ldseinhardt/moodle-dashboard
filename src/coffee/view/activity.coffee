@@ -1,5 +1,5 @@
 ###
-# activity: activity view
+# activity
 ###
 
 class Activity extends ViewBase

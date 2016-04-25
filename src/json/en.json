@@ -239,7 +239,7 @@
     "message": "..."
   },
 
-  "data_total_activities_per_hour_description": {
+  "data_activities_per_hour_description": {
     "message": "..."
   },
 
@@ -261,5 +261,9 @@
 
   "data_logs_description": {
     "message": "It allows you to view the logs obtained moodle."
+  },
+
+  "data_components_description": {
+    "message": "..."
   }
 }

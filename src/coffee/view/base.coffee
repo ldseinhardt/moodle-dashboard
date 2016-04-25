@@ -1,5 +1,5 @@
 ###
-# view: view base
+# view base
 ###
 
 class ViewBase

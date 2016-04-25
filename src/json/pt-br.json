@@ -411,8 +411,12 @@
     "message": "Taxa de rejeição por dia"
   },
 
-  "total_activities_per_hour": {
-    "message": "Total de atividades por hora"
+  "activities_per_hour": {
+    "message": "Atividades por hora"
+  },
+
+  "activities_per_hour_heatmap": {
+    "message": "Atividades por hora (Mapa de calor)"
   },
 
   "hour": {
@@ -465,6 +469,10 @@
 
   "saturday": {
     "message": "Sábado"
+  },
+
+  "su_mo_tu_we_th_fr_sa": {
+    "message": "Dom_Seg_Ter_Qua_Qui_Sex_Sab"
   },
 
   "total_days": {
@@ -1447,7 +1455,7 @@
     "message": "Permite visualizar a taxa de rejeição (porcentagem de sessões em que o participante acessa apenas uma página e sai do ambiente) por dia no moodle."
   },
 
-  "data_total_activities_per_hour_description": {
+  "data_activities_per_hour_description": {
     "message": "Permite visualizar o total de atividades no moodle por hora e dia da semana."
   },
 
@@ -1469,5 +1477,13 @@
 
   "data_logs_description": {
     "message": "Permite visualizar os logs obtidos do moodle."
+  },
+
+  "data_components_description": {
+    "message": "Permite visualizar o número de visualizações de páginas por área."
+  },
+
+  "page_views_by_area": {
+    "message": "Visualizações de páginas por área"
   }
 }

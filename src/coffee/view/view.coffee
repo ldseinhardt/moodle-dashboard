@@ -1,5 +1,5 @@
 ###
-# view: view collection
+# view
 ###
 
 class View

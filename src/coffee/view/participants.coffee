@@ -1,5 +1,5 @@
 ###
-# participants: participants view
+# participants
 ###
 
 class Participants extends ViewBase

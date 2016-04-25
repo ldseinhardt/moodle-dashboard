@@ -1,5 +1,5 @@
 ###
-# dispersion: dispersion view
+# metrics comparation
 ###
 
 class MetricsComparation extends ViewBase
@@ -182,7 +182,6 @@ class MetricsComparation extends ViewBase
       explorer:
         maxZoomOut: 1
         keepInBounds: true
-
     @extendOptions(options)
     @chart = new google.visualization.BubbleChart($('.graph', @ctx)[0])
     @show()
