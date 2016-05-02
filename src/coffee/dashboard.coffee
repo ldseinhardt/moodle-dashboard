@@ -323,7 +323,6 @@ class Dashboard
         index = i
     if index >= 0
       @list.splice(index, 1)
-        sendMessageToUser: (user, message, sesskey, response) ->
     @
 
   sendMessageToMoodle: (message) ->
