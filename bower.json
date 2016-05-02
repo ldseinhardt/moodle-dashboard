@@ -1,17 +1,5 @@
 {
   "name": "moodle-dashboard",
-  "description": "Learning analytics dashboard for moodle logs data",
-  "version": "0.1.11",
-  "authors": [
-    "Luan Einhardt"
-  ],
-  "keywords": [
-    "moodle",
-    "dashboard",
-    "learning-analytics",
-    "visualization"
-  ],
-  "homepage": "https://github.com/ldseinhardt/moodle-dashboard#readme",
   "private": true,
   "dependencies": {
     "bootstrap-material-design": "^0.5.7",
@@ -21,6 +9,5 @@
     "eonasdan-bootstrap-datetimepicker": "^4.17.37",
     "jquery": "^2.1.4",
     "material-design-icons": "^2.2.0"
-  },
-  "license": "MIT"
+  }
 }

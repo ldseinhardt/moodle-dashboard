@@ -28,6 +28,33 @@ class Client
     $.material.init()
     $('[data-toggle=tooltip]').tooltip()
 
+  sendMoodleMessage: (users) ->
+    unless users.length
+      return @
+    html  = '<div style="text-align: left">'
+    if users.length > 1
+      html += '<p>' + users.map((d) -> d.name).join(', ') + '</p>'
+    else
+      html += '<img src="' + users[0].picture + '" alt="' + users[0].name + '" title="' + users[0].name + '" style="margin: 5px;">'
+      html += users[0].name
+    html += '<h4>' + __('Message') + ':</h4>'
+    html += '<textarea style="width: 100%; height: 150px; resize: none" id="moodle-send-message"></textarea>'
+    html += '</div>'
+    buttons  = '<a href="#" class="btn btn-primary" id="btn-send-message">'
+    buttons += __('Send')
+    buttons += '</a>'
+    @showMessage(__('Send message'), html, buttons)
+    $('#btn-send-message').click((evt) =>
+      message = $('#moodle-send-message').val()
+      if message != ''
+        @sendMessage('sendMessageToMoodle',
+          users: users.map((d) -> d.id)
+          message: message
+        )
+        $('#moodle-message').modal('hide')
+    )
+    @
+
   analytics: ->
     if @started
       @sendMessage('analytics',
@@ -1092,4 +1119,4 @@ class Client
     )
     @
 
-@start = -> new Client()
+@start = => @client = new Client()

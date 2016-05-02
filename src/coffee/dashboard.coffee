@@ -323,6 +323,22 @@ class Dashboard
         index = i
     if index >= 0
       @list.splice(index, 1)
+        sendMessageToUser: (user, message, sesskey, response) ->
+    @
+
+  sendMessageToMoodle: (message) ->
+    moodle = @getMoodle(message.moodle)
+    if moodle
+      moodle.getSessKey((sessKey) ->
+        if sessKey
+          for user in message.users
+            moodle.sendMessageToUser(
+              user,
+              message.message,
+              sessKey
+              (response) -> console.log('send message to', user, '[', message.message , ']')
+            )
+      )
     @
 
   getSelected: ->
@@ -419,7 +435,8 @@ class Dashboard
           'getConfig',
           'setConfig',
           'deleteMoodle',
-          'defaultConfig'
+          'defaultConfig',
+          'sendMessageToMoodle'
         ]
         if commands.indexOf(request.cmd) >= 0
           @[request.cmd](request)

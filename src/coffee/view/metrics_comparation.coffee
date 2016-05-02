@@ -29,14 +29,14 @@ class MetricsComparation extends ViewBase
       dates: []
     for role in @course.users
       for user in role.list
+        @_data.users.push(user.firstname + ' ' + user.lastname)
+        @_data.roles.push(__(role.role))
+        d =
+          pageViews: 0
+          dates: {}
+          activities: {}
+          pages: {}
         if user.selected && user.data
-          @_data.users.push(user.firstname + ' ' + user.lastname)
-          @_data.roles.push(role.role)
-          d =
-            pageViews: 0
-            dates: {}
-            activities: {}
-            pages: {}
           for day, components of user.data
             if @min.selected <= day <= @max.selected
               d.dates[day] = []
@@ -54,38 +54,38 @@ class MetricsComparation extends ViewBase
                           if /view/.test(eventname)
                             d.pageViews += size
                             d.pages[page] = 1
-          @_data.pageViews.push(d.pageViews)
-          @_data.dates.push(Object.keys(d.dates).length)
-          @_data.activities.push(Object.keys(d.activities).length)
-          @_data.pages.push(Object.keys(d.pages).length)
-          _sessions = []
-          for day, times of d.dates
-            times.sort((a, b) ->
-              if a < b
-                return -1
-              if a > b
-                return 1
-              return 0
-            )
-            a = times[0]
-            b = times[0]
-            for t in times
-              if t - a > @sessiontime
-                _sessions.push(b - a)
-                a = t
-              b = t
-            _sessions.push(b - a)
-          if _sessions.length
-            minutes = _sessions.reduce((a, b) -> a + b) / (_sessions.length * 60)
-            @_data.numberSessions.push(_sessions.length)
-            @_data.meanSession.push(Math.round(minutes * 100) / 100)
-            @_data.bounceRate.push(Math.round(
-              (_sessions.filter((e) -> e == 0).length / _sessions.length) * 100
-            ))
-          else
-            @_data.numberSessions.push(0)
-            @_data.meanSession.push(0)
-            @_data.bounceRate.push(100)
+        @_data.pageViews.push(d.pageViews)
+        @_data.dates.push(Object.keys(d.dates).length)
+        @_data.activities.push(Object.keys(d.activities).length)
+        @_data.pages.push(Object.keys(d.pages).length)
+        _sessions = []
+        for day, times of d.dates
+          times.sort((a, b) ->
+            if a < b
+              return -1
+            if a > b
+              return 1
+            return 0
+          )
+          a = times[0]
+          b = times[0]
+          for t in times
+            if t - a > @sessiontime
+              _sessions.push(b - a)
+              a = t
+            b = t
+          _sessions.push(b - a)
+        if _sessions.length
+          minutes = _sessions.reduce((a, b) -> a + b) / (_sessions.length * 60)
+          @_data.numberSessions.push(_sessions.length)
+          @_data.meanSession.push(Math.round(minutes * 100) / 100)
+          @_data.bounceRate.push(Math.round(
+            (_sessions.filter((e) -> e == 0).length / _sessions.length) * 100
+          ))
+        else
+          @_data.numberSessions.push(0)
+          @_data.meanSession.push(0)
+          @_data.bounceRate.push(100)
     @
 
   getData: (a, b) ->
@@ -103,7 +103,7 @@ class MetricsComparation extends ViewBase
     x = metrics[a]
     y = metrics[b]
     data =
-      rows: users.map((v, i) -> [v, x[i], y[i], roles[i]])
+      rows: []
       x:
         label: @labels[a]
         min: Math.min.apply(null, x)
@@ -112,6 +112,16 @@ class MetricsComparation extends ViewBase
         label: @labels[b]
         min: Math.min.apply(null, y)
         max: Math.max.apply(null, y)
+    _data = users.map((v, i) -> [v, x[i], y[i], roles[i]])
+    for row in _data
+      filter = data.rows.filter((d) ->
+        row[1] == d[1] && row[2] == d[2] && row[3] == d[3]
+      )
+      if filter.length
+        filter[0][0] += ', ' + row[0]
+      else
+        data.rows.push(row)
+    data
 
   template: ->
     html = """
@@ -184,6 +194,17 @@ class MetricsComparation extends ViewBase
         keepInBounds: true
     @extendOptions(options)
     @chart = new google.visualization.BubbleChart($('.graph', @ctx)[0])
+    google.visualization.events.addListener(@chart, 'select', =>
+      selected = @chart.getSelection()[0]
+      if selected
+        names = @data.getValue(selected.row || 0, 0).split(', ')
+        group = @data.getValue(selected.row || 0, 3)
+        roles = @course.users.filter((d) -> __(d.role) == group)
+        if names.length && roles.length
+          window.client.sendMoodleMessage(
+            roles[0].list.filter((d) -> names.indexOf(d.name) != -1)
+          )
+    )
     @show()
     $('select', @ctx).change((evt) =>
       options = $('option:selected', evt.currentTarget)

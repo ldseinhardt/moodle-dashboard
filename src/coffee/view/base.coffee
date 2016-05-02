@@ -40,8 +40,6 @@ class ViewBase
   extendOptions: (options) ->
     _options =
       colors: @getColors()
-      tooltip:
-        isHtml: true
     @options = @clone(_options)
     for key, value of options
       @options[key] = value

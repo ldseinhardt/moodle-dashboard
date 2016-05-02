@@ -1485,5 +1485,9 @@
 
   "page_views_by_area": {
     "message": "Visualizações de páginas por área"
+  },
+
+  "send_message": {
+    "message": "Enviar mensagem"
   }
 }

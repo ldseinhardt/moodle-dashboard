@@ -379,6 +379,35 @@ class Moodle
     )
     @
 
+  getSessKey: (response) ->
+    $.ajax(
+      url: @url
+      success: (data, textStatus, request) ->
+        parser = new DOMParser()
+        doc = parser.parseFromString(data, 'text/html')
+        sesskey = /"sesskey":"([^"]*)/.exec($('head', doc).html())
+        if sesskey && sesskey.length > 1 && sesskey[1]
+          return response(sesskey[1])
+        response()
+      error: -> response()
+    )
+    @
+
+  sendMessageToUser: (user, message, sesskey, response) ->
+    $.ajax(
+      url: @url + '/message/index.php'
+      data:
+        id: user
+        message: message
+        sesskey: sesskey
+        _qf__send_form: 1
+        submitbutton: 'send'
+      method: 'POST'
+      success: (data, textStatus, request) -> response()
+      error: -> response()
+    )
+    @
+
   setCourse: (id) ->
     for course, i in @courses
       course.selected = (i == id)
