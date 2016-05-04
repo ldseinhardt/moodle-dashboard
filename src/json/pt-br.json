@@ -1489,5 +1489,9 @@
 
   "send_message": {
     "message": "Enviar mensagem"
+  },
+
+  "more_options": {
+    "message": "Mais opções"
   }
 }

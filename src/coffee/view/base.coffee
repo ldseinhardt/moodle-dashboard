@@ -11,7 +11,7 @@ class ViewBase
           <div class="tab-pane#{selected}" id="#{@group}">
             <div class="default">
               <i class="material-icons">&#xE80C;</i>
-              <div class="message __MSG_select_course__"></div>
+              <div class="message" data-i18n="Select course"></div>
             </div>
             <div class="data"></div>
           </div>

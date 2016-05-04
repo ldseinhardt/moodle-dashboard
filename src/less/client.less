@@ -260,7 +260,9 @@ body {
       & > .header {
         position: fixed;
         width: 100%;
-        padding-right: @sidebar-width + 7;
+        // @sidebar-width = 330, scroll 10
+        width: ~"-webkit-calc(100% - " (@sidebar-width + 10) ~")";
+        width:  ~"calc(100% - " (@sidebar-width + 10) ~")";
         z-index: 1000;
 
         & > .box {
@@ -605,8 +607,8 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -647,5 +649,23 @@ a {
     box-shadow: none !important;
     border: 0 !important;
     outline-style: none !important;
+  }
+}
+
+#review {
+  margin-top: 10px;
+
+  a {
+    color: @white !important;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+
+      &::after {
+        margin-left: 5px;
+        content: ": )";
+      }
+    }
   }
 }

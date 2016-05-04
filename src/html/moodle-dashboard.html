@@ -5,6 +5,9 @@
         <div class="box">
           <i class="material-icons">&#xE80C;</i>
           <div class="title"></div>
+          <div id="review">
+            <a href="#">Avalie a Ferramenta!</a>
+          </div>
         </div>
       </div>
       <nav class="menu">
@@ -47,11 +50,11 @@
       <div class="submenu-item" id="submenu-users">
         <div class="default">
           <i class="material-icons">&#xE80C;</i>
-          <div class="message __MSG_select_course__"></div>
+          <div class="message" data-i18n="Select course"></div>
         </div>
       </div>
       <div class="submenu-item" id="submenu-daterange">
-        <div class="btn-group more-options users-options">
+        <div class="btn-group more-options users-options" data-toggle="tooltip" data-placement="bottom" data-i18n="More options" data-original-title="i18n">
           <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
             <i class="material-icons">&#xE5D4;</i>
           </a>
@@ -59,35 +62,27 @@
             <li>
               <a href="#" class="btn-daterange-min active">
                 <i class="material-icons">&#xE8DF;</i>&nbsp;
-                <span class="__MSG_start_date__"></span>
+                <span data-i18n="Start date"></span>
               </a>
             </li>
             <li>
               <a href="#" class="btn-daterange-max">
                 <i class="material-icons">&#xE8DF;</i>&nbsp;
-                <span class="__MSG_end_date__"></span>
+                <span data-i18n="End date"></span>
               </a>
             </li>
             <li class="divider"></li>
             <li>
-              <a href="#" class="btn-daterange-last-day not-actived">
-                <span class="__MSG_last_day__"></span>
-              </a>
+              <a href="#" class="btn-daterange-last-day not-actived" data-i18n="Last day"></a>
             </li>
             <li>
-              <a href="#" class="btn-daterange-last-week not-actived">
-                <span class="__MSG_last_week__"></span>
-              </a>
+              <a href="#" class="btn-daterange-last-week not-actived" data-i18n="Last week"></a>
             </li>
             <li>
-              <a href="#" class="btn-daterange-last-month not-actived">
-                <span class="__MSG_last_month__"></span>
-              </a>
+              <a href="#" class="btn-daterange-last-month not-actived" data-i18n="Last month"></a>
             </li>
             <li>
-              <a href="#" class="btn-daterange-select-all not-actived">
-                <span class="__MSG_select_all_days__"></span>
-              </a>
+              <a href="#" class="btn-daterange-select-all not-actived" data-i18n="Select all days"></a>
             </li>
           </ul>
         </div>
@@ -103,63 +98,41 @@
     <div class="main" id="dashboard-content">
       <div class="header">
         <div class="box">
-          <div class="title __MSG_course_title__"></div>
+          <div class="title" data-i18n="Course title"></div>
           <div class="subtitle data-header"></div>
           <ul class="nav nav-tabs">
             <li class="active">
-              <a href="#general" data-toggle="tab">
-                <span class="__MSG_general__"></span>
-              </a>
+              <a href="#general" data-toggle="tab" data-i18n="General"></a>
             </li>
             <li>
-              <a href="#course" data-toggle="tab">
-                <span class="__MSG_course__"></span>
-              </a>
+              <a href="#course" data-toggle="tab" data-i18n="Course"></a>
             </li>
             <li>
-              <a href="#content" data-toggle="tab">
-                <span class="__MSG_content__"></span>
-              </a>
+              <a href="#content" data-toggle="tab" data-i18n="Content"></a>
             </li>
             <li>
-              <a href="#assign" data-toggle="tab">
-                <span class="__MSG_assignment__"></span>
-              </a>
+              <a href="#assign" data-toggle="tab" data-i18n="Assignment"></a>
             </li>
             <li>
-              <a href="#forum" data-toggle="tab">
-                <span class="__MSG_forum__"></span>
-              </a>
+              <a href="#forum" data-toggle="tab" data-i18n="Forum"></a>
             </li>
             <li>
-              <a href="#chat" data-toggle="tab">
-                <span class="__MSG_chat__"></span>
-              </a>
+              <a href="#chat" data-toggle="tab" data-i18n="Chat"></a>
             </li>
             <li>
-              <a href="#choice" data-toggle="tab">
-                <span class="__MSG_choice__"></span>
-              </a>
+              <a href="#choice" data-toggle="tab" data-i18n="Choice"></a>
             </li>
             <li>
-              <a href="#quiz" data-toggle="tab">
-                <span class="__MSG_quiz__"></span>
-              </a>
+              <a href="#quiz" data-toggle="tab" data-i18n="Quiz"></a>
             </li>
             <li>
-              <a href="#blog" data-toggle="tab">
-                <span class="__MSG_blog__"></span>
-              </a>
+              <a href="#blog" data-toggle="tab" data-i18n="Blog"></a>
             </li>
             <li>
-              <a href="#wiki" data-toggle="tab">
-                <span class="__MSG_wiki__"></span>
-              </a>
+              <a href="#wiki" data-toggle="tab" data-i18n="Wiki"></a>
             </li>
             <li>
-              <a href="#logs" data-toggle="tab">
-                <span>Logs</span>
-              </a>
+              <a href="#logs" data-toggle="tab" data-i18n="Logs"></a>
             </li>
           </ul>
         </div>
@@ -169,7 +142,7 @@
             <div class="tab-pane" id="logs">
               <div class="default">
                 <i class="material-icons">&#xE80C;</i>
-                <div class="message __MSG_select_course__"></div>
+                <div class="message" data-i18n="Select course"></div>
               </div>
               <div class="data"></div>
             </div>
@@ -179,30 +152,22 @@
     <div class="main" id="dashboard-settings">
       <div class="header">
         <div class="box">
-          <a class="btn-back" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_back__">
+          <a class="btn-back" data-toggle="tooltip" data-placement="right" data-i18n="Back" data-original-title="i18n">
             <i class="material-icons">&#xE5C4;</i>
           </a>
-          <div class="title __MSG_settings__"></div>
+          <div class="title" data-i18n="Settings"></div>
           <ul class="nav nav-tabs">
             <li class="active">
-              <a href="#filters" data-toggle="tab">
-                <span class="__MSG_filters__"></span>
-              </a>
+              <a href="#filters" data-toggle="tab" data-i18n="Filters"></a>
             </li>
             <li>
-              <a href="#synchronization" data-toggle="tab">
-                <span class="__MSG_synchronization__"></span>
-              </a>
+              <a href="#synchronization" data-toggle="tab" data-i18n="Synchronization"></a>
             </li>
             <li>
-              <a href="#privacy" data-toggle="tab">
-                <span class="__MSG_privacy__"></span>
-              </a>
+              <a href="#privacy" data-toggle="tab" data-i18n="Privacy"></a>
             </li>
             <li>
-              <a href="#others" data-toggle="tab">
-                <span class="__MSG_other_options__"></span>
-              </a>
+              <a href="#others" data-toggle="tab" data-i18n="Other options"></a>
             </li>
           </ul>
         </div>
@@ -215,10 +180,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_filters__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_filters__"></div>
+                      <div class="title" data-toggle="tooltip" data-placement="right" data-i18n="Filters" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_filter_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings filter description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body filter-activities"></div>
@@ -232,17 +197,17 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_moodle_environments__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_moodle_environments__"></div>
+                      <div class="title" data-i18n="Moodle environments" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_search_moodle_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings search moodle description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_search_moodle">
-                        <span class="__MSG_settings_search_moodle_action__"></span>
+                        <span  data-i18n="Settings search moodle action"></span>
                       </label>
                     </div>
                   </div>
@@ -254,23 +219,23 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_metadata_synchronization__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_metadata_synchronization__"></div>
+                      <div class="title" data-i18n="Metadata synchronization" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_metadata_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings sync metadata description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_sync_metadata">
-                        <span class="__MSG_settings_sync_metadata_action__"></span>
+                        <span data-i18n="Settings sync metadata action"></span>
                       </label>
                     </div>
                     <div class="number-field">
                       <input type="number" id="input_sync_metadata_interval" min="1" max="60">
                       <label for="input_sync_metadata_interval">
-                        <span class="__MSG_settings_sync_metadata_interval_action__"></span>
+                        <span data-i18n="Settings sync metadata interval action"></span>
                       </label>
                     </div>
                   </div>
@@ -280,24 +245,22 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_logs_synchronization__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_logs_synchronization__"></div>
+                      <div class="title" data-i18n="Logs synchronization" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_sync_logs_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings sync logs description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_sync_logs">
-                        <span class="__MSG_settings_sync_logs_action__"></span>
+                        <span data-i18n="Settings sync logs action"></span>
                       </label>
                     </div>
                     <div class="number-field">
                       <input type="number" id="input_sync_logs_interval" min="1" max="24">
-                      <label for="input_sync_logs_interval">
-                        <span class="__MSG_settings_sync_logs_interval_action__"></span>
-                      </label>
+                      <label for="input_sync_logs_interval" data-i18n="Settings sync logs interval action"></label>
                     </div>
                   </div>
                 </div>
@@ -308,29 +271,29 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_messages__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_messages__"></div>
+                      <div class="title" data-i18n="Messages" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_error_messages_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings error messages description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_message_error_sync_moodle">
-                        <span class="__MSG_settings_error_messages_moodle_action__"></span>
+                        <span data-i18n="Settings error messages moodle action"></span>
                       </label>
                     </div>
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_message_error_sync_dashboard">
-                          <span class="__MSG_settings_error_messages_dashboard_action__"></span>
+                        <span data-i18n="Settings error messages dashboard action"></span>
                       </label>
                     </div>
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_message_alert_users_not_found">
-                        <span class="__MSG_settings_error_messages_users_not_found_action__"></span>
+                        <span data-i18n="Settings error messages users not found action"></span>
                       </label>
                     </div>
                   </div>
@@ -342,10 +305,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_download_data_preprocessed__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_download_data_preprocessed__"></div>
+                      <div class="title" data-i18n="Download data preprocessed" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_data_download_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings data download description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body text-center">
@@ -357,14 +320,14 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_remove_data__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_remove_data__"></div>
+                      <div class="title" data-i18n="Remove data" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_remove_data_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings remove data description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body text-center">
-                    <button type="submit" class="btn btn-primary btn-delete __MSG_remove_data__"></button>
+                    <button type="submit" class="btn btn-primary btn-delete" data-i18n="Remove data"></button>
                   </div>
                 </div>
               </div>
@@ -376,17 +339,17 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_usage_statistics__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_usage_statistics__"></div>
+                      <div class="title" data-i18n="Usage statistics" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_analytics_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings analytics description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_analytics">
-                        <span class="__MSG_settings_analytics_action__"></span>
+                        <span data-i18n="Settings analytics action"></span>
                       </label>
                     </div>
                   </div>
@@ -400,10 +363,10 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_interface_language__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_interface_language__"></div>
+                      <div class="title" data-i18n="Interface language" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_language_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings language description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
@@ -411,13 +374,13 @@
                         <div class="radio">
                           <label>
                             <input type="radio" name="language" id="input_language_pt-br" value="pt-br">
-                            <div class="__MSG_portuguese_(Brazil)__"></div>
+                            <div data-i18n="Portuguese (Brazil)"></div>
                           </label>
                         </div>
                         <div class="radio">
                           <label>
                             <input type="radio" name="language" id="input_language_en" value="en">
-                            <div class="__MSG_english__"></div>
+                            <div data-i18n="English"></div>
                           </label>
                         </div>
                     </div>
@@ -430,17 +393,17 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_notice_update__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_notice_update__"></div>
+                      <div class="title" data-i18n="Notice update" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_notice_update_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings notice update description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
                     <div class="togglebutton">
                       <label>
                         <input type="checkbox" id="input_message_update">
-                        <span class="__MSG_settings_notice_update_action__"></span>
+                        <span data-i18n="Settings notice update action"></span>
                       </label>
                     </div>
                   </div>
@@ -452,14 +415,14 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <div class="panel-title">
-                      <div class="title __MSG_default_setting__" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_default_setting__"></div>
+                      <div class="title" data-i18n="Default setting" data-toggle="tooltip" data-placement="right" data-original-title="i18n"></div>
                     </div>
                     <div class="panel-options">
-                      <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="__MSG_settings_default_setting_description__">&#xE88E;</i>
+                      <i class="material-icons info" data-i18n="Settings default setting description" data-toggle="tooltip" data-placement="left" data-original-title="i18n">&#xE88E;</i>
                     </div>
                   </div>
                   <div class="panel-body">
-                    <button type="submit" class="btn btn-primary btn-default-setting __MSG_settings_default_setting_action__"></button>
+                    <button type="submit" class="btn btn-primary btn-default-setting" data-i18n="Settings default setting action"></button>
                   </div>
                 </div>
               </div>
@@ -471,30 +434,22 @@
     <div class="main" id="dashboard-help">
       <div class="header">
         <div class="box">
-          <a class="btn-back" data-toggle="tooltip" data-placement="right" data-original-title="__MSG_back__">
+          <a class="btn-back" data-i18n="Back" data-toggle="tooltip" data-placement="right" data-original-title="i18n">
             <i class="material-icons">&#xE5C4;</i>
           </a>
-          <div class="title __MSG_help__"></div>
+          <div class="title" data-i18n="Help"></div>
           <ul class="nav nav-tabs">
             <li class="active">
-              <a href="#help" data-toggle="tab">
-                <span class="__MSG_help__"></span>
-              </a>
+              <a href="#help" data-toggle="tab" data-i18n="Help"></a>
             </li>
             <li>
-              <a href="#faq" data-toggle="tab">
-                <span>FAQ</span>
-              </a>
+              <a href="#faq" data-toggle="tab" data-i18n="FAQ"></a>
             </li>
             <li>
-              <a href="#support" data-toggle="tab">
-                <span class="__MSG_support__"></span>
-              </a>
+              <a href="#support" data-toggle="tab" data-i18n="Support"></a>
             </li>
             <li>
-              <a href="#about" data-toggle="tab">
-                <span class="__MSG_about__"></span>
-              </a>
+              <a href="#about" data-toggle="tab" data-i18n="About"></a>
             </li>
           </ul>
         </div>
@@ -511,32 +466,26 @@
                     <div class="message"></div>
                     <div class="form-horizontal">
                       <div class="form-group">
-                        <label for="inputName" class="col-md-2 control-label">
-                          <span class="__MSG_name__"></span>
-                        </label>
+                        <label for="inputName" class="col-md-2 control-label" data-i18n="Name"></label>
                         <div class="col-md-10">
                           <input type="text" class="form-control" id="inputName" maxlength="64" required autofocus>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputEmail" class="col-md-2 control-label">
-                          <span class="__MSG_email__"></span>
-                        </label>
+                        <label for="inputEmail" class="col-md-2 control-label" data-i18n="Email"></label>
                         <div class="col-md-10">
                           <input type="email" class="form-control" id="inputEmail" maxlength="255" required>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="inputMessage" class="col-md-2 control-label">
-                          <span class="__MSG_message__"></span>
-                        </label>
+                        <label for="inputMessage" class="col-md-2 control-label" data-i18n="Message"></label>
                         <div class="col-md-10">
                           <textarea class="form-control" rows="7" id="inputMessage" maxlength="10000" required></textarea>
                         </div>
                       </div>
                       <div class="form-group">
                         <div class="col-md-10 col-md-offset-2">
-                          <button class="btn btn-primary btn-support __MSG_send__"></button>
+                          <button class="btn btn-primary btn-support" data-i18n="Send"></button>
                         </div>
                       </div>
                     </div>
@@ -550,12 +499,12 @@
               <div class="col-md-12">
                 <div class="panel panel-default">
                   <div class="panel-body text-center">
-                    <strong class="__MSG_app_name__"></strong> - 2016<br>
-                    <span class="__MSG_version__"></span>
+                    <strong data-i18n="App Name"></strong> - 2016<br>
+                    <span data-i18n="Version"></span>
                     <span class="data-version"></span>
                     <span class="data-update"></span>&nbsp;(BETA)<br>
                     <a href="#" class="btn-license">
-                      <span class="__MSG_MIT_License__"></span>
+                      <span data-i18n="MIT License"></span>
                     </a>
                   </div>
                 </div>
@@ -565,7 +514,7 @@
         </div>
       </div>
     </div>
-    <div class="btn-group more-options">
+    <div class="btn-group more-options" data-toggle="tooltip" data-placement="left" data-i18n="More options" data-original-title="i18n">
       <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
         <i class="material-icons">&#xE5D4;</i>
       </a>
@@ -573,13 +522,13 @@
         <li>
           <a href="#" class="btn-fullscreen not-actived">
             <i class="material-icons">&#xE5D0;</i>&nbsp;
-            <span class="__MSG_fullscreen__"></span>
+            <span data-i18n="Fullscreen"></span>
           </a>
         </li>
         <li>
           <a href="#" class="btn-exit not-actived">
             <i class="material-icons">&#xE879;</i>&nbsp;
-            <span class="__MSG_exit__"></span>
+            <span data-i18n="Exit"></span>
           </a>
         </li>
       </ul>

@@ -202,7 +202,7 @@ class MetricsComparation extends ViewBase
         roles = @course.users.filter((d) -> __(d.role) == group)
         if names.length && roles.length
           window.client.sendMoodleMessage(
-            roles[0].list.filter((d) -> names.indexOf(d.name) != -1)
+            roles[0].list.filter((d) -> names.indexOf(d.firstname + ' ' + d.lastname) != -1)
           )
     )
     @show()

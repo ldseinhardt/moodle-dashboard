@@ -25,7 +25,7 @@ class Moodle
     @
 
   sync: (response) ->
-    # default = /my, fael moodle = /disciplinas
+    # default = /my, cafeead moodle = /disciplinas
     $.ajax(
       url: @url + '/disciplinas'
       type: 'HEAD'

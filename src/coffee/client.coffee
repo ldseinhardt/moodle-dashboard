@@ -13,6 +13,7 @@ class Client
       @id = tab[0].id
       @sendMessage('getMoodles')
     )
+    $('#review a').click(-> alert('Endereço não disponível...'))
     @navActive()
     .onMenuClick()
     .onKeydown()
@@ -437,7 +438,7 @@ class Client
 
   responseUsers: (message) ->
     if message.roles && message.roles.length
-      html  = '<div class="btn-group more-options users-options">'
+      html  = '<div class="btn-group more-options users-options" data-toggle="tooltip" data-placement="bottom" data-original-title="' + __('More options') + '">'
       html += '<a class="dropdown-toggle" data-target="#" data-toggle="dropdown">'
       html += '<i class="material-icons">&#xE5D4;</i>'
       html += '</a>'
@@ -482,6 +483,7 @@ class Client
       html += '</div>'
       $('#submenu-users').html(html + husr)
       $.material.togglebutton()
+      $('#submenu-users [data-toggle=tooltip]').tooltip()
       @navActive()
       $('.role-list').on('click', (evt) =>
         @role = parseInt($(evt.currentTarget).attr('index'))
@@ -1056,27 +1058,12 @@ class Client
 
   translate: ->
     $('html').attr('lang', langId)
-    $('*').each((i, e) ->
-      list = $(e).attr('class')?.trim().replace(/\s+/g,' ')
-      if list && list.length && list.split
-        for classname in list.split(/\s/)
-          msg = /^__MSG_([^$]*)/.exec(classname)
-          if msg && msg.length > 1 && msg[1]
-            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
-            key = key.charAt(0).toUpperCase() + key[1..]
-            $(e).html(__(key))
-        @
-    )
-    $('[data-toggle=tooltip]').each((i, e) ->
-      list = $(e).attr('data-original-title')?.trim().replace(/\s+/g,' ')
-      if list && list.length && list.split
-        for classname in list.split(/\s/)
-          msg = /^__MSG_([^$]*)/.exec(classname)
-          if msg && msg.length > 1 && msg[1]
-            key = msg[1].replace(/__/g, '').replace(/_/g, ' ')
-            key = key.charAt(0).toUpperCase() + key[1..]
-            $(e).attr('data-original-title', __(key))
-        @
+    $('[data-i18n]').each((i, e) ->
+      text = __($(e).attr('data-i18n'))
+      if $(e).html() == ''
+        $(e).html(text)
+      if $(e).attr('data-original-title') == 'i18n'
+        $(e).attr('data-original-title', text)
     )
     @
 
