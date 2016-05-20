@@ -1,8 +1,18 @@
 {
-  "version": "0.1",
+  "version": "0.3",
 
   "langs": {
-    "pt-br": [],
-    "en": []
+    "pt-br": [
+      {
+        "title": "Quais dados são coletados pela ferramenta?",
+        "text": "Caso a opção para envio de estatísticas de uso esteja habilitada em configurações de privacidade, será enviado apenas o nome do moodle que você utiliza, bem como o endereço (url), além do período de uso da ferramenta."
+      }
+    ],
+    "en": [
+      {
+        "title": "What data is collected by the tool?",
+        "text": "If the option for usage statistics sending is enabled on privacy settings, it will only be sent moodle name you use, the address (url) and the tool usage period."
+      }
+    ]
   }
 }

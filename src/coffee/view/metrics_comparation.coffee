@@ -29,7 +29,7 @@ class MetricsComparation extends ViewBase
       dates: []
     for role in @course.users
       for user in role.list
-        @_data.users.push(user.firstname + ' ' + user.lastname)
+        @_data.users.push(user.name)
         @_data.roles.push(__(role.role))
         d =
           pageViews: 0
@@ -150,6 +150,7 @@ class MetricsComparation extends ViewBase
           </div>
           <div class="panel-body">
             <div class="graph"></div>
+            <div class="text-center">#{__('private_message_notify')}</div>
           </div>
         </div>
       </div>
@@ -202,7 +203,7 @@ class MetricsComparation extends ViewBase
         roles = @course.users.filter((d) -> __(d.role) == group)
         if names.length && roles.length
           window.client.sendMoodleMessage(
-            roles[0].list.filter((d) -> names.indexOf(d.firstname + ' ' + d.lastname) != -1)
+            roles[0].list.filter((d) -> names.indexOf(d.name) != -1)
           )
     )
     @show()

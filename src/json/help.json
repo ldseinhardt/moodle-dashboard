@@ -1,8 +1,42 @@
 {
-  "version": "0.1",
+  "version": "0.4",
 
   "langs": {
-    "pt-br": [],
-    "en": []
+    "pt-br": [
+      {
+        "title": "Guia de instalação",
+        "text": "<div style=\"text-align: center\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/4OBBX-XMFJc?rel=0\" frameborder=\"0\" allowfullscreen></iframe></div>"
+      },
+      {
+        "title": "Guia de funcionalidades",
+        "text": "<div style=\"text-align: center\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/Kl1AdxdHHnQ?rel=0\" frameborder=\"0\" allowfullscreen></iframe></div>"
+      },
+      {
+        "title": "Problemas com a ferramenta",
+        "text": "Caso a ferramenta esteja aprensentando problemas em sua utilização, ou queira nos enviar sua sugestão para melhorá-la, entre em contato enviando sua mensagem pela guia suporte ou então se preferir envie um email para <a href=\"mailto:ldseinhardt@gmail.com\">ldseinhardt@gmail.com</a>."
+      },
+      {
+        "title": "Contato",
+        "text": "Entre em contato enviando sua mensagem pela guia suporte ou então se preferir envie um email para <a href=\"mailto:ldseinhardt@gmail.com\">ldseinhardt@gmail.com</a>."
+      }
+    ],
+    "en": [
+      {
+        "title": "Installation guide (Portuguese - Brazil)",
+        "text": "<div style=\"text-align: center\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/4OBBX-XMFJc?rel=0\" frameborder=\"0\" allowfullscreen></iframe></div>"
+      },
+      {
+        "title": "Feature guide (Portuguese - Brazil)",
+        "text": "<div style=\"text-align: center\"><iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/Kl1AdxdHHnQ?rel=0\" frameborder=\"0\" allowfullscreen></iframe></div>"
+      },
+      {
+        "title": "Problems with the tool",
+        "text": "If the tool is having problems in their use, or want to send us your suggestions to improve it, please send your message by the support tab or else if you prefer to send email to <a href=\"mailto:ldseinhardt@gmail.com\">ldseinhardt@gmail.com</a>."
+      },
+      {
+        "title": "Contact",
+        "text": "Contact sending your message by the support tab or else if you prefer to send email to <a href=\"mailto:ldseinhardt@gmail.com\">ldseinhardt@gmail.com</a>."
+      }
+    ]
   }
 }

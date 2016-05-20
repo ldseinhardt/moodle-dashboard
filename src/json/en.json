@@ -265,5 +265,9 @@
 
   "data_components_description": {
     "message": "..."
+  },
+
+  "private_message_notify": {
+    "message": "Click twice to send a private message (You must be logged in Moodle)."
   }
 }

@@ -13,7 +13,6 @@ class Client
       @id = tab[0].id
       @sendMessage('getMoodles')
     )
-    $('#review a').click(-> alert('Endereço não disponível...'))
     @navActive()
     .onMenuClick()
     .onKeydown()
