@@ -48,7 +48,7 @@ class Activity extends ViewBase
       @_selected.tree[row.day].activities[row.event.fullname] = {}
     unless @_selected.tree[row.day].activities[row.event.fullname][row.user]
       @_selected.tree[row.day].activities[row.event.fullname][row.user] = 1
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @_selected.tree[row.day].users[row.user].pageViews += row.size
       unless @_selected.tree[row.day].pages[row.page]
         @_selected.tree[row.day].pages[row.page] = {}

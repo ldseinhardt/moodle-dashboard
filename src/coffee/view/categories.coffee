@@ -16,21 +16,21 @@ class Categories extends ViewBase
       blog: 0
       wiki: 0
     @_groups =
-      content: /^(content|book|chapter|imscp|page|url|label|folder|resource|lesson)/
-      assign: /^assign/
-      forum: /^(forum|post|discussion)/
-      chat: /^(chat|message)/
-      choice: /^choice/
-      quiz: /^quiz/
-      blog: /^blog/
+      content: /^(content|conteúdo|book|livro|chapter|capítulo|imscp|page|página|url|label|rótulo|folder|pasta|resource|recurso|arquivo|lesson|lição)/
+      assign: /^(assign|tarefa|avaliação)/
+      forum: /^(forum|fórum|post|postagem|discussion|discussão)/
+      chat: /^(chat|bate|message|mensagem)/
+      choice: /^(choice|escolha)/
+      quiz: /^(quiz|checklist|questionário)/
+      blog: /^(blog|diário)/
       wiki: /^wiki/
     @
 
   selected: (row) ->
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       key = 'course'
       for group, e of @_groups
-        if e.test(row.event.name) || e.test(row.page.toLowerCase())
+        if e.test(row.event.name.toLowerCase) || e.test(row.page.toLowerCase())
           key = group
       @_selected[key] += row.size
     @

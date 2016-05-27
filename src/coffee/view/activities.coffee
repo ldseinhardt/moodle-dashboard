@@ -41,7 +41,7 @@ class Activities extends ViewBase
       @_selected[row.event.fullname].users[row.user] = 1
     unless @_selected[row.event.fullname].dates[row.day]
       @_selected[row.event.fullname].dates[row.day] = 1
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @_selected[row.event.fullname].totalViews += row.size
     @
 

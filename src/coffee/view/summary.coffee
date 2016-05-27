@@ -28,7 +28,7 @@ class Summary extends ViewBase
     @_selected.sessions[row.user][row.day].push(row.time / 1000)
     unless @_selected.activities[row.event.fullname]
       @_selected.activities[row.event.fullname] = 1
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @_data.pageViews[1] += row.size
       unless @_selected.pages[row.page]
         @_selected.pages[row.page] = 1
@@ -44,7 +44,7 @@ class Summary extends ViewBase
     @_recorded.sessions[row.user][row.day].push(row.time / 1000)
     unless @_recorded.activities[row.event.fullname]
       @_recorded.activities[row.event.fullname] = 1
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @_data.pageViews[0] += row.size
       unless @_recorded.pages[row.page]
         @_recorded.pages[row.page] = 1

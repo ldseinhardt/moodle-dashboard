@@ -31,7 +31,7 @@ class Participants extends ViewBase
     @_selected[row.user].dates[row.day].push(row.time / 1000)
     unless @_selected[row.user].activities[row.event.fullname]
       @_selected[row.user].activities[row.event.fullname] = 1
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @_selected[row.user].totalViews += row.size
       unless @_selected[row.user].pages[row.page]
         @_selected[row.user].pages[row.page] = 1

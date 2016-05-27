@@ -1,7 +1,7 @@
 {
   "name": "moodle-dashboard",
   "description": "Learning analytics dashboard for moodle logs data",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "author": "Luan Einhardt",
   "keywords": [
     "moodle",

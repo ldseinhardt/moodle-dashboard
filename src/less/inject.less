@@ -14,13 +14,18 @@
     .button {
       position: fixed;
       top: 5px;
-      right: 5px;
+      right: 15px;
       width: @button-size;
       height: @button-size;
       opacity: 0.8;
 
       &:hover {
         opacity: 1;
+      }
+
+      a {
+        background: none !important;
+        border: none !important;
       }
     }
 
@@ -32,7 +37,7 @@
     .message {
       position: fixed;
       top: 15px;
-      right: @button-size + 7;
+      right: @button-size + 17;
       max-width: @message-width;
       color: @white;
       text-align: right;

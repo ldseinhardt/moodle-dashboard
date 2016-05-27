@@ -51,7 +51,7 @@ class MetricsComparation extends ViewBase
                         d.activities[evtfullname] = 1
                         for time, size of hours
                           d.dates[day].push(time / 1000)
-                          if /view/.test(eventname)
+                          if /view/.test(eventname) || /view/.test(description)
                             d.pageViews += size
                             d.pages[page] = 1
         @_data.pageViews.push(d.pageViews)

@@ -11,7 +11,7 @@ class CheckAsData extends ViewBase
   selected: (row) ->
     if @filter(row.event, row.page)
       return @
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       @views += row.size
     @
 

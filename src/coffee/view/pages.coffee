@@ -20,7 +20,7 @@ class Pages extends ViewBase
   selected: (row) ->
     if @filter(row.event, row.page)
       return @
-    if /view/.test(row.event.name)
+    if /view/.test(row.event.name) || /view/.test(row.description)
       unless @_selected[row.page]
         @_selected[row.page] =
           totalViews: 0

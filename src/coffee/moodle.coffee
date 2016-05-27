@@ -151,7 +151,7 @@ class Moodle
             usr =
               id: parseInt(/[\\?&]id=([^&#]*)/.exec($(a[i]).prop('href'))[1])
               picture: $('img', a[i]).prop('src')
-              name: $(b[i]).text().trim()
+              name: $(b[i]).text().replace(/\s\s/g, ' ').trim()
               email: $(c[i]).text().trim()
               selected: true
             names = usr.name.toLowerCase().split(/\s/)
@@ -186,9 +186,9 @@ class Moodle
             return
         )
         course.users.sort((a, b) ->
-          if a.id > b.id
+          if a.list.length > b.list.length
             return -1
-          if a.id < b.id
+          if a.list.length < b.list.length
             return 1
           return 0
         )
@@ -292,15 +292,18 @@ class Moodle
         date: time
         chooselog: 1
         logformat: 'downloadascsv'
-        download: 'tsv'
+        download: 'csv'
         lang: 'en'
       success: (data, textStatus, request) =>
         type = request.getResponseHeader('content-type')
         if /application\/download/.test(type)
-          @processRaw(course, time, data)
+          @processRaw(course, time, data, 'tsv')
         else if /text\/tab-separated-values/.test(type)
           if data.length > 0
-            @processRaw(course, time, data)
+            @processRaw(course, time, data, 'tsv')
+        else if /text\/csv/.test(type)
+          if data.length > 0
+            @processRaw(course, time, data, 'csv')
         else
           if data.length > 0
             course.errors.push(time)
@@ -321,15 +324,15 @@ class Moodle
     )
     @
 
-  processRaw: (course, time, data) ->
+  processRaw: (course, time, data, type) ->
     realtime = time * 1000
     logs = data.replace(/\"Saved\sat\:(.+)\s/, '')
     unless course.logs
       course.logs = {}
-    course.logs[realtime] = d3.tsv.parse(logs)
+    course.logs[realtime] = d3[type].parse(logs)
     users = {}
     for row in course.logs[realtime]
-      username = row['User full name'].trim()
+      username = (row['User full name'] || row['Nome completo']).trim()
       unless users[username]
         users[username] = []
       users[username].push(row)
@@ -347,14 +350,18 @@ class Moodle
   processRow: (rows, realtime) ->
     data = {}
     for row in rows
-      action = (row['Event name'] || row['Action'])
+      action = (row['Event name'] || row['Action'] || row['Nome do evento'])
       eventname = action.split(/\s\(/)?[0].trim()
       eventcontext = (
-          row['Event context'] || action.split(/\s\(/)?[1].slice(0, -1)
+          row['Event context'] || row['Contexto do Evento'] || action.split(/\s\(/)?[1].slice(0, -1)
         ).trim()
-      component = (row['Component'] || action.split(/\s/)?[0]).trim()
-      description = (row['Description'] || row['Information']).trim()
-      hour = row['Time'].split(/,\s/)?[1]?.trim()
+      component = (row['Component'] || row['Componente'] || action.split(/\s/)?[0]).trim()
+      if component.toLowerCase() == 'logs'
+        continue
+      description = (row['Description'] || row['Information'] || row['Descrição'])
+      if description
+        description = description.trim()
+      hour = /([0-9]{1,2}:[0-9]{1,2})(\s(A|P)M)?/.exec((row['Time'] || row['Hora']).toUpperCase())[0]
       date = new Date(realtime).toISOString().split(/T/)[0]
       time = Date.parse(date + ' ' + hour) - Date.parse(date)
       unless data[component]

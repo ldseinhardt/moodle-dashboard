@@ -69,22 +69,23 @@ class ViewBase
     @
 
   filter: (event, page) ->
+    name = event.name.toLowerCase()
     page = page.toLowerCase()
     groups =
-      content: /^(content|book|chapter|imscp|page|url|label|folder|resource|lesson)/
-      assign: /^assign/
-      forum: /^(forum|post|discussion)/
-      chat: /^(chat|message)/
-      choice: /^choice/
-      quiz: /^quiz/
-      blog: /^blog/
+      content: /^(content|conteúdo|book|livro|chapter|capítulo|imscp|page|página|url|label|rótulo|folder|pasta|resource|recurso|arquivo|lesson|lição)/
+      assign: /^(assign|tarefa|avaliação)/
+      forum: /^(forum|fórum|post|postagem|discussion|discussão)/
+      chat: /^(chat|bate|message|mensagem)/
+      choice: /^(choice|escolha)/
+      quiz: /^(quiz|checklist|questionário)/
+      blog: /^(blog|diário)/
       wiki: /^wiki/
     if @group == 'course'
       for group, e of groups
-        if e.test(event.name) || e.test(page)
+        if e.test(name) || e.test(page)
           return true
     else if groups[@group]
-      if !groups[@group].test(event.name) && !groups[@group].test(page)
+      if !groups[@group].test(name) && !groups[@group].test(page)
         return true
     false
 
