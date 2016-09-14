@@ -219,7 +219,7 @@ class Moodle
       )
     course = @getCourse()
     $.ajax(
-      url: @url + '/report/log'
+      url: @url + '/report/log/'
       data:
         id: course.id
       success: (data) =>
@@ -286,7 +286,7 @@ class Moodle
 
   syncData: (course, time, response) ->
     $.ajax(
-      url: @url + '/report/log'
+      url: @url + '/report/log/'
       data:
         id: course.id
         date: time
@@ -315,7 +315,12 @@ class Moodle
           Moodle.response().success,
           Moodle.response().sync_data
         )
-      error: ->
+      error: (request) ->
+        if request.status >= 400
+          return response(
+            Moodle.response().success,
+            Moodle.response().sync_data
+          );
         course.errors.push(time)
         response(
           Moodle.response().sync_no_moodle_access,
