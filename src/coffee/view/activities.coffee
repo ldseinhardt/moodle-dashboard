@@ -117,7 +117,12 @@ class Activities extends ViewBase
                 </a>
               </div>
               <div class="btn-group">
-                <a class="btn-download">
+                <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE80D;</i>
+                </a>
+              </div>
+              <div class="btn-group">
+                <a href="#" class="btn-report">
                   <i class="material-icons">&#xE2C4;</i>
                 </a>
               </div>
@@ -247,6 +252,22 @@ class Activities extends ViewBase
       showColumns: true
       locale: langId
     )
+    _headers = [
+      __('Activity'),
+      __('Page views'),
+      __('Participants'),
+      __('Accessed days'),
+      __('Bounce rate')
+    ]
+    $('.btn-report', @ctx).click(=> @download(
+      @table(_headers, data.map((e) =>
+        list = []
+        for h, i in _headers
+          list.push(e[h])
+        list
+      )),
+      (__(title) + '_' +__(@views[@view.index].title, true)).replace(/\s/g, '_') + '.csv'
+    ))
     @
 
   resize: (isNotFullScreen) ->

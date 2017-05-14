@@ -50,10 +50,10 @@ class DayTime extends ViewBase
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div class="panel-title" style="margin-right: -150px; padding-right: 150px;">
+            <div class="panel-title" style="margin-right: -250px; padding-right: 250px;">
               <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="#{__(title)}">#{__(title)}</div>
             </div>
-            <div class="panel-options" style="width: 150px;">
+            <div class="panel-options" style="width: 250px;">
               <div class="btn-group">
                 <a class="dropdown-toggle btn-graph" data-target="#" data-toggle="dropdown">
                   <i class="material-icons">&#xE8F4;</i>
@@ -88,7 +88,12 @@ class DayTime extends ViewBase
                 </ul>
               </div>
               <div class="btn-group">
-                <a class="btn-download">
+                <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE80D;</i>
+                </a>
+              </div>
+              <div class="btn-group">
+                <a href="#" class="btn-report">
                   <i class="material-icons">&#xE2C4;</i>
                 </a>
               </div>
@@ -276,6 +281,16 @@ class DayTime extends ViewBase
           => @show(index)
         )(i + 1)
       )
+    $('.btn-report', @ctx).click(=> @download(
+      @table(tables.columns[1].map((e) => e.title), tables.data[1].map((e) =>
+        list = []
+        _headers = tables.columns[1];
+        for header in _headers
+          list.push(String(e[header.field]).replace(/<\/?[^>]+(>|$)/g, ''))
+        list
+      )),
+      __(title).replace(/\s/g, '_') + '.csv'
+    ))
     @
 
   resize: (isNotFullScreen) ->

@@ -53,12 +53,17 @@ class Categories extends ViewBase
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div class="panel-title">
+            <div class="panel-title" style="margin-right: -150px; padding-right: 150px;">
               <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="#{__('Page views by area')}">#{__('Page views by area')}</div>
             </div>
-            <div class="panel-options">
+            <div class="panel-options" style="width: 150px;">
               <div class="btn-group">
                 <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE80D;</i>
+                </a>
+              </div>
+              <div class="btn-group">
+                <a href="#" class="btn-report">
                   <i class="material-icons">&#xE2C4;</i>
                 </a>
               </div>
@@ -105,6 +110,10 @@ class Categories extends ViewBase
     $('.btn-download', @ctx).click(=> @download(
       @chart.getImageURI(),
       __('Page views by area').replace(/\s/g, '_') + '.png'
+    ))
+    $('.btn-report', @ctx).click(=> @download(
+      @table([__('Category'), __('Page views')], data),
+      __('Page views by area').replace(/\s/g, '_') + '.csv'
     ))
     @
 

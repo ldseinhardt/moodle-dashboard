@@ -41,15 +41,15 @@ class DayTimeHeatmap extends ViewBase
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div class="panel-title">
+            <div class="panel-title" style="margin-right: -150px; padding-right: 150px;">
               <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="#{__('Activities per hour (Heatmap)')}">#{__('Activities per hour (Heatmap)')}</div>
             </div>
-            <div class="panel-options">
-              <div class="btn-group">
-                <a href="#" class="btn-download">
-                  <i class="material-icons">&#xE2C4;</i>
-                </a>
-              </div>
+            <div class="panel-options" style="width: 150px;">
+            <div class="btn-group">
+              <a href="#" class="btn-download">
+                <i class="material-icons">&#xE80D;</i>
+              </a>
+            </div>
               <i class="material-icons info" data-toggle="tooltip" data-placement="left" data-original-title="#{__('data_activities_per_hour_description')}">&#xE88E;</i>
             </div>
           </div>
@@ -195,8 +195,8 @@ class DayTimeHeatmap extends ViewBase
       canvas.toDataURL('image/png')
 
     $('.btn-download', @ctx).click(=> @download(
-      svg_to_png_data($('.graph', @ctx)),
-      __('Activities per hour (Heatmap)').replace(/\s/g, '_') + '.png'
+      'data:image/svg+xml,' + encodeURIComponent($('.graph', @ctx).html())
+      __('Activities per hour (Heatmap)').replace(/\s/g, '_') + '.svg'
     ))
     @
 

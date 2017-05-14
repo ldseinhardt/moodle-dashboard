@@ -86,6 +86,9 @@ class MetricsComparation extends ViewBase
           @_data.numberSessions.push(0)
           @_data.meanSession.push(0)
           @_data.bounceRate.push(100)
+    @report =
+      headers: [],
+      data: []
     @
 
   getData: (a, b) ->
@@ -142,6 +145,11 @@ class MetricsComparation extends ViewBase
               </select>
               <div class="btn-group">
                 <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE80D;</i>
+                </a>
+              </div>
+              <div class="btn-group">
+                <a href="#" class="btn-report">
                   <i class="material-icons">&#xE2C4;</i>
                 </a>
               </div>
@@ -219,6 +227,10 @@ class MetricsComparation extends ViewBase
       @chart.getImageURI(),
       __(@title).replace(/\s/g, '_') + '.png'
     ))
+    $('.btn-report', @ctx).click(=> @download(
+      @table(@report.headers, @report.data),
+      __(@title).replace(/\s/g, '_') + '.csv'
+    ))
     @
 
   resize: (isNotFullScreen) ->
@@ -247,6 +259,12 @@ class MetricsComparation extends ViewBase
     @options.vAxis.minValue = data.y.min - 5
     @options.vAxis.maxValue = data.y.max + 5
     @chart.draw(@data, @options)
+    @report =
+      headers: [__('participant'), __('Role'), data.x.label, data.y.label]
+      data: []
+    for row in data.rows
+      for user in row[0].split(', ')
+        @report.data.push([user, row[3], row[1], row[2]])
     @
 
 view =

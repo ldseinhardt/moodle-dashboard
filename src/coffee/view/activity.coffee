@@ -27,6 +27,9 @@ class Activity extends ViewBase
     @_selected =
       users: {}
       tree: {}
+    @report =
+      headers: [],
+      data: []
     @
 
   selected: (row) ->
@@ -149,10 +152,10 @@ class Activity extends ViewBase
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div class="panel-title" style="margin-right: -150px; padding-right: 150px;">
+            <div class="panel-title" style="margin-right: -250px; padding-right: 250px;">
               <div class="title" data-toggle="tooltip" data-placement="right" data-original-title="#{__(title)}">#{__(title)}</div>
             </div>
-            <div class="panel-options" style="width: 150px;">
+            <div class="panel-options" style="width: 250px;">
               <div class="btn-group">
                 <a class="dropdown-toggle" data-target="#" data-toggle="dropdown">
                   <i class="material-icons">&#xE8F4;</i>
@@ -175,7 +178,12 @@ class Activity extends ViewBase
                 </a>
               </div>
               <div class="btn-group">
-                <a class="btn-download">
+                <a href="#" class="btn-download">
+                  <i class="material-icons">&#xE80D;</i>
+                </a>
+              </div>
+              <div class="btn-group">
+                <a href="#" class="btn-report">
                   <i class="material-icons">&#xE2C4;</i>
                 </a>
               </div>
@@ -306,6 +314,10 @@ class Activity extends ViewBase
       @chart.getImageURI(),
       __(@views[@view.index].title).replace(/\s/g, '_') + '.png'
     ))
+    $('.btn-report', @ctx).click(=> @download(
+      @table(@report.headers, @report.data),
+      __(@views[@view.index].title).replace(/\s/g, '_') + '.csv'
+    ))
     buttons = $('.btn-view', @ctx)
     for button, i in buttons
       $(button).click(
@@ -376,6 +388,12 @@ class Activity extends ViewBase
   show: (index) ->
     @view.index = index if index?
     view = @views[@view.index]
+    @report =
+      headers: [__('Date')].concat(view.labels)
+      data: JSON.parse(JSON.stringify(view.data)).map((e) =>
+        e[0] = new Date(e[0]).toLocaleDateString(langId)
+        e
+      )
     @data = new google.visualization.DataTable()
     @data.addColumn('string', 'id')
     for label in view.labels

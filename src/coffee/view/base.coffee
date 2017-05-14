@@ -92,6 +92,13 @@ class ViewBase
   render: ->
     @
 
+  table: (headers, rows) ->
+    console.log(headers)
+    console.log(rows)
+    header = headers.map((e) => '"' + e + '"').join(',') + "\r\n"
+    content = rows.map((e) => e.map((e) => '"' + e + '"').join(',')).join("\r\n") + "\r\n"
+    'data:text/csv;base64,' + btoa(unescape(encodeURIComponent(header + content)))
+
   resize: (isNotFullScreen) ->
     if isNotFullScreen?
       @isNotFullScreen = isNotFullScreen

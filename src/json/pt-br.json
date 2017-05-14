@@ -1497,5 +1497,13 @@
 
   "private_message_notify": {
     "message": "Clique duas vezes para enviar uma mensagem privada (Você deve estar logado ao Moodle)."
+  },
+
+  "date": {
+    "message": "Data"
+  },
+
+  "category": {
+    "message": "Categoria"
   }
 }
