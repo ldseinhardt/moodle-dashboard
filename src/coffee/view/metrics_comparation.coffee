@@ -86,10 +86,23 @@ class MetricsComparation extends ViewBase
           @_data.numberSessions.push(0)
           @_data.meanSession.push(0)
           @_data.bounceRate.push(100)
-    @report =
-      headers: [],
-      data: []
     @
+
+  getDataReport: () ->
+    list = []
+    for user, i in @_data.users
+      list.push([
+        user,
+        @_data.roles[i],
+        @_data.pageViews[i],
+        @_data.activities[i],
+        @_data.pages[i],
+        @_data.numberSessions[i],
+        @_data.meanSession[i],
+        @_data.bounceRate[i],
+        @_data.dates[i]
+      ])
+    list
 
   getData: (a, b) ->
     users = @_data.users
@@ -228,7 +241,7 @@ class MetricsComparation extends ViewBase
       __(@title).replace(/\s/g, '_') + '.png'
     ))
     $('.btn-report', @ctx).click(=> @download(
-      @table(@report.headers, @report.data),
+      @table([__('participant'), __('Role')].concat(@labels), @getDataReport()),
       __(@title).replace(/\s/g, '_') + '.csv'
     ))
     @
@@ -259,12 +272,6 @@ class MetricsComparation extends ViewBase
     @options.vAxis.minValue = data.y.min - 5
     @options.vAxis.maxValue = data.y.max + 5
     @chart.draw(@data, @options)
-    @report =
-      headers: [__('participant'), __('Role'), data.x.label, data.y.label]
-      data: []
-    for row in data.rows
-      for user in row[0].split(', ')
-        @report.data.push([user, row[3], row[1], row[2]])
     @
 
 view =

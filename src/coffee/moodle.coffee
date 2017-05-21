@@ -44,7 +44,11 @@ class Moodle
       success: (data) =>
         parser = new DOMParser()
         doc = parser.parseFromString(data, 'text/html')
-        courses = $('h2 > a[href*="course/view.php"]', doc)
+        courses = $('h2 > a[href*="course/view.php?id="]', doc)
+        unless courses.length
+          courses = $('h4 > a[href*="course/view.php?id="]', doc)
+        unless courses.length
+          courses = $('li > a[href*="course/view.php?id="]', doc)
         unless courses.length
           return response(
             Moodle.response().sync_no_courses,
